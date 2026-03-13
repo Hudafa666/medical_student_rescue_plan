@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后端开发对应前端范例</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .intro {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .demo-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .response-area {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-family: "Consolas", monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin: 15px 0;
+        }
+        
+        label {
+            display: inline-block;
+            width: 80px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+            font-size: 14px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .user-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .user-item {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-info {
+            color: #2c3e50;
+        }
+        
+        .user-id {
+            color: #95a5a6;
+            font-size: 12px;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .info-box h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>后端开发对应前端范例</h1>
+    <p class="intro">这个页面展示了如何与后端服务器进行交互</p>
+    
+    <div class="info-box">
+        <h3>⚠️ 使用前必读</h3>
+        <p>在测试之前，请先确保后端服务器已启动：</p>
+        <p>运行命令：<code>python 后端开发.py</code></p>
+        <p>服务器地址：<code>http://localhost:8080</code></p>
+    </div>
+    
+    <div class="demo-box">
+        <h2>1. GET 请求 - 获取首页数据</h2>
+        <p>点击按钮，向服务器发送GET请求，获取欢迎信息</p>
+        <button onclick="getHome()">获取首页数据</button>
+        <div class="response-area" id="homeResponse">点击按钮查看结果...</div>
+    </div>
+    
+    <div class="demo-box">
+        <h2>2. GET 请求 - 获取用户列表</h2>
+        <p>点击按钮，从服务器获取所有用户的数据</p>
+        <button onclick="getUsers()">获取用户列表</button>
+        <ul class="user-list" id="userList"></ul>
+        <div class="response-area" id="usersResponse" style="display:none;"></div>
+    </div>
+    
+    <div class="demo-box">
+        <h2>3. POST 请求 - 添加新用户</h2>
+        <p>填写下方表单，向服务器发送POST请求添加新用户</p>
+        <div class="form-group">
+            <label>姓名：</label>
+            <input type="text" id="newName" placeholder="请输入姓名">
+        </div>
+        <div class="form-group">
+            <label>年龄：</label>
+            <input type="number" id="newAge" placeholder="请输入年龄">
+        </div>
+        <div class="form-group">
+            <label>专业：</label>
+            <input type="text" id="newMajor" placeholder="请输入专业">
+        </div>
+        <button onclick="addUser()">添加用户</button>
+        <div class="response-area" id="addResponse">点击按钮查看结果...</div>
+    </div>
+    
+    <div class="demo-box">
+        <h2>后端API说明</h2>
+        <table border="1" cellpadding="10" style="width:100%; border-collapse: collapse;">
+            <tr style="background:#3498db; color:white;">
+                <th>请求方法</th>
+                <th>URL路径</th>
+                <th>功能说明</th>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/</td>
+                <td>获取首页欢迎信息</td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td>/users</td>
+                <td>获取所有用户列表</td>
+            </tr>
+            <tr>
+                <td>POST</td>
+                <td>/users</td>
+                <td>添加新用户</td>
+            </tr>
+        </table>
+    </div>
+    
+    <script>
+        // 后端服务器地址
+        const API_BASE = "http://localhost:8080";
+        
+        // GET请求：获取首页数据
+        async function getHome() {
+            try {
+                const response = await fetch(API_BASE + "/");
+                const data = await response.json();
+                document.getElementById("homeResponse").textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                document.getElementById("homeResponse").textContent = "错误：" + error.message + "\n\n请检查：\n1. 后端服务器是否正在运行\n2. 端口是否被占用（默认8080）\n3. 尝试重启后端服务器";
+            }
+        }
+        
+        // GET请求：获取用户列表
+        async function getUsers() {
+            try {
+                const response = await fetch(API_BASE + "/users");
+                const users = await response.json();
+                
+                // 显示用户列表
+                const userList = document.getElementById("userList");
+                userList.innerHTML = "";
+                users.forEach(user => {
+                    const li = document.createElement("li");
+                    li.className = "user-item";
+                    li.innerHTML = `
+                        <span class="user-info"><strong>${user.name}</strong> - ${user.major} - ${user.age}岁</span>
+                        <span class="user-id">ID: ${user.id}</span>
+                    `;
+                    userList.appendChild(li);
+                });
+                
+                // 同时显示JSON
+                document.getElementById("usersResponse").style.display = "block";
+                document.getElementById("usersResponse").textContent = JSON.stringify(users, null, 2);
+            } catch (error) {
+                document.getElementById("usersResponse").style.display = "block";
+                document.getElementById("usersResponse").textContent = "错误：" + error.message + "\n\n请确保后端服务器正在运行！";
+            }
+        }
+        
+        // POST请求：添加新用户
+        async function addUser() {
+            const name = document.getElementById("newName").value;
+            const age = document.getElementById("newAge").value;
+            const major = document.getElementById("newMajor").value;
+            
+            if (!name || !age || !major) {
+                document.getElementById("addResponse").textContent = "请填写所有字段！";
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_BASE + "/users", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        age: parseInt(age),
+                        major: major
+                    })
+                });
+                
+                const data = await response.json();
+                document.getElementById("addResponse").textContent = JSON.stringify(data, null, 2);
+                
+                // 清空表单
+                document.getElementById("newName").value = "";
+                document.getElementById("newAge").value = "";
+                document.getElementById("newMajor").value = "";
+                
+                // 刷新用户列表
+                getUsers();
+            } catch (error) {
+                document.getElementById("addResponse").textContent = "错误：" + error.message + "\n\n请确保后端服务器正在运行！";
+            }
+        }
+    </script>
+</body>
+</html>
