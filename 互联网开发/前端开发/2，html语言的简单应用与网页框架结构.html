@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML语言入门教程</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.8;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            color: #7f8c8d;
+            margin-top: 30px;
+        }
+        
+        h4 {
+            color: #555;
+            margin-top: 20px;
+        }
+        
+        .demo-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Consolas", "Courier New", monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        
+        .code-tag { color: #66d9ef; }
+        .code-attr { color: #a6e22e; }
+        .code-value { color: #fd971f; }
+        .code-text { color: #f8f8f2; }
+        .code-comment { color: #75715e; }
+        
+        .render {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background: #3498db;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .tip {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .note {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        label {
+            display: inline-block;
+            width: 100px;
+            font-weight: bold;
+        }
+        
+        input, select, textarea {
+            padding: 8px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+        
+        textarea {
+            width: 300px;
+            height: 80px;
+        }
+        
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>HTML语言入门教程</h1>
+
+<p>下面是一个最基本的HTML文件示例：</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;!DOCTYPE html&gt;</span>  <span class="code-comment">&lt;!-- 声明文档类型 --&gt;</span>
+<span class="code-tag">&lt;html&gt;</span>                <span class="code-comment">&lt;!-- 根元素 --&gt;</span>
+    <span class="code-tag">&lt;head&gt;</span>              <span class="code-comment">&lt;!-- 头部信息 --&gt;</span>
+        <span class="code-tag">&lt;meta</span> <span class="code-attr">charset</span>=<span class="code-value">"UTF-8"</span><span class="code-tag">&gt;</span>
+        <span class="code-tag">&lt;title&gt;</span><span class="code-text">页面标题</span><span class="code-tag">&lt;/title&gt;</span>
+    <span class="code-tag">&lt;/head&gt;</span>
+    <span class="code-tag">&lt;body&gt;</span>              <span class="code-comment">&lt;!-- 可见内容 --&gt;</span>
+        <span class="code-tag">&lt;p&gt;</span><span class="code-text">页面内容</span><span class="code-tag">&lt;/p&gt;</span>
+    <span class="code-tag">&lt;/body&gt;</span>
+<span class="code-tag">&lt;/html&gt;</span>
+</div>
+</div>
+
+<hr>
+
+<h2>第一部分：HTML简介</h2>
+
+<h3>什么是HTML？</h3>
+
+<p>HTML（HyperText Markup Language，超文本标记语言）是用于创建网页的标准标记语言。</p>
+
+<p><strong>核心概念：</strong></p>
+<ul>
+    <li><strong>标记语言</strong>：不是编程语言，而是一种用来结构化信息的语言</li>
+    <li><strong>超文本</strong>：除了文本，还可以包含图片、链接、音视频等</li>
+    <li><strong>浏览器负责解析</strong>：浏览器读取HTML文件并渲染成可视化页面</li>
+</ul>
+
+<h3>HTML的基本结构</h3>
+
+<p><strong>结构说明：</strong></p>
+
+<table>
+<tr>
+    <th>标签</th>
+    <th>作用</th>
+</tr>
+<tr>
+    <td>&lt;!DOCTYPE html&gt;</td>
+    <td>声明文档类型，告诉浏览器用HTML5标准解析</td>
+</tr>
+<tr>
+    <td>&lt;html&gt;</td>
+    <td>根元素，所有其他元素的容器</td>
+</tr>
+<tr>
+    <td>&lt;head&gt;</td>
+    <td>头部，包含页面的元信息（不显示在页面中）</td>
+</tr>
+<tr>
+    <td>&lt;body&gt;</td>
+    <td>主体，包含所有可见的页面内容</td>
+</tr>
+</table>
+
+<div class="tip">
+<strong>提示：</strong>HTML标签通常是成对出现的，如&lt;html&gt;和&lt;/html&gt;，但也有单标签，如&lt;meta&gt;和&lt;br&gt;。
+</div>
+
+<hr>
+
+<h2>第二部分：常用的文本标签</h2>
+
+<h3>标题标签（h1-h6）</h3>
+
+<p>标题标签用于定义标题，从h1到h6，重要性依次递减。</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;h1&gt;</span><span class="code-text">一级标题（最重要的标题）</span><span class="code-tag">&lt;/h1&gt;</span>
+<span class="code-tag">&lt;h2&gt;</span><span class="code-text">二级标题</span><span class="code-tag">&lt;/h2&gt;</span>
+<span class="code-tag">&lt;h3&gt;</span><span class="code-text">三级标题</span><span class="code-tag">&lt;/h3&gt;</span>
+<span class="code-tag">&lt;h4&gt;</span><span class="code-text">四级标题</span><span class="code-tag">&lt;/h4&gt;</span>
+<span class="code-tag">&lt;h5&gt;</span><span class="code-text">五级标题</span><span class="code-tag">&lt;/h5&gt;</span>
+<span class="code-tag">&lt;h6&gt;</span><span class="code-text">六级标题（最不重要的标题）</span><span class="code-tag">&lt;/h6&gt;</span>
+</div>
+
+<div class="render">
+<h1>一级标题（最重要的标题）</h1>
+<h2>二级标题</h2>
+<h3>三级标题</h3>
+<h4>四级标题</h4>
+<h5>五级标题</h5>
+<h6>六级标题（最不重要的标题）</h6>
+</div>
+</div>
+
+<div class="note">
+<strong>规范：</strong>一个页面通常只有一个h1标签，用于页面主标题。搜索引擎会重点关注h1标签。
+</div>
+
+<h3>段落和换行</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;p&gt;</span><span class="code-text">这是一个段落，浏览器会自动在段落前后添加间距。</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-text">这是另一个段落。</span><span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-comment">&lt;!-- 换行标签 --&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-text">第一行&lt;br&gt;第二行&lt;br&gt;第三行</span><span class="code-tag">&lt;/p&gt;</span>
+</div>
+
+<div class="render">
+<p>这是一个段落，浏览器会自动在段落前后添加间距。</p>
+<p>这是另一个段落。</p>
+
+<p>第一行<br>第二行<br>第三行</p>
+</div>
+</div>
+
+<h3>文本格式化标签</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;p&gt;</span><span class="code-text">普通文本</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;strong&gt;</span><span class="code-text">加粗文本（强调）</span><span class="code-tag">&lt;/strong&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;b&gt;</span><span class="code-text">加粗文本（视觉）</span><span class="code-tag">&lt;/b&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;em&gt;</span><span class="code-text">斜体文本（强调）</span><span class="code-tag">&lt;/em&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;i&gt;</span><span class="code-text">斜体文本（视觉）</span><span class="code-tag">&lt;/i&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;u&gt;</span><span class="code-text">下划线文本</span><span class="code-tag">&lt;/u&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-tag">&lt;del&gt;</span><span class="code-text">删除线文本</span><span class="code-tag">&lt;/del&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-text">上标：x</span><span class="code-tag">&lt;sup&gt;</span><span class="code-text">2</span><span class="code-tag">&lt;/sup&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-text">下标：H</span><span class="code-tag">&lt;sub&gt;</span><span class="code-text">2</span><span class="code-tag">&lt;/sub&gt;</span><span class="code-tag">&lt;/p&gt;</span>
+</div>
+
+<div class="render">
+<p>普通文本</p>
+<p><strong>加粗文本（强调）</strong></p>
+<p><b>加粗文本（视觉）</b></p>
+<p><em>斜体文本（强调）</em></p>
+<p><i>斜体文本（视觉）</i></p>
+<p><u>下划线文本</u></p>
+<p><del>删除线文本</del></p>
+<p>上标：x<sup>2</sup></p>
+<p>下标：H<sub>2</sub></p>
+</div>
+</div>
+
+<div class="tip">
+<strong>提示：</strong>&lt;strong&gt;和&lt;em&gt;有语义意义（表示强调），而&lt;b&gt;和&lt;i&gt;只有视觉效果。搜索引擎更看重有语义的标签。
+</div>
+
+<h3>列表标签</h3>
+
+<h4>无序列表</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;ul&gt;</span>
+    <span class="code-tag">&lt;li&gt;</span><span class="code-text">苹果</span><span class="code-tag">&lt;/li&gt;</span>
+    <span class="code-tag">&lt;li&gt;</span><span class="code-text">香蕉</span><span class="code-tag">&lt;/li&gt;</span>
+    <span class="code-tag">&lt;li&gt;</span><span class="code-text">橙子</span><span class="code-tag">&lt;/li&gt;</span>
+<span class="code-tag">&lt;/ul&gt;</span>
+</div>
+
+<div class="render">
+<ul>
+    <li>苹果</li>
+    <li>香蕉</li>
+    <li>橙子</li>
+</ul>
+</div>
+</div>
+
+<h4>有序列表</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;ol&gt;</span>
+    <span class="code-tag">&lt;li&gt;</span><span class="code-text">第一步：打开冰箱</span><span class="code-tag">&lt;/li&gt;</span>
+    <span class="code-tag">&lt;li&gt;</span><span class="code-text">第二步：放入大象</span><span class="code-tag">&lt;/li&gt;</span>
+    <span class="code-tag">&lt;li&gt;</span><span class="code-text">第三步：关上冰箱</span><span class="code-tag">&lt;/li&gt;</span>
+<span class="code-tag">&lt;/ol&gt;</span>
+</div>
+
+<div class="render">
+<ol>
+    <li>第一步：打开冰箱</li>
+    <li>第二步：放入大象</li>
+    <li>第三步：关上冰箱</li>
+</ol>
+</div>
+</div>
+
+<h3>超链接</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">&lt;!-- 跳转到其他页面 --&gt;</span>
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"https://www.baidu.com"</span><span class="code-tag">&gt;</span><span class="code-text">跳转到百度</span><span class="code-tag">&lt;/a&gt;</span>
+
+<span class="code-comment">&lt;!-- 在新标签页打开 --&gt;</span>
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"https://www.google.com"</span> <span class="code-attr">target</span>=<span class="code-value">"_blank"</span><span class="code-tag">&gt;</span><span class="code-text">在新标签页打开Google</span><span class="code-tag">&lt;/a&gt;</span>
+
+<span class="code-comment">&lt;!-- 跳转到页面内位置（锚点） --&gt;</span>
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"#section1"</span><span class="code-tag">&gt;</span><span class="code-text">跳转到第一部分</span><span class="code-tag">&lt;/a&gt;</span>
+<span class="code-tag">&lt;h2</span> <span class="code-attr">id</span>=<span class="code-value">"section1"</span><span class="code-tag">&gt;</span><span class="code-text">第一部分</span><span class="code-tag">&lt;/h2&gt;</span>
+</div>
+
+<div class="render">
+<a href="https://www.baidu.com">跳转到百度</a><br><br>
+<a href="https://www.google.com" target="_blank">在新标签页打开Google</a><br><br>
+<a href="#section1">跳转到下一行</a>
+<h2 id="section1">将会跳转到此行</h2>
+</div>
+</div>
+
+<h3>图片标签</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">&lt;!-- 基本用法 --&gt;</span>
+<span class="code-tag">&lt;img</span> <span class="code-attr">src</span>=<span class="code-value">"图片地址"</span> <span class="code-attr">alt</span>=<span class="code-value">"图片描述"</span><span class="code-tag">&gt;</span>
+
+<span class="code-comment">&lt;!-- 完整示例 --&gt;</span>
+<span class="code-tag">&lt;img</span> <span class="code-attr">src</span>=<span class="code-value">"https://ask-fd.zol-img.com.cn/g5/M00/09/09/ChMkJlpCjsGIQjpbAAOIUBAwhTUAAjhIgBBhQsAA4ho721.jpg"</span> 
+      <span class="code-attr">alt</span>=<span class="code-value">"占位图片"</span>
+      <span class="code-attr">width</span>=<span class="code-value">"300"</span>
+      <span class="code-attr">height</span>=<span class="code-value">"150"</span><span class="code-tag">&gt;</span>
+</div>
+
+<div class="render">
+<img src="https://ask-fd.zol-img.com.cn/g5/M00/09/09/ChMkJlpCjsGIQjpbAAOIUBAwhTUAAjhIgBBhQsAA4ho721.jpg" alt="占位图片" width="300" height="150">
+</div>
+</div>
+
+<div class="note">
+<strong>特点：</strong>&lt;img&gt;是单标签，不需要闭合。alt属性用于图片无法显示时的替代文本，也利于搜索引擎理解图片内容。
+</div>
+
+<hr>
+
+<h2>第三部分：HTML标签属性</h2>
+
+<h3>什么是属性？</h3>
+
+<p>属性是标签的额外信息，用于描述标签的特征。属性写在开始标签中。</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;标签名</span> <span class="code-attr">属性名</span>=<span class="code-value">"属性值"</span><span class="code-tag">&gt;</span>内容<span class="code-tag">&lt;/标签名&gt;</span>
+</div>
+</div>
+
+<h3>通用属性（所有标签都支持）</h3>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>属性</th>
+    <th>说明</th>
+    <th>示例</th>
+</tr>
+<tr>
+    <td>id</td>
+    <td>元素的唯一标识</td>
+    <td>id="header"</td>
+</tr>
+<tr>
+    <td>class</td>
+    <td>元素的类名（用于CSS）</td>
+    <td>class="container"</td>
+</tr>
+<tr>
+    <td>style</td>
+    <td>内联样式</td>
+    <td>style="color:red;"</td>
+</tr>
+<tr>
+    <td>title</td>
+    <td>鼠标悬停显示的提示</td>
+    <td>title="详细信息"</td>
+</tr>
+</table>
+</div>
+
+<h3>常用属性示例</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">&lt;!-- id属性：唯一标识 --&gt;</span>
+<span class="code-tag">&lt;div</span> <span class="code-attr">id</span>=<span class="code-value">"main-content"</span><span class="code-tag">&gt;</span><span class="code-text">主要内容区域</span><span class="code-tag">&lt;/div&gt;</span>
+
+<span class="code-comment">&lt;!-- class属性：用于样式分组 --&gt;</span>
+<span class="code-tag">&lt;p</span> <span class="code-attr">class</span>=<span class="code-value">"highlight"</span><span class="code-tag">&gt;</span><span class="code-text">这段文字有高亮样式</span><span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-comment">&lt;!-- style属性：直接添加样式 --&gt;</span>
+<span class="code-tag">&lt;p</span> <span class="code-attr">style</span>=<span class="code-value">"color: blue; font-size: 20px;"</span><span class="code-tag">&gt;</span><span class="code-text">蓝色20像素的文字</span><span class="code-tag">&lt;/p&gt;</span>
+
+<span class="code-comment">&lt;!-- title属性：鼠标悬停提示 --&gt;</span>
+<span class="code-tag">&lt;p</span> <span class="code-attr">title</span>=<span class="code-value">"这是一段提示文字"</span><span class="code-tag">&gt;</span><span class="code-text">鼠标悬停在我上面看看</span><span class="code-tag">&lt;/p&gt;</span>
+</div>
+
+<div class="render">
+<div id="main-content">主要内容区域（id="main-content"）</div>
+<p class="highlight">这段文字有高亮样式（class="highlight"）</p>
+<p style="color: blue; font-size: 20px;">蓝色20像素的文字（style="color: blue;"）</p>
+<p title="这是一段提示文字">鼠标悬停在我上面看看</p>
+</div>
+</div>
+
+<h3>特殊属性</h3>
+
+<div class="demo-box">
+<h4>链接的href属性</h4>
+<div class="code">
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"https://www.example.com"</span><span class="code-tag">&gt;</span><span class="code-text">外部链接</span><span class="code-tag">&lt;/a&gt;</span>
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"page.html"</span><span class="code-tag">&gt;</span><span class="code-text">本地链接</span><span class="code-tag">&lt;/a&gt;</span>
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"#top"</span><span class="code-tag">&gt;</span><span class="code-text">锚点链接</span><span class="code-tag">&lt;/a&gt;</span>
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"javascript:void(0);"</span><span class="code-tag">&gt;</span><span class="code-text">不跳转</span><span class="code-tag">&lt;/a&gt;</span>
+</div>
+
+<h4>图片的src和alt属性</h4>
+<div class="code">
+<span class="code-tag">&lt;img</span> <span class="code-attr">src</span>=<span class="code-value">"logo.png"</span> <span class="code-attr">alt</span>=<span class="code-value">"网站Logo"</span><span class="code-tag">&gt;</span>
+</div>
+
+<h4>输入框的value属性</h4>
+<div class="code">
+<span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"text"</span> <span class="code-attr">value</span>=<span class="code-value">"默认值"</span><span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"password"</span> <span class="code-attr">placeholder</span>=<span class="code-value">"请输入密码"</span><span class="code-tag">&gt;</span>
+</div>
+</div>
+
+<div class="tip">
+<strong>提示：</strong>属性值通常用引号括起来，单引号或双引号都可以。推荐使用双引号。
+</div>
+
+<hr>
+
+<h2>第四部分：块元素与行内元素</h2>
+
+<h3>概念区分</h3>
+
+<p>HTML元素可以分为两大类：<strong>块元素</strong>和<strong>行内元素</strong>。</p>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>特征</th>
+    <th>块元素（Block）</th>
+    <th>行内元素（Inline）</th>
+</tr>
+<tr>
+    <td>是否独占一行</td>
+    <td>是，独占一行</td>
+    <td>否，与其他元素共享一行</td>
+</tr>
+<tr>
+    <td>可以设置宽高</td>
+    <td>可以</td>
+    <td>不行（width/height无效）</td>
+</tr>
+<tr>
+    <td>可以设置margin/padding</td>
+    <td>四周都可以</td>
+    <td>只有左右有效</td>
+</tr>
+<tr>
+    <td>常见标签</td>
+    <td>div, p, h1-h6, ul, ol, li</td>
+    <td>span, a, strong, em, img</td>
+</tr>
+</table>
+</div>
+
+<h3>块元素示例</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;div&gt;</span><span class="code-text">这是一个div块元素</span><span class="code-tag">&lt;/div&gt;</span>
+<span class="code-tag">&lt;p&gt;</span><span class="code-text">这是一个段落块元素</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;h3&gt;</span><span class="code-text">这是一个标题块元素</span><span class="code-tag">&lt;/h3&gt;</span>
+</div>
+
+<div class="render">
+<div style="background: #3498db; color: white; padding: 10px; margin: 5px 0;">这是一个div块元素</div>
+<p style="background: #2ecc71; color: white; padding: 10px; margin: 5px 0;">这是一个段落块元素</p>
+<h3 style="background: #e74c3c; color: white; padding: 10px; margin: 5px 0;">这是一个标题块元素</h3>
+</div>
+</div>
+
+<h3>行内元素示例</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;span&gt;</span><span class="code-text">这是span行内元素</span><span class="code-tag">&lt;/span&gt;</span>
+<span class="code-tag">&lt;strong&gt;</span><span class="code-text">加粗</span><span class="code-tag">&lt;/strong&gt;</span>
+<span class="code-tag">&lt;em&gt;</span><span class="code-text">斜体</span><span class="code-tag">&lt;/em&gt;</span>
+<span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"#"</span><span class="code-tag">&gt;</span><span class="code-text">链接</span><span class="code-tag">&lt;/a&gt;</span>
+</div>
+
+<div class="render">
+<span style="background: #3498db; color: white; padding: 5px;">这是span行内元素</span>
+<strong style="background: #2ecc71; color: white; padding: 5px;">加粗</strong>
+<em style="background: #e74c3c; color: white; padding: 5px;">斜体</em>
+<a href="#" style="background: #9b59b6; color: white; padding: 5px;">链接</a>
+</div>
+</div>
+
+<h3>两者的重要区别</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">&lt;!-- 块元素可以包含行内元素 --&gt;</span>
+<span class="code-tag">&lt;div&gt;</span>
+    <span class="code-tag">&lt;p&gt;</span><span class="code-text">段落</span><span class="code-tag">&lt;/p&gt;</span>
+    <span class="code-tag">&lt;a</span> <span class="code-attr">href</span>=<span class="code-value">"#"</span><span class="code-tag">&gt;</span><span class="code-text">链接</span><span class="code-tag">&lt;/a&gt;</span>
+<span class="code-tag">&lt;/div&gt;</span>
+
+<span class="code-comment">&lt;!-- 行内元素通常不包含块元素 --&gt;</span>
+<span class="code-tag">&lt;span&gt;</span>
+    <span class="code-tag">&lt;p&gt;</span><span class="code-text">这是不规范的写法！</span><span class="code-tag">&lt;/p&gt;</span>
+<span class="code-tag">&lt;/span&gt;</span>
+</div>
+</div>
+
+<h3>特殊元素：行内块元素</h3>
+
+<div class="demo-box">
+<p>&lt;img&gt;和&lt;input&gt;是特殊的行内块元素，既可以与其他元素在同一行，又可以设置宽高。</p>
+
+<div class="code">
+<span class="code-tag">&lt;img</span> <span class="code-attr">src</span>=<span class="code-value">"..."</span> <span class="code-attr">width</span>=<span class="code-value">"100"</span> <span class="code-attr">height</span>=<span class="code-value">"100"</span><span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"text"</span><span class="code-tag">&gt;</span>
+<span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"text"</span><span class="code-tag">&gt;</span>
+</div>
+
+<div class="render">
+<img src="https://ask-fd.zol-img.com.cn/g5/M00/09/09/ChMkJlpCjsGIQjpbAAOIUBAwhTUAAjhIgBBhQsAA4ho721.jpg" width="100" height="100" style="display:inline-block;">
+<input type="text" placeholder="输入框1" style="display:inline-block;">
+<input type="text" placeholder="输入框2" style="display:inline-block;">
+</div>
+</div>
+
+<hr>
+
+<h2>第五部分：HTML表单</h2>
+
+<h3>表单简介</h3>
+
+<p>表单用于收集用户输入的数据，是网页与用户交互的重要方式。</p>
+
+<div class="demo-box">
+<form>
+    <label>用户名：</label><br>
+    <input type="text" placeholder="请输入用户名"><br>
+    <label>密码：</label><br>
+    <input type="password" placeholder="请输入密码"><br>
+    <button type="button">登录</button>
+</form>
+</div>
+
+<h3>表单基本结构</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;form</span> <span class="code-attr">action</span>=<span class="code-value">"提交地址"</span> <span class="code-attr">method</span>=<span class="code-value">"提交方式"</span><span class="code-tag">&gt;</span>
+    <span class="code-comment">&lt;!-- 表单控件 --&gt;</span>
+    <span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"text"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;button&gt;</span><span class="code-text">提交</span><span class="code-tag">&lt;/button&gt;</span>
+<span class="code-tag">&lt;/form&gt;</span>
+</div>
+
+<table>
+<tr>
+    <th>属性</th>
+    <th>说明</th>
+    <th>可选值</th>
+</tr>
+<tr>
+    <td>action</td>
+    <td>表单提交的服务器地址</td>
+    <td>URL路径</td>
+</tr>
+<tr>
+    <td>method</td>
+    <td>提交方式</td>
+    <td>GET / POST</td>
+</tr>
+<tr>
+    <td>target</td>
+    <td>提交后在哪里显示响应</td>
+    <td>_self / _blank</td>
+</tr>
+</table>
+</div>
+
+<h3>各种输入类型</h3>
+
+<div class="demo-box">
+<form>
+    <h4>文本输入</h4>
+    <label>用户名：</label>
+    <input type="text" placeholder="请输入用户名">
+    
+    <h4>密码输入,这个输入框会隐藏输入内容</h4>
+    <label>密码：</label>
+    <input type="password" placeholder="请输入密码">
+    
+    <h4>单选按钮</h4>
+    <label>性别：</label>
+    <input type="radio" name="gender" value="male"> 男
+    <input type="radio" name="gender" value="female"> 女
+    
+    <h4>复选框</h4>
+    <label>爱好：</label>
+    <input type="checkbox" name="hobby" value="reading"> 唱歌
+    <input type="checkbox" name="hobby" value="sports"> 跳舞
+    <input type="checkbox" name="hobby" value="music"> rap
+    
+    <h4>下拉选择</h4>
+    <label>城市：</label>
+    <select>
+        <option>请选择</option>
+        <option>北京</option>
+        <option>上海</option>
+        <option>广州</option>
+        <option>深圳</option>
+    </select>
+    
+    <h4>文本域</h4>
+    <label>简介：</label><br>
+    <textarea placeholder="请输入个人简介"></textarea>
+    
+    <h4>其他类型</h4>
+    <label>邮箱：</label>
+    <input type="email" placeholder="example@email.com"><br>
+    <label>数字：</label>
+    <input type="number" min="1" max="100"><br>
+    <label>日期：</label>
+    <input type="date"><br>
+    <label>颜色（我觉得应该不会有人会在开发过程中用到这个，微软做的太反人类了）：</label>
+    <input type="color"><br>
+    
+    <br>
+    <button type="submit">提交表单</button>
+    <button type="reset">重置</button>
+</form>
+</div>
+
+<h3>表单控件详解</h3>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>控件</th>
+    <th>标签</th>
+    <th>说明</th>
+</tr>
+<tr>
+    <td>单行输入框</td>
+    <td>&lt;input type="text"&gt;</td>
+    <td>输入单行文本</td>
+</tr>
+<tr>
+    <td>密码框</td>
+    <td>&lt;input type="password"&gt;</td>
+    <td>输入密码（显示为圆点）</td>
+</tr>
+<tr>
+    <td>单选按钮</td>
+    <td>&lt;input type="radio"&gt;</td>
+    <td>同一组name只能选一个</td>
+</tr>
+<tr>
+    <td>复选框</td>
+    <td>&lt;input type="checkbox"&gt;</td>
+    <td>可以选中多个</td>
+</tr>
+<tr>
+    <td>下拉框</td>
+    <td>&lt;select&gt;</td>
+    <td>下拉选择</td>
+</tr>
+<tr>
+    <td>文本域</td>
+    <td>&lt;textarea&gt;</td>
+    <td>输入多行文本</td>
+</tr>
+<tr>
+    <td>提交按钮</td>
+    <td>&lt;button type="submit"&gt;</td>
+    <td>提交表单</td>
+</tr>
+<tr>
+    <td>重置按钮</td>
+    <td>&lt;button type="reset"&gt;</td>
+    <td>清空表单内容</td>
+</tr>
+</table>
+</div>
+
+<h3>表单的name属性</h3>
+
+<div class="warning">
+<strong>重要：</strong>表单控件必须有name属性，提交时才会发送给服务器！
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">&lt;!-- 正确：有name属性 --&gt;</span>
+<span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"text"</span> <span class="code-attr">name</span>=<span class="code-value">"username"</span><span class="code-tag">&gt;</span>
+
+<span class="code-comment">&lt;!-- 错误：没有name属性，不会提交 --&gt;</span>
+<span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"text"</span><span class="code-tag">&gt;</span>
+</div>
+</div>
+
+<h3>完整的表单示例</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-tag">&lt;form</span> <span class="code-attr">action</span>=<span class="code-value">"/submit"</span> <span class="code-attr">method</span>=<span class="code-value">"POST"</span><span class="code-tag">&gt;</span>
+    <span class="code-tag">&lt;fieldset&gt;</span>
+        <span class="code-tag">&lt;legend&gt;</span><span class="code-text">用户注册</span><span class="code-tag">&lt;/legend&gt;</span>
+        
+        <span class="code-tag">&lt;p&gt;</span>
+            <span class="code-tag">&lt;label</span> <span class="code-attr">for</span>=<span class="code-value">"username"</span><span class="code-tag">&gt;</span><span class="code-text">用户名：</span><span class="code-tag">&lt;/label&gt;</span>
+            <span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"text"</span> <span class="code-attr">id</span>=<span class="code-value">"username"</span> <span class="code-attr">name</span>=<span class="code-value">"username"</span> <span class="code-attr">required</span><span class="code-tag">&gt;</span>
+        <span class="code-tag">&lt;/p&gt;</span>
+        
+        <span class="code-tag">&lt;p&gt;</span>
+            <span class="code-tag">&lt;label</span> <span class="code-attr">for</span>=<span class="code-value">"email"</span><span class="code-tag">&gt;</span><span class="code-text">邮箱：</span><span class="code-tag">&lt;/label&gt;</span>
+            <span class="code-tag">&lt;input</span> <span class="code-attr">type</span>=<span class="code-value">"email"</span> <span class="code-attr">id</span>=<span class="code-value">"email"</span> <span class="code-attr">name</span>=<span class="code-value">"email"</span> <span class="code-attr">required</span><span class="code-tag">&gt;</span>
+        <span class="code-tag">&lt;/p&gt;</span>
+        
+        <span class="code-tag">&lt;p&gt;</span>
+            <span class="code-tag">&lt;button</span> <span class="code-attr">type</span>=<span class="code-value">"submit"</span><span class="code-tag">&gt;</span><span class="code-text">注册</span><span class="code-tag">&lt;/button&gt;</span>
+            <span class="code-tag">&lt;button</span> <span class="code-attr">type</span>=<span class="code-value">"reset"</span><span class="code-tag">&gt;</span><span class="code-text">重置</span><span class="code-tag">&lt;/button&gt;</span>
+        <span class="code-tag">&lt;/p&gt;</span>
+    <span class="code-tag">&lt;/fieldset&gt;</span>
+<span class="code-tag">&lt;/form&gt;</span>
+</div>
+
+<div class="render">
+<form action="/submit" method="POST" style="max-width: 400px;">
+    <fieldset>
+        <legend>用户注册</legend>
+        
+        <p>
+            <label for="username">用户名：</label><br>
+            <input type="text" id="username" name="username" required style="width: 100%;">
+        </p>
+        
+        <p>
+            <label for="email">邮箱：</label><br>
+            <input type="email" id="email" name="email" required style="width: 100%;">
+        </p>
+        
+        <p>
+            <button type="submit">注册</button>
+            <button type="reset">重置</button>
+        </p>
+    </fieldset>
+</form>
+</div>
+</div>
+
+<hr>
+
+<h2>总结</h2>
+
+<p>本教程涵盖了HTML的基础知识：</p>
+
+<table>
+<tr>
+    <th>章节</th>
+    <th>知识点</th>
+</tr>
+<tr>
+    <td>第一部分</td>
+    <td>HTML简介、基本结构</td>
+</tr>
+<tr>
+    <td>第二部分</td>
+    <td>文本标签（标题、段落、列表、链接、图片）</td>
+</tr>
+<tr>
+    <td>第三部分</td>
+    <td>HTML属性（id、class、style、title等）</td>
+</tr>
+<tr>
+    <td>第四部分</td>
+    <td>块元素与行内元素的区别</td>
+</tr>
+<tr>
+    <td>第五部分</td>
+    <td>表单元素（输入框、按钮、下拉框等）</td>
+</tr>
+</table>
+
+<div class="tip">
+<strong>下一步学习：</strong>学习CSS来美化页面
+</div>
+
+</body>
+</html>
