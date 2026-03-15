@@ -1,0 +1,1813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript基础</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.8;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #f39c12;
+            padding-bottom: 15px;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #f39c12;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        
+        h3 {
+            color: #7f8c8d;
+            margin-top: 30px;
+        }
+        
+        h4 {
+            color: #555;
+            margin-top: 20px;
+        }
+        
+        .demo-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Consolas", "Courier New", monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        
+        .code-keyword { color: #f92672; }
+        .code-string { color: #e6db74; }
+        .code-number { color: #ae81ff; }
+        .code-comment { color: #75715e; }
+        .code-function { color: #66d9ef; }
+        .code-operator { color: #f92672; }
+        .code-variable { color: #fd971f; }
+        
+        .render {
+            background: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            min-height: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background: #f39c12;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .tip {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .knowledge-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f7ff 100%);
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 25px 0;
+            box-shadow: 0 3px 15px rgba(52, 152, 219, 0.15);
+        }
+        
+        .knowledge-box h4 {
+            color: #2980b9;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .knowledge-box p {
+            margin: 12px 0;
+        }
+        
+        .knowledge-box ul {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        
+        .knowledge-box li {
+            margin: 8px 0;
+        }
+        
+        .knowledge-box table {
+            margin: 15px 0;
+        }
+        
+        .knowledge-box .code {
+            margin: 15px 0;
+        }
+        
+        .knowledge-box .warning {
+            margin: 15px 0;
+        }
+        
+        .note {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 40px 0;
+        }
+        
+        button {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        
+        button:hover {
+            background-color: #e67e22;
+        }
+        
+        .output-box {
+            background: #1e1e1e;
+            color: #4ec9b0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: "Consolas", monospace;
+            margin: 10px 0;
+            min-height: 20px;
+        }
+        
+        .inline-code {
+            background: #f4f4f4;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-family: "Consolas", monospace;
+            color: #c7254e;
+        }
+        
+        .scenario-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px;
+            display: inline-block;
+            width: 200px;
+            vertical-align: top;
+            text-align: center;
+        }
+        
+        .scenario-card h4 {
+            color: white;
+            margin-top: 0;
+        }
+        
+        .type-box {
+            display: inline-block;
+            padding: 15px 20px;
+            margin: 5px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .type-string { background: #e74c3c; color: white; }
+        .type-number { background: #3498db; color: white; }
+        .type-boolean { background: #2ecc71; color: white; }
+        .type-null { background: #95a5a6; color: white; }
+        .type-undefined { background: #7f8c8d; color: white; }
+        .type-symbol { background: #9b59b6; color: white; }
+        .type-object { background: #f39c12; color: white; }
+        .type-array { background: #1abc9c; color: white; }
+        .type-function { background: #e67e22; color: white; }
+    </style>
+</head>
+<body>
+
+<h1>JavaScript基础</h1>
+
+<p>JavaScript是一种动态类型、基于原型的脚本语言，是Web开发的核心技术之一。它让网页"活"起来，实现各种交互效果。</p>
+
+<hr>
+
+<h2>一、JavaScript的应用场景</h2>
+
+<p>JavaScript的应用范围非常广泛，远不止网页开发：</p>
+
+<div style="text-align: center; margin: 10px 0;">
+    <div class="scenario-card">
+        <h4> 网页交互</h4>
+        <p>表单验证、动态内容、动画效果</p>
+    </div>
+    <div class="scenario-card">
+        <h4> 移动应用</h4>
+        <p>React Native、Ionic跨平台开发</p>
+    </div>
+    <div class="scenario-card">
+        <h4> 桌面应用</h4>
+        <p>Electron开发桌面软件</p>
+    </div>
+    <div class="scenario-card">
+        <h4> 服务端</h4>
+        <p>Node.js后端开发</p>
+    </div>
+</div>
+
+<div class="demo-box">
+<h4>生活中的JavaScript例子：</h4>
+<ul>
+    <strong>微信小程序</strong> - 使用JavaScript编写逻辑<br>
+    <strong>在线文档</strong> - 腾讯文档、石墨文档的实时协作<br>
+    <strong>网页游戏</strong> - 各种H5小游戏<br>
+    <strong>数据可视化</strong> - ECharts图表库<br>
+</ul>
+</div>
+
+<div class="tip">
+在医院中，医院信息系统(HIS)、电子病历系统、在线问诊平台的前端交互，都离不开JavaScript
+<br>
+你可以理解为，网页前端的各种交互行为的逻辑都由javascript实现
+</div>
+
+<hr>
+
+<h2>二、变量与数据类型</h2>
+
+<div class="knowledge-box">
+<h4> 前置核心概念：变量与内存</h4>
+
+<p><strong>什么是变量？</strong></p>
+<p>变量是程序中用于存储和引用数据的命名容器。可以把变量想象成一个"贴了标签的盒子"，标签是变量名，盒子里装的是数据值。通过变量名，我们可以随时找到并操作盒子里的数据。</p>
+
+<p><strong>为什么变量要声明？</strong></p>
+<p>声明变量是在告诉计算机："请为我准备一个存储空间，并给它起个名字"。声明的重要性在于：</p>
+<ul>
+    <strong>分配内存空间</strong>：计算机需要知道要预留多少存储空间<br>
+    <strong>建立访问入口</strong>：通过变量名可以找到对应的存储位置<br>
+    <strong>明确作用范围</strong>：声明时确定变量在哪些代码区域有效<br>
+    <strong>避免命名冲突</strong>：防止不小心覆盖其他数据<br>
+</ul>
+
+<p><strong>什么是内存？</strong></p>
+<p>内存是计算机用于临时存储正在运行的程序和数据的高速存储区域。程序运行时，所有的变量、函数、对象都存储在内存中。内存的特点是读写速度极快，但断电后数据会丢失。</p>
+
+<p><strong>内存的主要分类：</strong></p>
+<table>
+<tr>
+    <th>类型</th>
+    <th>特点</th>
+    <th>用途</th>
+</tr>
+<tr>
+    <td><strong>栈内存（Stack）</strong></td>
+    <td>空间小、速度快、自动分配释放、按顺序存取</td>
+    <td>存储基本类型数据（数字、字符串、布尔值等）和函数调用的上下文</td>
+</tr>
+<tr>
+    <td><strong>堆内存（Heap）</strong></td>
+    <td>空间大、动态分配、需要手动或自动管理释放</td>
+    <td>存储引用类型数据（对象、数组、函数等复杂结构）</td>
+</tr>
+</table>
+
+<p><strong>什么是数据类型？</strong></p>
+<p>数据类型是对数据的分类，它定义了数据可以取哪些值、能进行哪些操作、以及占用多少存储空间。比如数字类型可以进行加减乘除，字符串类型可以拼接和截取。</p>
+
+<p><strong>为什么数据要分类？</strong></p>
+<ul>
+    <strong>高效存储</strong>：不同类型数据占用空间不同，分类存储更节省内存<br>
+    <strong>明确操作</strong>：知道类型就知道能做什么操作（数字可以计算，字符串不能直接相减）<br>
+    <strong>防止错误</strong>：类型检查可以在运行前发现潜在问题<br>
+    <strong>提高效率</strong>：编译器/解释器可以根据类型优化代码执行
+</ul>
+
+<p><strong>什么是引用？</strong></p>
+<p>引用是指向内存中某个对象的"地址"或"指针"。在JavaScript中，对象、数组等引用类型存储在堆内存中，变量保存的是这些数据的内存地址（引用），而不是数据本身。</p>
+<div class="code">
+<span class="code-comment">// 基本类型：变量直接存储值</span>
+<span class="code-keyword">let</span> <span class="code-variable">a</span> = <span class="code-number">10</span>;
+<span class="code-keyword">let</span> <span class="code-variable">b</span> = <span class="code-variable">a</span>;  <span class="code-comment">// b得到的是10的副本，a和b互不影响</span>
+<span class="code-variable">b</span> = <span class="code-number">20</span>;
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span>);  <span class="code-comment">// 10，a没有变化</span>
+
+<span class="code-comment">// 引用类型：变量存储的是地址</span>
+<span class="code-keyword">let</span> <span class="code-variable">obj1</span> = { <span class="code-variable">name</span>: <span class="code-string">"张三"</span> };
+<span class="code-keyword">let</span> <span class="code-variable">obj2</span> = <span class="code-variable">obj1</span>;  <span class="code-comment">// obj2得到的是地址，指向同一个对象</span>
+<span class="code-variable">obj2</span>.<span class="code-variable">name</span> = <span class="code-string">"李四"</span>;
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">obj1</span>.<span class="code-variable">name</span>);  <span class="code-comment">// "李四"，obj1也变了！</span>
+</div>
+</div>
+
+<h3>2.1 变量声明</h3>
+
+<p>变量是存储数据的容器。JavaScript有三种声明变量的方式：</p>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>关键字</th>
+    <th>作用域</th>
+    <th>是否可重新赋值</th>
+    <th>是否可重复声明</th>
+    <th>推荐程度</th>
+</tr>
+<tr>
+    <td><span class="inline-code">var</span></td>
+    <td>函数作用域</td>
+    <td> 是</td>
+    <td> 是</td>
+    <td> 不推荐</td>
+</tr>
+<tr>
+    <td><span class="inline-code">let</span></td>
+    <td>块级作用域</td>
+    <td> 是</td>
+    <td> 否</td>
+    <td> 推荐</td>
+</tr>
+<tr>
+    <td><span class="inline-code">const</span></td>
+    <td>块级作用域</td>
+    <td> 否</td>
+    <td> 否</td>
+    <td> 推荐（常量）</td>
+</tr>
+</table>
+</div>
+
+<div class="demo-box">
+<h4>代码示例：</h4>
+<div class="code">
+<span class="code-comment">// var - 函数作用域，存在变量提升（不推荐使用）</span>
+<span class="code-keyword">var</span> <span class="code-variable">name</span> = <span class="code-string">"张三"</span>;
+
+<span class="code-comment">// let - 块级作用域，可重新赋值</span>
+<span class="code-keyword">let</span> <span class="code-variable">age</span> = <span class="code-number">25</span>;
+<span class="code-variable">age</span> = <span class="code-number">26</span>;  <span class="code-comment">// 合法</span>
+
+<span class="code-comment">// const - 块级作用域，不可重新赋值（常量）</span>
+<span class="code-keyword">const</span> <span class="code-variable">PI</span> = <span class="code-number">3.14159</span>;
+<span class="code-comment">// PI = 3.14;  // 报错！const不能重新赋值</span>
+
+<span class="code-comment">// const声明对象时，属性可以修改</span>
+<span class="code-keyword">const</span> <span class="code-variable">user</span> = { <span class="code-variable">name</span>: <span class="code-string">"李四"</span> };
+<span class="code-variable">user</span>.<span class="code-variable">name</span> = <span class="code-string">"王五"</span>;  <span class="code-comment">// 合法，修改属性</span>
+</div>
+</div>
+
+<div class="warning">
+<strong>注意：</strong>现代JavaScript开发中，优先使用<span class="inline-code">const</span>，需要重新赋值时使用<span class="inline-code">let</span>，尽量避免使用<span class="inline-code">var</span>。
+</div>
+
+<h3>2.2 基本数据类型（原始类型）</h3>
+
+<p>JavaScript有6种基本数据类型，它们直接存储在栈内存中：</p>
+
+<div style="text-align: center; margin: 20px 0;">
+    <div class="type-box type-string">String<br><small>字符串</small></div>
+    <div class="type-box type-number">Number<br><small>数字</small></div>
+    <div class="type-box type-boolean">Boolean<br><small>布尔值</small></div>
+    <div class="type-box type-null">Null<br><small>空值</small></div>
+    <div class="type-box type-undefined">Undefined<br><small>未定义</small></div>
+    <div class="type-box type-symbol">Symbol<br><small>符号(ES6)</small></div>
+</div>
+
+<div class="demo-box">
+<h4>基本类型示例：</h4>
+<div class="code">
+<span class="code-comment">// 1. String 字符串 - 用引号包裹的文本</span>
+<span class="code-keyword">let</span> <span class="code-variable">hospital</span> = <span class="code-string">"北京协和医院"</span>;
+<span class="code-keyword">let</span> <span class="code-variable">department</span> = <span class="code-string">'内科'</span>;
+<span class="code-keyword">let</span> <span class="code-variable">intro</span> = <span class="code-string">`欢迎来到${hospital}`</span>;  <span class="code-comment">// 模板字符串（ES6）</span>
+
+<span class="code-comment">// 2. Number 数字 - 整数和小数</span>
+<span class="code-keyword">let</span> <span class="code-variable">age</span> = <span class="code-number">30</span>;
+<span class="code-keyword">let</span> <span class="code-variable">temperature</span> = <span class="code-number">37.5</span>;
+<span class="code-keyword">let</span> <span class="code-variable">negative</span> = <span class="code-number">-10</span>;
+<span class="code-keyword">let</span> <span class="code-variable">infinity</span> = <span class="code-number">Infinity</span>;
+<span class="code-keyword">let</span> <span class="code-variable">notANumber</span> = <span class="code-number">NaN</span>;  <span class="code-comment">// Not a Number</span>
+
+<span class="code-comment">// 3. Boolean 布尔值 - 只有 true 或 false</span>
+<span class="code-keyword">let</span> <span class="code-variable">isDoctor</span> = <span class="code-keyword">true</span>;
+<span class="code-keyword">let</span> <span class="code-variable">isPatient</span> = <span class="code-keyword">false</span>;
+
+<span class="code-comment">// 4. Null - 空值，表示"无"或"空"</span>
+<span class="code-keyword">let</span> <span class="code-variable">emptyValue</span> = <span class="code-keyword">null</span>;
+
+<span class="code-comment">// 5. Undefined - 未定义，变量声明但未赋值</span>
+<span class="code-keyword">let</span> <span class="code-variable">notAssigned</span>;
+<span class="code-comment">// console.log(notAssigned); // undefined</span>
+
+<span class="code-comment">// 6. Symbol - ES6新增，表示独一无二的值</span>
+<span class="code-keyword">let</span> <span class="code-variable">sym</span> = <span class="code-function">Symbol</span>(<span class="code-string">"description"</span>);
+</div>
+</div>
+
+<h3>2.3 引用数据类型</h3>
+
+<p>引用类型存储在堆内存中，变量保存的是内存地址的引用：</p>
+
+<div style="text-align: center; margin: 20px 0;">
+    <div class="type-box type-object">Object<br><small>对象</small></div>
+    <div class="type-box type-array">Array<br><small>数组</small></div>
+    <div class="type-box type-function">Function<br><small>函数</small></div>
+</div>
+
+<div class="demo-box">
+<h4>引用类型示例：</h4>
+<div class="code">
+<span class="code-comment">// 1. Object 对象 - 键值对集合</span>
+<span class="code-keyword">let</span> <span class="code-variable">patient</span> = {
+    <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+    <span class="code-variable">age</span>: <span class="code-number">45</span>,
+    <span class="code-variable">gender</span>: <span class="code-string">"男"</span>,
+    <span class="code-variable">diagnosis</span>: <span class="code-string">"高血压"</span>
+};
+
+<span class="code-comment">// 访问对象属性</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">patient</span>.<span class="code-variable">name</span>);      <span class="code-comment">// "张三"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">patient</span>[<span class="code-string">"age"</span>]);   <span class="code-comment">// 45</span>
+
+<span class="code-comment">// 2. Array 数组 - 有序的数据集合</span>
+<span class="code-keyword">let</span> <span class="code-variable">vitalSigns</span> = [<span class="code-number">36.5</span>, <span class="code-number">72</span>, <span class="code-number">120</span>, <span class="code-number">80</span>];
+<span class="code-comment">// 索引:        体温   心率  收缩压 舒张压</span>
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">vitalSigns</span>[<span class="code-number">0</span>]);  <span class="code-comment">// 36.5（第一个元素）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">vitalSigns</span>.<span class="code-variable">length</span>);  <span class="code-comment">// 4（数组长度）</span>
+
+<span class="code-comment">// 3. Function 函数 - 可执行的代码块</span>
+<span class="code-keyword">function</span> <span class="code-function">greet</span>(<span class="code-variable">name</span>) {
+    <span class="code-keyword">return</span> <span class="code-string">"你好，"</span> + <span class="code-variable">name</span> + <span class="code-string">"医生！"</span>;
+}
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">greet</span>(<span class="code-string">"李"</span>));  <span class="code-comment">// "你好，李医生！"</span>
+</div>
+</div>
+
+<div class="note">
+<strong>理解引用类型：</strong>基本类型复制的是值，引用类型复制的是引用（地址）。这就像复印文件和分享文件链接的区别。
+</div>
+
+<h3>2.4 typeof运算符</h3>
+
+<p>使用<span class="inline-code">typeof</span>可以检测数据类型：</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> <span class="code-string">"hello"</span>);     <span class="code-comment">// "string"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> <span class="code-number">123</span>);          <span class="code-comment">// "number"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> <span class="code-keyword">true</span>);        <span class="code-comment">// "boolean"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> <span class="code-keyword">undefined</span>);  <span class="code-comment">// "undefined"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> <span class="code-keyword">null</span>);        <span class="code-comment">// "object"  这是一个历史遗留bug</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> {});           <span class="code-comment">// "object"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> []);           <span class="code-comment">// "object"（数组也是对象）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">typeof</span> <span class="code-keyword">function</span>(){}); <span class="code-comment">// "function"</span>
+</div>
+</div>
+
+<hr>
+
+<h2>三、运算符</h2>
+
+<h3>3.1 算术运算符</h3>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>运算符</th>
+    <th>描述</th>
+    <th>示例</th>
+    <th>结果</th>
+</tr>
+<tr><td>+</td><td>加法</td><td>5 + 3</td><td>8</td></tr>
+<tr><td>-</td><td>减法</td><td>5 - 3</td><td>2</td></tr>
+<tr><td>*</td><td>乘法</td><td>5 * 3</td><td>15</td></tr>
+<tr><td>/</td><td>除法</td><td>6 / 2</td><td>3</td></tr>
+<tr><td>%</td><td>取余（模）</td><td>7 % 3</td><td>1</td></tr>
+<tr><td>**</td><td>幂运算（ES7）</td><td>2 ** 3</td><td>8</td></tr>
+<tr><td>++</td><td>自增</td><td>let a=1; a++</td><td>a=2</td></tr>
+<tr><td>--</td><td>自减</td><td>let a=1; a--</td><td>a=0</td></tr>
+</table>
+</div>
+
+<div class="demo-box">
+<h4>算术运算示例：</h4>
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">a</span> = <span class="code-number">10</span>;
+<span class="code-keyword">let</span> <span class="code-variable">b</span> = <span class="code-number">3</span>;
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span> + <span class="code-variable">b</span>);   <span class="code-comment">// 13</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span> - <span class="code-variable">b</span>);   <span class="code-comment">// 7</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span> * <span class="code-variable">b</span>);   <span class="code-comment">// 30</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span> / <span class="code-variable">b</span>);   <span class="code-comment">// 3.333...</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span> % <span class="code-variable">b</span>);   <span class="code-comment">// 1（10除以3余1）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span> ** <span class="code-variable">b</span>);  <span class="code-comment">// 1000（10的3次方）</span>
+
+<span class="code-comment">// 字符串拼接</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"体温："</span> + <span class="code-number">37.5</span> + <span class="code-string">"℃"</span>);  <span class="code-comment">// "体温：37.5℃"</span>
+</div>
+<button onclick="demoArithmetic()">运行示例</button>
+<div id="arithmetic-output" class="output-box"></div>
+</div>
+
+<h3>3.2 赋值运算符</h3>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>运算符</th>
+    <th>描述</th>
+    <th>等价于</th>
+</tr>
+<tr><td>=</td><td>赋值</td><td>x = y</td></tr>
+<tr><td>+=</td><td>加后赋值</td><td>x = x + y</td></tr>
+<tr><td>-=</td><td>减后赋值</td><td>x = x - y</td></tr>
+<tr><td>*=</td><td>乘后赋值</td><td>x = x * y</td></tr>
+<tr><td>/=</td><td>除后赋值</td><td>x = x / y</td></tr>
+<tr><td>%=</td><td>取余后赋值</td><td>x = x % y</td></tr>
+</table>
+
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">score</span> = <span class="code-number">80</span>;
+<span class="code-variable">score</span> += <span class="code-number">10</span>;  <span class="code-comment">// score = score + 10; 结果：90</span>
+<span class="code-variable">score</span> -= <span class="code-number">5</span>;   <span class="code-comment">// score = score - 5; 结果：85</span>
+</div>
+</div>
+
+<h3>3.3 比较运算符</h3>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>运算符</th>
+    <th>描述</th>
+    <th>示例</th>
+    <th>结果</th>
+</tr>
+<tr><td>==</td><td>相等（会类型转换）</td><td>5 == "5"</td><td>true ⚠️</td></tr>
+<tr><td>===</td><td>严格相等（不转换）</td><td>5 === "5"</td><td>false ✅</td></tr>
+<tr><td>!=</td><td>不相等（会类型转换）</td><td>5 != "5"</td><td>false</td></tr>
+<tr><td>!==</td><td>严格不相等</td><td>5 !== "5"</td><td>true ✅</td></tr>
+<tr><td>></td><td>大于</td><td>5 > 3</td><td>true</td></tr>
+<tr><td><</td><td>小于</td><td>5 < 3</td><td>false</td></tr>
+<tr><td>>=</td><td>大于等于</td><td>5 >= 5</td><td>true</td></tr>
+<tr><td><=</td><td>小于等于</td><td>5 <= 3</td><td>false</td></tr>
+</table>
+</div>
+
+<div class="warning">
+<strong>重要：</strong>始终使用<span class="inline-code">===</span>和<span class="inline-code">!==</span>进行严格比较，避免隐式类型转换带来的意外结果！
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// == 会进行类型转换</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">5</span> == <span class="code-string">"5"</span>);    <span class="code-comment">// true（字符串被转为数字）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">0</span> == <span class="code-keyword">false</span>);    <span class="code-comment">// true</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">""</span> == <span class="code-keyword">false</span>);   <span class="code-comment">// true</span>
+
+<span class="code-comment">// === 严格比较，不转换类型</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">5</span> === <span class="code-string">"5"</span>);   <span class="code-comment">// false（类型不同）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">0</span> === <span class="code-keyword">false</span>);   <span class="code-comment">// false</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">""</span> === <span class="code-keyword">false</span>);  <span class="code-comment">// false</span>
+</div>
+<button onclick="demoComparison()">运行示例</button>
+<div id="comparison-output" class="output-box"></div>
+</div>
+
+<h3>3.4 逻辑运算符</h3>
+
+<div class="knowledge-box">
+<h4>💡 核心概念：逻辑门</h4>
+
+<p><strong>什么是逻辑门？</strong></p>
+<p>逻辑门是数字电路的基本构建单元，用于实现布尔运算。在计算机底层，所有的计算最终都由逻辑门完成。逻辑门接收一个或多个二进制输入（0或1，对应false或true），产生一个二进制输出。</p>
+
+<p><strong>常见逻辑门的自然语言表述：</strong></p>
+<table>
+<tr>
+    <th>逻辑门</th>
+    <th>符号</th>
+    <th>自然语言表述</th>
+    <th>真值表</th>
+</tr>
+<tr>
+    <td><strong>与门（AND）</strong></td>
+    <td>&&</td>
+    <td>"两个条件都满足时，结果才成立"</td>
+    <td>1 AND 1 = 1，其余为0</td>
+</tr>
+<tr>
+    <td><strong>或门（OR）</strong></td>
+    <td>||</td>
+    <td>"至少有一个条件满足，结果就成立"</td>
+    <td>0 OR 0 = 0，其余为1</td>
+</tr>
+<tr>
+    <td><strong>非门（NOT）</strong></td>
+    <td>!</td>
+    <td>"条件取反，真变假、假变真"</td>
+    <td>NOT 1 = 0，NOT 0 = 1</td>
+</tr>
+<tr>
+    <td><strong>异或门（XOR）</strong></td>
+    <td>^</td>
+    <td>"两个条件不同时成立，相同时不成立"</td>
+    <td>1 XOR 0 = 1，0 XOR 1 = 1，其余为0</td>
+</tr>
+<tr>
+    <td><strong>与非门（NAND）</strong></td>
+    <td>—</td>
+    <td>"与门结果取反"，是最通用的逻辑门</td>
+    <td>0 NAND 0 = 1，其余与AND相反</td>
+</tr>
+<tr>
+    <td><strong>或非门（NOR）</strong></td>
+    <td>—</td>
+    <td>"或门结果取反"</td>
+    <td>1 NOR 1 = 0，其余与OR相反</td>
+</tr>
+</table>
+
+<p><strong>生活中的逻辑门例子：</strong></p>
+<ul>
+    <strong>与门</strong>：电梯只有在门关好<strong>且</strong>按了楼层按钮后才会移动<br>
+    <strong>或门</strong>：手机可以用密码<strong>或</strong>指纹解锁<br>
+    <strong>非门</strong>：灯开关打开时灯亮，关闭时灯灭<br>
+    <strong>异或门</strong>：两个开关控制一盏灯，状态不同时灯亮</li>
+</ul>
+</div>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>运算符</th>
+    <th>描述</th>
+    <th>示例</th>
+</tr>
+<tr><td>&&</td><td>逻辑与（都为真才为真）</td><td>true && false → false</td></tr>
+<tr><td>||</td><td>逻辑或（有一个为真就为真）</td><td>true || false → true</td></tr>
+<tr><td>!</td><td>逻辑非（取反）</td><td>!true → false</td></tr>
+</table>
+
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">hasLicense</span> = <span class="code-keyword">true</span>;
+<span class="code-keyword">let</span> <span class="code-variable">hasCar</span> = <span class="code-keyword">false</span>;
+
+<span class="code-comment">// 逻辑与：两个条件都满足</span>
+<span class="code-keyword">if</span> (<span class="code-variable">hasLicense</span> && <span class="code-variable">hasCar</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"可以开车"</span>);
+} <span class="code-keyword">else</span> {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"条件不满足"</span>);
+}
+
+<span class="code-comment">// 逻辑或：满足一个条件即可</span>
+<span class="code-keyword">if</span> (<span class="code-variable">hasLicense</span> || <span class="code-variable">hasCar</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"至少有一个条件满足"</span>);
+}
+
+<span class="code-comment">// 短路求值</span>
+<span class="code-keyword">let</span> <span class="code-variable">name</span> = <span class="code-string">""</span>;
+<span class="code-keyword">let</span> <span class="code-variable">displayName</span> = <span class="code-variable">name</span> || <span class="code-string">"匿名用户"</span>;  <span class="code-comment">// "匿名用户"</span>
+</div>
+</div>
+
+<h3>3.5 三元运算符</h3>
+
+<p>三元运算符是<span class="inline-code">if...else</span>的简写形式：</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 语法：条件 ? 真值 : 假值</span>
+
+<span class="code-keyword">let</span> <span class="code-variable">temperature</span> = <span class="code-number">38.5</span>;
+<span class="code-keyword">let</span> <span class="code-variable">status</span> = <span class="code-variable">temperature</span> >= <span class="code-number">37.3</span> ? <span class="code-string">"发热"</span> : <span class="code-string">"正常"</span>;
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">status</span>);  <span class="code-comment">// "发热"</span>
+
+<span class="code-comment">// 等价于：</span>
+<span class="code-keyword">if</span> (<span class="code-variable">temperature</span> >= <span class="code-number">37.3</span>) {
+    <span class="code-variable">status</span> = <span class="code-string">"发热"</span>;
+} <span class="code-keyword">else</span> {
+    <span class="code-variable">status</span> = <span class="code-string">"正常"</span>;
+}
+</div>
+<button onclick="demoTernary()">运行示例</button>
+<div id="ternary-output" class="output-box"></div>
+</div>
+
+<h3>3.6 位运算符</h3>
+
+<p>位运算符对数字的二进制位进行操作：</p>
+
+<div class="demo-box">
+<table>
+<tr>
+    <th>运算符</th>
+    <th>描述</th>
+    <th>示例</th>
+</tr>
+<tr><td>&</td><td>按位与</td><td>5 & 3 → 1</td></tr>
+<tr><td>|</td><td>按位或</td><td>5 | 3 → 7</td></tr>
+<tr><td>^</td><td>按位异或</td><td>5 ^ 3 → 6</td></tr>
+<tr><td>~</td><td>按位非</td><td>~5 → -6</td></tr>
+<tr><td><<</td><td>左移</td><td>5 << 1 → 10</td></tr>
+<tr><td>>></td><td>右移</td><td>5 >> 1 → 2</td></tr>
+</table>
+
+<div class="code">
+<span class="code-comment">// 实用技巧：使用 ~~ 快速取整</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(~~<span class="code-number">3.7</span>);   <span class="code-comment">// 3</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(~~<span class="code-number">-3.7</span>);  <span class="code-comment">// -3</span>
+
+<span class="code-comment">// 使用 ^ 交换两个数</span>
+<span class="code-keyword">let</span> <span class="code-variable">a</span> = <span class="code-number">5</span>, <span class="code-variable">b</span> = <span class="code-number">3</span>;
+<span class="code-variable">a</span> = <span class="code-variable">a</span> ^ <span class="code-variable">b</span>;
+<span class="code-variable">b</span> = <span class="code-variable">a</span> ^ <span class="code-variable">b</span>;
+<span class="code-variable">a</span> = <span class="code-variable">a</span> ^ <span class="code-variable">b</span>;
+<span class="code-comment">// a=3, b=5</span>
+</div>
+</div>
+
+<h3>3.7 instanceof运算符</h3>
+
+<p><span class="inline-code">instanceof</span>用于检测对象是否是某个构造函数的实例：</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">arr</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>];
+<span class="code-keyword">let</span> <span class="code-variable">obj</span> = {};
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arr</span> <span class="code-keyword">instanceof</span> <span class="code-function">Array</span>);   <span class="code-comment">// true</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arr</span> <span class="code-keyword">instanceof</span> <span class="code-function">Object</span>);  <span class="code-comment">// true</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">obj</span> <span class="code-keyword">instanceof</span> <span class="code-function">Array</span>);   <span class="code-comment">// false</span>
+
+<span class="code-comment">// 更可靠的数组检测方法</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Array</span>.<span class="code-function">isArray</span>(<span class="code-variable">arr</span>));  <span class="code-comment">// true</span>
+</div>
+</div>
+
+<hr>
+
+<h2>四、流程控制</h2>
+
+<div class="knowledge-box">
+<h4> 核心概念：流程控制语句的作用</h4>
+
+<p><strong>什么是流程控制？</strong></p>
+<p>流程控制是指程序根据条件决定执行哪些代码、跳过哪些代码、重复执行哪些代码的机制。默认情况下，程序从上到下顺序执行每一行代码，但流程控制语句可以改变这个执行顺序。</p>
+
+<p><strong>各语句的作用：</strong></p>
+
+<p><strong>条件判断语句：</strong></p>
+<table>
+<tr>
+    <th>语句</th>
+    <th>作用</th>
+    <th>适用场景</th>
+</tr>
+<tr>
+    <td><span class="inline-code">if...else</span></td>
+    <td>根据条件真假选择执行不同的代码分支</td>
+    <td>条件判断、范围判断、复杂逻辑判断</td>
+</tr>
+<tr>
+    <td><span class="inline-code">switch</span></td>
+    <td>根据表达式的值匹配多个固定选项</td>
+    <td>多选一的场景（如状态机、菜单选择）</td>
+</tr>
+</table>
+
+<p><strong>循环语句：</strong></p>
+<table>
+<tr>
+    <th>语句</th>
+    <th>作用</th>
+    <th>适用场景</th>
+</tr>
+<tr>
+    <td><span class="inline-code">for</span></td>
+    <td>已知循环次数时使用，包含初始化、条件、迭代三部分</td>
+    <td>遍历数组、执行固定次数的操作</td>
+</tr>
+<tr>
+    <td><span class="inline-code">while</span></td>
+    <td>先判断条件，条件为真时重复执行</td>
+    <td>不确定循环次数，需要满足某条件时停止</td>
+</tr>
+<tr>
+    <td><span class="inline-code">do...while</span></td>
+    <td>先执行一次，再判断条件是否继续</td>
+    <td>至少需要执行一次的场景（如菜单选择）</td>
+</tr>
+<tr>
+    <td><span class="inline-code">for...of</span></td>
+    <td>遍历可迭代对象的值（ES6）</td>
+    <td>遍历数组、字符串等，直接获取元素值</td>
+</tr>
+<tr>
+    <td><span class="inline-code">for...in</span></td>
+    <td>遍历对象的属性名（键）</td>
+    <td>遍历对象的所有可枚举属性</td>
+</tr>
+</table>
+
+<p><strong>跳转语句：</strong></p>
+<table>
+<tr>
+    <th>语句</th>
+    <th>作用</th>
+    <th>使用说明</th>
+</tr>
+<tr>
+    <td><span class="inline-code">break</span></td>
+    <td>立即跳出当前循环或switch语句</td>
+    <td>提前结束循环，不再执行后续迭代</td>
+</tr>
+<tr>
+    <td><span class="inline-code">continue</span></td>
+    <td>跳过本次循环的剩余代码，进入下一次迭代</td>
+    <td>只跳过当前这一次，循环继续</td>
+</tr>
+<tr>
+    <td><span class="inline-code">label</span></td>
+    <td>给代码块命名，配合break/continue跳转到指定位置</td>
+    <td>用于嵌套循环中跳出外层循环（较少使用）</td>
+</tr>
+</table>
+</div>
+
+<h3>4.1 条件语句</h3>
+
+<h4>if...else 语句</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">bloodPressure</span> = <span class="code-number">145</span>;  <span class="code-comment">// 收缩压</span>
+
+<span class="code-keyword">if</span> (<span class="code-variable">bloodPressure</span> >= <span class="code-number">140</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"高血压"</span>);
+} <span class="code-keyword">else</span> <span class="code-keyword">if</span> (<span class="code-variable">bloodPressure</span> >= <span class="code-number">120</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"正常高值"</span>);
+} <span class="code-keyword">else</span> <span class="code-keyword">if</span> (<span class="code-variable">bloodPressure</span> >= <span class="code-number">90</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"正常"</span>);
+} <span class="code-keyword">else</span> {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"低血压"</span>);
+}
+</div>
+<button onclick="demoIfElse()">运行示例</button>
+<div id="ifelse-output" class="output-box"></div>
+</div>
+
+<h4>switch 语句</h4>
+
+<p>当有多个固定值需要判断时，使用<span class="inline-code">switch</span>更清晰：</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">bloodType</span> = <span class="code-string">"A"</span>;
+
+<span class="code-keyword">switch</span> (<span class="code-variable">bloodType</span>) {
+    <span class="code-keyword">case</span> <span class="code-string">"A"</span>:
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"A型血：可输A型、O型血"</span>);
+        <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> <span class="code-string">"B"</span>:
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"B型血：可输B型、O型血"</span>);
+        <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> <span class="code-string">"AB"</span>:
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"AB型血：万能受血者"</span>);
+        <span class="code-keyword">break</span>;
+    <span class="code-keyword">case</span> <span class="code-string">"O"</span>:
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"O型血：万能供血者"</span>);
+        <span class="code-keyword">break</span>;
+    <span class="code-keyword">default</span>:
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"未知血型"</span>);
+}
+</div>
+<button onclick="demoSwitch()">运行示例</button>
+<div id="switch-output" class="output-box"></div>
+</div>
+
+<div class="warning">
+<strong>注意：</strong>每个<span class="inline-code">case</span>后面要加<span class="inline-code">break</span>，否则会继续执行下一个case（称为"穿透"）。
+</div>
+
+<h3>4.2 循环语句</h3>
+
+<h4>for 循环</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 基本for循环</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">1</span>; <span class="code-variable">i</span> <= <span class="code-number">5</span>; <span class="code-variable">i</span>++) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"第"</span> + <span class="code-variable">i</span> + <span class="code-string">"次循环"</span>);
+}
+
+<span class="code-comment">// 遍历数组</span>
+<span class="code-keyword">let</span> <span class="code-variable">symptoms</span> = [<span class="code-string">"发热"</span>, <span class="code-string">"咳嗽"</span>, <span class="code-string">"乏力"</span>];
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < <span class="code-variable">symptoms</span>.<span class="code-variable">length</span>; <span class="code-variable">i</span>++) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">symptoms</span>[<span class="code-variable">i</span>]);
+}
+</div>
+<button onclick="demoFor()">运行示例</button>
+<div id="for-output" class="output-box"></div>
+</div>
+
+<h4>while 循环</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// while：先判断后执行</span>
+<span class="code-keyword">let</span> <span class="code-variable">count</span> = <span class="code-number">0</span>;
+<span class="code-keyword">while</span> (<span class="code-variable">count</span> < <span class="code-number">3</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"count = "</span> + <span class="code-variable">count</span>);
+    <span class="code-variable">count</span>++;
+}
+</div>
+</div>
+
+<h4>do...while 循环</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// do...while：先执行后判断（至少执行一次）</span>
+<span class="code-keyword">let</span> <span class="code-variable">num</span> = <span class="code-number">0</span>;
+<span class="code-keyword">do</span> {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"num = "</span> + <span class="code-variable">num</span>);
+    <span class="code-variable">num</span>++;
+} <span class="code-keyword">while</span> (<span class="code-variable">num</span> < <span class="code-number">3</span>);
+</div>
+</div>
+
+<h4>for...of 和 for...in（ES6）</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">arr</span> = [<span class="code-string">"苹果"</span>, <span class="code-string">"香蕉"</span>, <span class="code-string">"橙子"</span>];
+
+<span class="code-comment">// for...of：遍历值</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">fruit</span> <span class="code-keyword">of</span> <span class="code-variable">arr</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">fruit</span>);  <span class="code-comment">// 苹果、香蕉、橙子</span>
+}
+
+<span class="code-comment">// for...in：遍历索引/键</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">index</span> <span class="code-keyword">in</span> <span class="code-variable">arr</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">index</span>);  <span class="code-comment">// 0、1、2</span>
+}
+
+<span class="code-comment">// 遍历对象</span>
+<span class="code-keyword">let</span> <span class="code-variable">patient</span> = { <span class="code-variable">name</span>: <span class="code-string">"张三"</span>, <span class="code-variable">age</span>: <span class="code-number">30</span> };
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">key</span> <span class="code-keyword">in</span> <span class="code-variable">patient</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">key</span> + <span class="code-string">": "</span> + <span class="code-variable">patient</span>[<span class="code-variable">key</span>]);
+}
+</div>
+<button onclick="demoForOf()">运行示例</button>
+<div id="forof-output" class="output-box"></div>
+</div>
+
+<h3>4.3 break、continue 和 label</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// break：跳出整个循环</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">1</span>; <span class="code-variable">i</span> <= <span class="code-number">10</span>; <span class="code-variable">i</span>++) {
+    <span class="code-keyword">if</span> (<span class="code-variable">i</span> === <span class="code-number">5</span>) <span class="code-keyword">break</span>;
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">i</span>);  <span class="code-comment">// 1, 2, 3, 4</span>
+}
+
+<span class="code-comment">// continue：跳过本次迭代</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">1</span>; <span class="code-variable">i</span> <= <span class="code-number">5</span>; <span class="code-variable">i</span>++) {
+    <span class="code-keyword">if</span> (<span class="code-variable">i</span> === <span class="code-number">3</span>) <span class="code-keyword">continue</span>;
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">i</span>);  <span class="code-comment">// 1, 2, 4, 5</span>
+}
+
+<span class="code-comment">// label：标记循环，用于跳出多层循环</span>
+<span class="code-variable">outer</span>:
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < <span class="code-number">3</span>; <span class="code-variable">i</span>++) {
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">j</span> = <span class="code-number">0</span>; <span class="code-variable">j</span> < <span class="code-number">3</span>; <span class="code-variable">j</span>++) {
+        <span class="code-keyword">if</span> (<span class="code-variable">i</span> === <span class="code-number">1</span> && <span class="code-variable">j</span> === <span class="code-number">1</span>) {
+            <span class="code-keyword">break</span> <span class="code-variable">outer</span>;  <span class="code-comment">// 跳出外层循环</span>
+        }
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">`i=${i}, j=${j}`</span>);
+    }
+}
+</div>
+<button onclick="demoBreakContinue()">运行示例</button>
+<div id="break-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>五、函数基础</h2>
+
+<div class="knowledge-box">
+<h4> 核心概念：为什么要声明函数？</h4>
+
+<p><strong>什么是函数？</strong></p>
+<p>函数是一段可重复使用的代码块，用于完成特定的任务。函数可以接收输入（参数），进行处理，并返回输出（返回值）。</p>
+
+<p><strong>为什么要声明函数？</strong></p>
+<ul>
+    <strong>代码复用</strong>：将常用功能封装成函数，避免重复编写相同代码。只需定义一次，可以在多处调用。<br>
+    <strong>模块化设计</strong>：将复杂问题分解为多个小函数，每个函数负责一个独立功能，使程序结构清晰。<br>
+    <strong>便于维护</strong>：修改功能只需改函数内部，所有调用处自动生效，降低维护成本。<br>
+    <strong>提高可读性</strong>：函数名可以描述功能意图，比一大段代码更容易理解。<br>
+    <strong>便于测试</strong>：独立的函数可以单独测试，更容易发现和定位问题。<br>
+    <strong>作用域隔离</strong>：函数内部定义的变量不会污染全局命名空间，避免变量冲突。<br>
+</ul>
+
+<p><strong>函数的本质：</strong></p>
+<p>函数在JavaScript中是一等公民，占据最重要的位置，这意味着函数可以：</p>
+<ul>
+    赋值给变量</br>
+    作为参数传递给其他函数（回调函数）</br>
+    作为其他函数的返回值</br>
+    存储在数据结构中</br>
+</ul>
+<div class="code">
+<span class="code-comment">// 函数作为参数传递</span>
+<span class="code-keyword">const</span> <span class="code-variable">numbers</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>];
+<span class="code-keyword">const</span> <span class="code-variable">doubled</span> = <span class="code-variable">numbers</span>.<span class="code-function">map</span>(<span class="code-keyword">function</span>(<span class="code-variable">n</span>) {
+    <span class="code-keyword">return</span> <span class="code-variable">n</span> * <span class="code-number">2</span>;
+});
+
+<span class="code-comment">// 函数作为返回值</span>
+<span class="code-keyword">function</span> <span class="code-function">createMultiplier</span>(<span class="code-variable">factor</span>) {
+    <span class="code-keyword">return</span> <span class="code-keyword">function</span>(<span class="code-variable">number</span>) {
+        <span class="code-keyword">return</span> <span class="code-variable">number</span> * <span class="code-variable">factor</span>;
+    };
+}
+<span class="code-keyword">const</span> <span class="code-variable">double</span> = <span class="code-function">createMultiplier</span>(<span class="code-number">2</span>);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">double</span>(<span class="code-number">5</span>));  <span class="code-comment">// 10</span>
+</div>
+</div>
+
+<h3>5.1 函数声明与表达式</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 1. 函数声明（会被提升）</span>
+<span class="code-keyword">function</span> <span class="code-function">calculateBMI</span>(<span class="code-variable">weight</span>, <span class="code-variable">height</span>) {
+    <span class="code-keyword">return</span> <span class="code-variable">weight</span> / (<span class="code-variable">height</span> * <span class="code-variable">height</span>);
+}
+
+<span class="code-comment">// 2. 函数表达式（不会被提升）</span>
+<span class="code-keyword">const</span> <span class="code-function">calculateBMI2</span> = <span class="code-keyword">function</span>(<span class="code-variable">weight</span>, <span class="code-variable">height</span>) {
+    <span class="code-keyword">return</span> <span class="code-variable">weight</span> / (<span class="code-variable">height</span> * <span class="code-variable">height</span>);
+};
+
+<span class="code-comment">// 3. 箭头函数（ES6，简洁写法）</span>
+<span class="code-keyword">const</span> <span class="code-function">calculateBMI3</span> = (<span class="code-variable">weight</span>, <span class="code-variable">height</span>) => {
+    <span class="code-keyword">return</span> <span class="code-variable">weight</span> / (<span class="code-variable">height</span> * <span class="code-variable">height</span>);
+};
+
+<span class="code-comment">// 箭头函数简写（单行可省略大括号和return）</span>
+<span class="code-keyword">const</span> <span class="code-function">square</span> = <span class="code-variable">x</span> => <span class="code-variable">x</span> * <span class="code-variable">x</span>;
+
+<span class="code-comment">// 使用函数</span>
+<span class="code-keyword">let</span> <span class="code-variable">bmi</span> = <span class="code-function">calculateBMI</span>(<span class="code-number">70</span>, <span class="code-number">1.75</span>);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"BMI: "</span> + <span class="code-variable">bmi</span>.<span class="code-function">toFixed</span>(<span class="code-number">2</span>));  <span class="code-comment">// BMI: 22.86</span>
+</div>
+<button onclick="demoFunction()">运行示例</button>
+<div id="function-output" class="output-box"></div>
+</div>
+
+<h3>5.2 参数</h3>
+
+<h4>默认参数（ES6）</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">function</span> <span class="code-function">greet</span>(<span class="code-variable">name</span> = <span class="code-string">"访客"</span>, <span class="code-variable">greeting</span> = <span class="code-string">"你好"</span>) {
+    <span class="code-keyword">return</span> <span class="code-string">`${greeting}，${name}！`</span>;
+}
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">greet</span>());              <span class="code-comment">// "你好，访客！"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">greet</span>(<span class="code-string">"张医生"</span>));      <span class="code-comment">// "你好，张医生！"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">greet</span>(<span class="code-string">"李护士"</span>, <span class="code-string">"欢迎"</span>));  <span class="code-comment">// "欢迎，李护士！"</span>
+</div>
+</div>
+
+<h4>剩余参数（ES6）</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 使用 ...收集剩余参数</span>
+<span class="code-keyword">function</span> <span class="code-function">sum</span>(...<span class="code-variable">numbers</span>) {
+    <span class="code-keyword">let</span> <span class="code-variable">total</span> = <span class="code-number">0</span>;
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">num</span> <span class="code-keyword">of</span> <span class="code-variable">numbers</span>) {
+        <span class="code-variable">total</span> += <span class="code-variable">num</span>;
+    }
+    <span class="code-keyword">return</span> <span class="code-variable">total</span>;
+}
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">sum</span>(<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>));       <span class="code-comment">// 6</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">sum</span>(<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>));  <span class="code-comment">// 15</span>
+</div>
+</div>
+
+<h4>arguments对象</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// arguments是类数组对象，包含所有传入的参数</span>
+<span class="code-keyword">function</span> <span class="code-function">showArguments</span>() {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arguments</span>.<span class="code-variable">length</span>);  <span class="code-comment">// 参数个数</span>
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arguments</span>[<span class="code-number">0</span>]);       <span class="code-comment">// 第一个参数</span>
+}
+
+<span class="code-function">showArguments</span>(<span class="code-string">"a"</span>, <span class="code-string">"b"</span>, <span class="code-string">"c"</span>);
+<span class="code-comment">// 输出: 3</span>
+<span class="code-comment">// 输出: "a"</span>
+</div>
+</div>
+
+<div class="tip">
+<strong>推荐：</strong>现代JavaScript中，优先使用剩余参数<span class="inline-code">...args</span>而不是<span class="inline-code">arguments</span>，因为剩余参数是真正的数组。
+</div>
+
+<h3>5.3 返回值</h3>
+
+<p>函数使用<span class="inline-code">return</span>返回结果，没有return则返回<span class="inline-code">undefined</span>：</p>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">function</span> <span class="code-function">checkTemperature</span>(<span class="code-variable">temp</span>) {
+    <span class="code-keyword">if</span> (<span class="code-variable">temp</span> >= <span class="code-number">37.3</span>) {
+        <span class="code-keyword">return</span> <span class="code-string">"发热"</span>;
+    } <span class="code-keyword">else</span> <span class="code-keyword">if</span> (<span class="code-variable">temp</span> < <span class="code-number">36.0</span>) {
+        <span class="code-keyword">return</span> <span class="code-string">"体温过低"</span>;
+    }
+    <span class="code-keyword">return</span> <span class="code-string">"正常"</span>;
+}
+
+<span class="code-keyword">let</span> <span class="code-variable">result</span> = <span class="code-function">checkTemperature</span>(<span class="code-number">38.5</span>);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">result</span>);  <span class="code-comment">// "发热"</span>
+
+<span class="code-comment">// 函数没有return时返回undefined</span>
+<span class="code-keyword">function</span> <span class="code-function">noReturn</span>() {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"我什么也不返回"</span>);
+}
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">noReturn</span>());  <span class="code-comment">// undefined</span>
+</div>
+</div>
+
+<h3>5.4 作用域</h3>
+
+<h4>全局作用域</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 在任何函数外部声明的变量是全局变量</span>
+<span class="code-keyword">var</span> <span class="code-variable">globalVar</span> = <span class="code-string">"我是全局变量"</span>;
+<span class="code-keyword">let</span> <span class="code-variable">globalLet</span> = <span class="code-string">"我也是全局变量"</span>;
+
+<span class="code-keyword">function</span> <span class="code-function">test</span>() {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">globalVar</span>);  <span class="code-comment">// 可以访问</span>
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">globalLet</span>);  <span class="code-comment">// 可以访问</span>
+}
+</div>
+</div>
+
+<h4>函数作用域</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">function</span> <span class="code-function">outer</span>() {
+    <span class="code-keyword">let</span> <span class="code-variable">outerVar</span> = <span class="code-string">"外部函数变量"</span>;
+    
+    <span class="code-keyword">function</span> <span class="code-function">inner</span>() {
+        <span class="code-keyword">let</span> <span class="code-variable">innerVar</span> = <span class="code-string">"内部函数变量"</span>;
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">outerVar</span>);   <span class="code-comment">// 可以访问（闭包）</span>
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">innerVar</span>);   <span class="code-comment">// 可以访问</span>
+    }
+    
+    <span class="code-function">inner</span>();
+    <span class="code-comment">// console.log(innerVar);  // 报错！无法访问</span>
+}
+
+<span class="code-function">outer</span>();
+</div>
+<button onclick="demoScope()">运行示例</button>
+<div id="scope-output" class="output-box"></div>
+</div>
+
+<h4>块级作用域（let/const）</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">if</span> (<span class="code-keyword">true</span>) {
+    <span class="code-keyword">var</span> <span class="code-variable">varVariable</span> = <span class="code-string">"var声明的变量"</span>;
+    <span class="code-keyword">let</span> <span class="code-variable">letVariable</span> = <span class="code-string">"let声明的变量"</span>;
+}
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">varVariable</span>);  <span class="code-comment">// "var声明的变量"（函数作用域，泄漏出去了）</span>
+<span class="code-comment">// console.log(letVariable);  // 报错！（块级作用域）</span>
+
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < <span class="code-number">3</span>; <span class="code-variable">i</span>++) {
+    <span class="code-function">setTimeout</span>(() => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">i</span>), <span class="code-number">100</span>);
+}
+<span class="code-comment">// 输出: 0, 1, 2（let每次循环创建新的作用域）</span>
+
+<span class="code-keyword">for</span> (<span class="code-keyword">var</span> <span class="code-variable">j</span> = <span class="code-number">0</span>; <span class="code-variable">j</span> < <span class="code-number">3</span>; <span class="code-variable">j</span>++) {
+    <span class="code-function">setTimeout</span>(() => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">j</span>), <span class="code-number">100</span>);
+}
+<span class="code-comment">// 输出: 3, 3, 3（var共享同一个变量）</span>
+</div>
+</div>
+
+<hr>
+
+<h2>六、内置对象与常用方法</h2>
+
+<h3>6.1 字符串（String）</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">str</span> = <span class="code-string">"  Hello, JavaScript!  "</span>;
+
+<span class="code-comment">// 常用方法</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-variable">length</span>);              <span class="code-comment">// 22（长度）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-function">trim</span>());              <span class="code-comment">// "Hello, JavaScript!"（去除首尾空格）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-function">toLowerCase</span>());      <span class="code-comment">// "  hello, javascript!  "</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-function">toUpperCase</span>());      <span class="code-comment">// "  HELLO, JAVASCRIPT!  "</span>
+
+<span class="code-comment">// 查找</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-function">indexOf</span>(<span class="code-string">"Java"</span>));     <span class="code-comment">// 9（首次出现的位置）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-function">includes</span>(<span class="code-string">"Java"</span>));   <span class="code-comment">// true（是否包含）</span>
+
+<span class="code-comment">// 截取</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-function">substring</span>(<span class="code-number">2</span>, <span class="code-number">7</span>));   <span class="code-comment">// "Hello"（从索引2到7）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">str</span>.<span class="code-function">slice</span>(<span class="code-number">-6</span>, <span class="code-number">-1</span>);    <span class="code-comment">// "ript!"（支持负索引）</span>
+
+<span class="code-comment">// 分割与替换</span>
+<span class="code-keyword">let</span> <span class="code-variable">words</span> = <span class="code-string">"苹果,香蕉,橙子"</span>.<span class="code-function">split</span>(<span class="code-string">","</span>);  <span class="code-comment">// ["苹果", "香蕉", "橙子"]</span>
+<span class="code-keyword">let</span> <span class="code-variable">newStr</span> = <span class="code-variable">str</span>.<span class="code-function">replace</span>(<span class="code-string">"Java"</span>, <span class="code-string">"Type"</span>);  <span class="code-comment">// "Hello, TypeScript!"</span>
+</div>
+<button onclick="demoString()">运行示例</button>
+<div id="string-output" class="output-box"></div>
+</div>
+
+<h3>6.2 数组（Array）</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">arr</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>];
+
+<span class="code-comment">// 常用方法</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arr</span>.<span class="code-variable">length</span>);           <span class="code-comment">// 5（长度）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arr</span>.<span class="code-function">push</span>(<span class="code-number">6</span>));        <span class="code-comment">// 6（末尾添加，返回新长度）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arr</span>.<span class="code-function">pop</span>());         <span class="code-comment">// 6（删除末尾元素）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arr</span>.<span class="code-function">unshift</span>(<span class="code-number">0</span>));     <span class="code-comment">// 6（开头添加）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">arr</span>.<span class="code-function">shift</span>());       <span class="code-comment">// 0（删除开头元素）</span>
+
+<span class="code-comment">// 高阶方法（ES5+）</span>
+<span class="code-keyword">let</span> <span class="code-variable">doubled</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>].<span class="code-function">map</span>(<span class="code-variable">x</span> => <span class="code-variable">x</span> * <span class="code-number">2</span>);     <span class="code-comment">// [2, 4, 6]</span>
+<span class="code-keyword">let</span> <span class="code-variable">evens</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>].<span class="code-function">filter</span>(<span class="code-variable">x</span> => <span class="code-variable">x</span> % <span class="code-number">2</span> === <span class="code-number">0</span>);  <span class="code-comment">// [2, 4]</span>
+<span class="code-keyword">let</span> <span class="code-variable">sum</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>].<span class="code-function">reduce</span>((<span class="code-variable">a</span>, <span class="code-variable">b</span>) => <span class="code-variable">a</span> + <span class="code-variable">b</span>);  <span class="code-comment">// 6</span>
+<span class="code-keyword">let</span> <span class="code-variable">found</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>].<span class="code-function">find</span>(<span class="code-variable">x</span> => <span class="code-variable">x</span> > <span class="code-number">1</span>);    <span class="code-comment">// 2</span>
+</div>
+<button onclick="demoArray()">运行示例</button>
+<div id="array-output" class="output-box"></div>
+</div>
+
+<h3>6.3 数字（Number）与Math</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// Number方法</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">parseInt</span>(<span class="code-string">"42px"</span>));      <span class="code-comment">// 42（解析整数）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">parseFloat</span>(<span class="code-string">"3.14"</span>));    <span class="code-comment">// 3.14（解析浮点数）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">isNaN</span>(<span class="code-number">NaN</span>));           <span class="code-comment">// true</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>((<span class="code-number">3.14159</span>).<span class="code-function">toFixed</span>(<span class="code-number">2</span>)); <span class="code-comment">// "3.14"</span>
+
+<span class="code-comment">// Math对象</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">round</span>(<span class="code-number">4.5</span>));    <span class="code-comment">// 5（四舍五入）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">floor</span>(<span class="code-number">4.9</span>));    <span class="code-comment">// 4（向下取整）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">ceil</span>(<span class="code-number">4.1</span>));     <span class="code-comment">// 5（向上取整）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">abs</span>(<span class="code-number">-5</span>));      <span class="code-comment">// 5（绝对值）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">max</span>(<span class="code-number">1</span>, <span class="code-number">5</span>, <span class="code-number">3</span>));  <span class="code-comment">// 5（最大值）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">min</span>(<span class="code-number">1</span>, <span class="code-number">5</span>, <span class="code-number">3</span>));  <span class="code-comment">// 1（最小值）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">random</span>());     <span class="code-comment">// 0-1之间的随机数</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Math</span>.<span class="code-function">floor</span>(<span class="code-function">Math</span>.<span class="code-function">random</span>() * <span class="code-number">10</span>)); <span class="code-comment">// 0-9的随机整数</span>
+</div>
+<button onclick="demoMath()">运行示例</button>
+<div id="math-output" class="output-box"></div>
+</div>
+
+<h3>6.4 日期（Date）</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">let</span> <span class="code-variable">now</span> = <span class="code-keyword">new</span> <span class="code-function">Date</span>();
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>);                     <span class="code-comment">// 当前日期时间</span>
+
+<span class="code-comment">// 创建指定日期</span>
+<span class="code-keyword">let</span> <span class="code-variable">birthday</span> = <span class="code-keyword">new</span> <span class="code-function">Date</span>(<span class="code-number">2000</span>, <span class="code-number">0</span>, <span class="code-number">1</span>);  <span class="code-comment">// 2000年1月1日</span>
+
+<span class="code-comment">// 获取日期各部分</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>.<span class="code-function">getFullYear</span>());     <span class="code-comment">// 年份</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>.<span class="code-function">getMonth</span>());        <span class="code-comment">// 月份（0-11，0是1月）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>.<span class="code-function">getDate</span>());         <span class="code-comment">// 日期（1-31）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>.<span class="code-function">getDay</span>());           <span class="code-comment">// 星期（0-6，0是周日）</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>.<span class="code-function">getHours</span>());        <span class="code-comment">// 小时</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>.<span class="code-function">getMinutes</span>());      <span class="code-comment">// 分钟</span>
+
+<span class="code-comment">// 格式化</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">now</span>.<span class="code-function">toLocaleDateString</span>(<span class="code-string">"zh-CN"</span>));  <span class="code-comment">// "2024/1/15"</span>
+</div>
+</div>
+
+<hr>
+
+<h2>七、类型转换</h2>
+
+<div class="knowledge-box">
+<h4> 核心概念：为什么需要类型转换？</h4>
+
+<p><strong>为什么各种变量类型之间不能直接互通而是需要转换？</strong></p>
+<p>不同类型的数据在内存中的存储方式和表示形式完全不同：</p>
+<ul>
+    <strong>存储格式不同</strong>：数字以二进制数值存储，字符串以字符编码序列存储，对象以引用地址存储</br>
+    <strong>操作规则不同</strong>：数字可以加减乘除，字符串可以拼接截取，对象可以访问属性</br>
+    <strong>内存占用不同</strong>：一个数字可能只占8字节，一个对象可能占用数百字节</br>
+</ul>
+<p>因此，当需要在不同类型之间操作时，必须先统一类型，这就是类型转换的意义。</p>
+
+<p><strong>区分出各种不同类型变量的意义：</strong></p>
+<table>
+<tr>
+    <th>意义</th>
+    <th>说明</th>
+    <th>例子</th>
+</tr>
+<tr>
+    <td><strong>明确数据性质</strong></td>
+    <td>类型告诉程序员和计算机这个数据代表什么</td>
+    <td>数字代表数量，字符串代表文本，布尔代表是非</td>
+</tr>
+<tr>
+    <td><strong>确定可用操作</strong></td>
+    <td>不同类型支持不同的操作方法</td>
+    <td>数字可以计算，数组可以遍历，对象可以存取属性</td>
+</tr>
+<tr>
+    <td><strong>优化存储空间</strong></td>
+    <td>根据类型分配恰当的内存空间</td>
+    <td>布尔值只需1位，大对象需要更多空间</td>
+</tr>
+<tr>
+    <td><strong>防止运行时错误</strong></td>
+    <td>类型检查可以在早期发现不合理操作</td>
+    <td>字符串不能直接减法，undefined不能访问属性</td>
+</tr>
+<tr>
+    <td><strong>提高代码可读性</strong></td>
+    <td>类型信息让代码意图更清晰</td>
+    <td>看到boolean就知道是判断条件，看到number就知道是数值</td>
+</tr>
+</table>
+
+<p><strong>类型转换的两种方式：</strong></p>
+<ul>
+    <strong>显式转换</strong>：程序员主动调用转换函数，如 <code>Number("123")</code>，意图明确、代码清晰</br>
+    <strong>隐式转换</strong>：JavaScript引擎自动完成，如 <code>"1" + 2</code>，方便但容易产生意外结果</li>
+</ul>
+
+<div class="warning">
+<strong>最佳实践：</strong>推荐使用显式转换，代码意图更清晰，避免隐式转换带来的意外结果。
+</div>
+</div>
+
+<h3>7.1 显式类型转换</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 转字符串</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">String</span>(<span class="code-number">123</span>));        <span class="code-comment">// "123"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>((<span class="code-number">123</span>).<span class="code-function">toString</span>());  <span class="code-comment">// "123"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">123</span> + <span class="code-string">""</span>);          <span class="code-comment">// "123"（隐式转换）</span>
+
+<span class="code-comment">// 转数字</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Number</span>(<span class="code-string">"123"</span>));     <span class="code-comment">// 123</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">parseInt</span>(<span class="code-string">"123.9"</span>)); <span class="code-comment">// 123</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">parseFloat</span>(<span class="code-string">"123.9"</span>)); <span class="code-comment">// 123.9</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"123"</span> - <span class="code-number">0</span>);        <span class="code-comment">// 123（隐式转换）</span>
+
+<span class="code-comment">// 转布尔值</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Boolean</span>(<span class="code-number">1</span>));        <span class="code-comment">// true</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Boolean</span>(<span class="code-number">0</span>));        <span class="code-comment">// false</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Boolean</span>(<span class="code-string">""</span>));       <span class="code-comment">// false</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Boolean</span>(<span class="code-keyword">null</span>));     <span class="code-comment">// false</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-function">Boolean</span>(<span class="code-keyword">undefined</span>)); <span class="code-comment">// false</span>
+</div>
+</div>
+
+<h3>7.2 隐式类型转换</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// + 运算符：倾向于转字符串</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"1"</span> + <span class="code-number">2</span>);      <span class="code-comment">// "12"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">1</span> + <span class="code-keyword">true</span>);    <span class="code-comment">// 2（true转为1）</span>
+
+<span class="code-comment">// -、*、/ 运算符：倾向于转数字</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"5"</span> - <span class="code-number">2</span>);      <span class="code-comment">// 3</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"6"</span> / <span class="code-string">"2"</span>);    <span class="code-comment">// 3</span>
+
+<span class="code-comment">// == 比较会进行类型转换</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">1</span> == <span class="code-string">"1"</span>);     <span class="code-comment">// true</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-number">0</span> == <span class="code-keyword">false</span>);   <span class="code-comment">// true</span>
+</div>
+</div>
+
+<div class="warning">
+<strong>最佳实践：</strong>使用严格相等<span class="inline-code">===</span>避免隐式转换，需要转换时显式调用转换函数。
+</div>
+
+<hr>
+
+<h2>八、错误处理</h2>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">try</span> {
+    <span class="code-comment">// 可能出错的代码</span>
+    <span class="code-keyword">let</span> <span class="code-variable">result</span> = <span class="code-function">JSON</span>.<span class="code-function">parse</span>(<span class="code-string">"invalid json"</span>);
+} <span class="code-keyword">catch</span> (<span class="code-variable">error</span>) {
+    <span class="code-comment">// 处理错误</span>
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"出错了："</span> + <span class="code-variable">error</span>.<span class="code-variable">message</span>);
+} <span class="code-keyword">finally</span> {
+    <span class="code-comment">// 无论是否出错都会执行</span>
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"清理工作"</span>);
+}
+
+<span class="code-comment">// 抛出错误</span>
+<span class="code-keyword">function</span> <span class="code-function">divide</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>) {
+    <span class="code-keyword">if</span> (<span class="code-variable">b</span> === <span class="code-number">0</span>) {
+        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-function">Error</span>(<span class="code-string">"除数不能为0"</span>);
+    }
+    <span class="code-keyword">return</span> <span class="code-variable">a</span> / <span class="code-variable">b</span>;
+}
+</div>
+</div>
+
+<hr>
+
+<h2>九、ES6+新特性简介</h2>
+
+<h3>9.1 解构赋值</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 数组解构</span>
+<span class="code-keyword">const</span> [<span class="code-variable">a</span>, <span class="code-variable">b</span>, <span class="code-variable">c</span>] = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>];
+
+<span class="code-comment">// 对象解构</span>
+<span class="code-keyword">const</span> { <span class="code-variable">name</span>, <span class="code-variable">age</span> } = { <span class="code-variable">name</span>: <span class="code-string">"张三"</span>, <span class="code-variable">age</span>: <span class="code-number">25</span> };
+
+<span class="code-comment">// 默认值</span>
+<span class="code-keyword">const</span> [<span class="code-variable">x</span> = <span class="code-number">10</span>] = [];
+</div>
+</div>
+
+<h3>9.2 展开运算符</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 数组展开</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr1</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>];
+<span class="code-keyword">const</span> <span class="code-variable">arr2</span> = [<span class="code-number">3</span>, <span class="code-number">4</span>];
+<span class="code-keyword">const</span> <span class="code-variable">merged</span> = [...<span class="code-variable">arr1</span>, ...<span class="code-variable">arr2</span>];  <span class="code-comment">// [1, 2, 3, 4]</span>
+
+<span class="code-comment">// 对象展开</span>
+<span class="code-keyword">const</span> <span class="code-variable">obj1</span> = { <span class="code-variable">a</span>: <span class="code-number">1</span> };
+<span class="code-keyword">const</span> <span class="code-variable">obj2</span> = { ...<span class="code-variable">obj1</span>, <span class="code-variable">b</span>: <span class="code-number">2</span> };  <span class="code-comment">// { a: 1, b: 2 }</span>
+</div>
+</div>
+
+<h3>9.3 模块化</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 导出（module.js）</span>
+<span class="code-keyword">export</span> <span class="code-keyword">const</span> <span class="code-variable">PI</span> = <span class="code-number">3.14</span>;
+<span class="code-keyword">export</span> <span class="code-keyword">function</span> <span class="code-function">add</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>) { <span class="code-keyword">return</span> <span class="code-variable">a</span> + <span class="code-variable">b</span>; }
+
+<span class="code-comment">// 导入（main.js）</span>
+<span class="code-keyword">import</span> { <span class="code-variable">PI</span>, <span class="code-function">add</span> } <span class="code-keyword">from</span> <span class="code-string">'./module.js'</span>;
+</div>
+</div>
+
+<hr>
+
+<h2>十、实战练习</h2>
+
+<div class="demo-box">
+<h4>练习：患者信息管理系统</h4>
+<p>下面是一个简单的患者信息管理示例，综合运用了前面学习的知识：</p>
+
+<div class="code">
+<span class="code-comment">// 患者数据</span>
+<span class="code-keyword">const</span> <span class="code-variable">patients</span> = [
+    { <span class="code-variable">id</span>: <span class="code-number">1</span>, <span class="code-variable">name</span>: <span class="code-string">"张三"</span>, <span class="code-variable">age</span>: <span class="code-number">45</span>, <span class="code-variable">diagnosis</span>: <span class="code-string">"高血压"</span> },
+    { <span class="code-variable">id</span>: <span class="code-number">2</span>, <span class="code-variable">name</span>: <span class="code-string">"李四"</span>, <span class="code-variable">age</span>: <span class="code-number">32</span>, <span class="code-variable">diagnosis</span>: <span class="code-string">"糖尿病"</span> },
+    { <span class="code-variable">id</span>: <span class="code-number">3</span>, <span class="code-variable">name</span>: <span class="code-string">"王五"</span>, <span class="code-variable">age</span>: <span class="code-number">28</span>, <span class="code-variable">diagnosis</span>: <span class="code-string">"感冒"</span> }
+];
+
+<span class="code-comment">// 查找患者</span>
+<span class="code-keyword">function</span> <span class="code-function">findPatient</span>(<span class="code-variable">id</span>) {
+    <span class="code-keyword">return</span> <span class="code-variable">patients</span>.<span class="code-function">find</span>(<span class="code-variable">p</span> => <span class="code-variable">p</span>.<span class="code-variable">id</span> === <span class="code-variable">id</span>);
+}
+
+<span class="code-comment">// 添加患者</span>
+<span class="code-keyword">function</span> <span class="code-function">addPatient</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>, <span class="code-variable">diagnosis</span>) {
+    <span class="code-keyword">const</span> <span class="code-variable">newId</span> = <span class="code-variable">patients</span>.<span class="code-variable">length</span> > <span class="code-number">0</span> 
+        ? <span class="code-variable">patients</span>[<span class="code-variable">patients</span>.<span class="code-variable">length</span> - <span class="code-number">1</span>].<span class="code-variable">id</span> + <span class="code-number">1</span> 
+        : <span class="code-number">1</span>;
+    <span class="code-variable">patients</span>.<span class="code-function">push</span>({ <span class="code-variable">id</span>: <span class="code-variable">newId</span>, <span class="code-variable">name</span>, <span class="code-variable">age</span>, <span class="code-variable">diagnosis</span> });
+}
+
+<span class="code-comment">// 计算平均年龄</span>
+<span class="code-keyword">const</span> <span class="code-variable">avgAge</span> = <span class="code-variable">patients</span>.<span class="code-function">reduce</span>((<span class="code-variable">sum</span>, <span class="code-variable">p</span>) => <span class="code-variable">sum</span> + <span class="code-variable">p</span>.<span class="code-variable">age</span>, <span class="code-number">0</span>) / <span class="code-variable">patients</span>.<span class="code-variable">length</span>;
+</div>
+<button onclick="demoPractice()">运行示例</button>
+<div id="practice-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>总结</h2>
+
+<div class="success">
+<strong>恭喜你完成了JavaScript基础学习！</strong>
+<p>本节我们学习了：</p>
+<ul>
+    JavaScript的应用场景和重要性</br>
+    变量声明（var/let/const）和数据类型</br>
+    各类运算符的使用</br>
+    流程控制语句</br>
+    函数的定义和作用域</br>
+    内置对象的常用方法</br>
+    类型转换和错误处理</br>
+</ul>
+</div>
+
+<script>
+function demoArithmetic() {
+    let a = 10, b = 3;
+    let output = '';
+    output += `a + b = ${a + b}\n`;
+    output += `a - b = ${a - b}\n`;
+    output += `a * b = ${a * b}\n`;
+    output += `a / b = ${(a / b).toFixed(2)}\n`;
+    output += `a % b = ${a % b}\n`;
+    output += `a ** b = ${a ** b}\n`;
+    output += `"体温：" + 37.5 + "℃" = 体温：37.5℃`;
+    document.getElementById('arithmetic-output').textContent = output;
+}
+
+function demoComparison() {
+    let output = '';
+    output += `5 == "5" → ${5 == "5"}\n`;
+    output += `0 == false → ${0 == false}\n`;
+    output += `"" == false → ${"" == false}\n\n`;
+    output += `5 === "5" → ${5 === "5"}\n`;
+    output += `0 === false → ${0 === false}\n`;
+    output += `"" === false → ${"" === false}`;
+    document.getElementById('comparison-output').textContent = output;
+}
+
+function demoTernary() {
+    let temperature = 38.5;
+    let status = temperature >= 37.3 ? "发热" : "正常";
+    document.getElementById('ternary-output').textContent = `体温 ${temperature}℃ → ${status}`;
+}
+
+function demoIfElse() {
+    let bloodPressure = 145;
+    let result;
+    if (bloodPressure >= 140) {
+        result = "高血压";
+    } else if (bloodPressure >= 120) {
+        result = "正常高值";
+    } else if (bloodPressure >= 90) {
+        result = "正常";
+    } else {
+        result = "低血压";
+    }
+    document.getElementById('ifelse-output').textContent = `收缩压 ${bloodPressure}mmHg → ${result}`;
+}
+
+function demoSwitch() {
+    let bloodType = "A";
+    let result;
+    switch (bloodType) {
+        case "A": result = "A型血：可输A型、O型血"; break;
+        case "B": result = "B型血：可输B型、O型血"; break;
+        case "AB": result = "AB型血：万能受血者"; break;
+        case "O": result = "O型血：万能供血者"; break;
+        default: result = "未知血型";
+    }
+    document.getElementById('switch-output').textContent = result;
+}
+
+function demoFor() {
+    let output = '循环输出:\n';
+    for (let i = 1; i <= 5; i++) {
+        output += `第${i}次循环\n`;
+    }
+    output += '\n遍历数组:\n';
+    let symptoms = ["发热", "咳嗽", "乏力"];
+    for (let i = 0; i < symptoms.length; i++) {
+        output += `${symptoms[i]}\n`;
+    }
+    document.getElementById('for-output').textContent = output;
+}
+
+function demoForOf() {
+    let arr = ["苹果", "香蕉", "橙子"];
+    let output = 'for...of 遍历值:\n';
+    for (let fruit of arr) {
+        output += `${fruit}\n`;
+    }
+    output += '\nfor...in 遍历索引:\n';
+    for (let index in arr) {
+        output += `${index}\n`;
+    }
+    output += '\n遍历对象:\n';
+    let patient = { name: "张三", age: 30 };
+    for (let key in patient) {
+        output += `${key}: ${patient[key]}\n`;
+    }
+    document.getElementById('forof-output').textContent = output;
+}
+
+function demoBreakContinue() {
+    let output = 'break示例:\n';
+    for (let i = 1; i <= 10; i++) {
+        if (i === 5) break;
+        output += `${i} `;
+    }
+    output += '\n\ncontinue示例:\n';
+    for (let i = 1; i <= 5; i++) {
+        if (i === 3) continue;
+        output += `${i} `;
+    }
+    output += '\n\nlabel示例:\n';
+    outer: for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            if (i === 1 && j === 1) {
+                break outer;
+            }
+            output += `i=${i}, j=${j}\n`;
+        }
+    }
+    document.getElementById('break-output').textContent = output;
+}
+
+function demoFunction() {
+    function calculateBMI(weight, height) {
+        return weight / (height * height);
+    }
+    let bmi = calculateBMI(70, 1.75);
+    document.getElementById('function-output').textContent = `BMI(70kg, 1.75m) = ${bmi.toFixed(2)}`;
+}
+
+function demoScope() {
+    let output = '';
+    function outer() {
+        let outerVar = "外部函数变量";
+        function inner() {
+            let innerVar = "内部函数变量";
+            output += `内部访问 outerVar: ${outerVar}\n`;
+            output += `内部访问 innerVar: ${innerVar}\n`;
+        }
+        inner();
+        output += `外部无法访问 innerVar`;
+    }
+    outer();
+    document.getElementById('scope-output').textContent = output;
+}
+
+function demoString() {
+    let str = "  Hello, JavaScript!  ";
+    let output = '';
+    output += `原字符串: "${str}"\n`;
+    output += `长度: ${str.length}\n`;
+    output += `trim(): "${str.trim()}"\n`;
+    output += `toLowerCase(): "${str.toLowerCase()}"\n`;
+    output += `indexOf("Java"): ${str.indexOf("Java")}\n`;
+    output += `includes("Java"): ${str.includes("Java")}\n`;
+    output += `substring(2,7): "${str.substring(2,7)}"`;
+    document.getElementById('string-output').textContent = output;
+}
+
+function demoArray() {
+    let arr = [1, 2, 3, 4, 5];
+    let output = `原数组: [${arr}]\n`;
+    output += `map(x => x*2): [${[1,2,3].map(x => x*2)}]\n`;
+    output += `filter(x => x%2===0): [${[1,2,3,4].filter(x => x%2===0)}]\n`;
+    output += `reduce((a,b)=>a+b): ${[1,2,3].reduce((a,b)=>a+b)}\n`;
+    output += `find(x => x>1): ${[1,2,3].find(x => x>1)}`;
+    document.getElementById('array-output').textContent = output;
+}
+
+function demoMath() {
+    let output = '';
+    output += `Math.round(4.5) = ${Math.round(4.5)}\n`;
+    output += `Math.floor(4.9) = ${Math.floor(4.9)}\n`;
+    output += `Math.ceil(4.1) = ${Math.ceil(4.1)}\n`;
+    output += `Math.abs(-5) = ${Math.abs(-5)}\n`;
+    output += `Math.max(1,5,3) = ${Math.max(1,5,3)}\n`;
+    output += `Math.random() = ${Math.random().toFixed(4)}\n`;
+    output += `0-9随机整数 = ${Math.floor(Math.random() * 10)}`;
+    document.getElementById('math-output').textContent = output;
+}
+
+function demoPractice() {
+    const patients = [
+        { id: 1, name: "张三", age: 45, diagnosis: "高血压" },
+        { id: 2, name: "李四", age: 32, diagnosis: "糖尿病" },
+        { id: 3, name: "王五", age: 28, diagnosis: "感冒" }
+    ];
+    
+    let output = '患者列表:\n';
+    patients.forEach(p => {
+        output += `ID:${p.id} ${p.name} ${p.age}岁 ${p.diagnosis}\n`;
+    });
+    
+    const avgAge = patients.reduce((sum, p) => sum + p.age, 0) / patients.length;
+    output += `\n平均年龄: ${avgAge.toFixed(1)}岁\n`;
+    
+    const found = patients.find(p => p.id === 2);
+    output += `\n查找ID=2的患者: ${found.name}`;
+    
+    document.getElementById('practice-output').textContent = output;
+}
+</script>
+
+</body>
+</html>
