@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript与ES6新特性</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.8;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #f39c12;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #f39c12;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        h3 { color: #7f8c8d; margin-top: 30px; }
+        h4 { color: #555; margin-top: 20px; }
+        .demo-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Consolas", "Courier New", monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        .code-keyword { color: #f92672; }
+        .code-string { color: #e6db74; }
+        .code-number { color: #ae81ff; }
+        .code-comment { color: #75715e; }
+        .code-function { color: #66d9ef; }
+        .code-variable { color: #fd971f; }
+        .code-class { color: #a6e22e; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f39c12; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .tip { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; }
+        .knowledge-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f7ff 100%);
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 25px 0;
+            box-shadow: 0 3px 15px rgba(52, 152, 219, 0.15);
+        }
+        .knowledge-box h4 {
+            color: #2980b9;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 10px;
+        }
+        .warning { background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; margin: 15px 0; }
+        hr { border: none; border-top: 1px solid #ddd; margin: 40px 0; }
+        button {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover { background-color: #e67e22; }
+        .output-box {
+            background: #1e1e1e;
+            color: #4ec9b0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: "Consolas", monospace;
+            margin: 10px 0;
+            min-height: 20px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+<h1>JavaScript与ES6新特性</h1>
+
+<p>ES6（ECMAScript 2015）是JavaScript语言的一次重大更新，引入了大量新特性，使JavaScript更加强大和易用。本章将系统讲解ES6及后续版本的核心新特性。</p>
+
+<hr>
+
+<h2>一、变量声明</h2>
+
+<h3>1.1 let 与 const</h3>
+
+<div class="knowledge-box">
+<h4>核心概念：let 和 const</h4>
+<p><strong>为什么需要let和const？</strong></p>
+<p>ES5中只有var声明变量，存在变量提升、无块级作用域等问题。let和const的引入解决了这些问题，使变量声明更加安全和可控。</p>
+</div>
+
+<div class="demo-box">
+<p><strong>let、const、var 对比：</strong></p>
+<table>
+<tr><th>特性</th><th>var</th><th>let</th><th>const</th></tr>
+<tr><td>作用域</td><td>函数作用域</td><td>块级作用域</td><td>块级作用域</td></tr>
+<tr><td>变量提升</td><td>是（初始化为undefined）</td><td>否（暂时性死区）</td><td>否（暂时性死区）</td></tr>
+<tr><td>重复声明</td><td>允许</td><td>不允许</td><td>不允许</td></tr>
+<tr><td>重新赋值</td><td>允许</td><td>允许</td><td>不允许</td></tr>
+<tr><td>全局变量挂载</td><td>挂载到window</td><td>不挂载</td><td>不挂载</td></tr>
+</table>
+</div>
+
+<h4>块级作用域</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// var 没有块级作用域</span>
+<span class="code-keyword">if</span> (<span class="code-keyword">true</span>) {
+    <span class="code-keyword">var</span> <span class="code-variable">x</span> = <span class="code-number">10</span>;
+}
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">x</span>);  <span class="code-comment">// 10 - 可以访问</span>
+
+<span class="code-comment">// let 有块级作用域</span>
+<span class="code-keyword">if</span> (<span class="code-keyword">true</span>) {
+    <span class="code-keyword">let</span> <span class="code-variable">y</span> = <span class="code-number">20</span>;
+}
+<span class="code-comment">// console.log(y); // 报错！y is not defined</span>
+
+<span class="code-comment">// 经典循环问题</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">var</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < <span class="code-number">3</span>; <span class="code-variable">i</span>++) {
+    <span class="code-function">setTimeout</span>(() => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"var:"</span> + <span class="code-variable">i</span>), <span class="code-number">100</span>);
+}
+<span class="code-comment">// 输出：var:3, var:3, var:3</span>
+
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">j</span> = <span class="code-number">0</span>; <span class="code-variable">j</span> < <span class="code-number">3</span>; <span class="code-variable">j</span>++) {
+    <span class="code-function">setTimeout</span>(() => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"let:"</span> + <span class="code-variable">j</span>), <span class="code-number">100</span>);
+}
+<span class="code-comment">// 输出：let:0, let:1, let:2</span>
+</div>
+<button onclick="demoBlockScope()">运行示例</button>
+<div id="blockscope-output" class="output-box"></div>
+</div>
+
+<h4>暂时性死区（TDZ）</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 暂时性死区：在声明之前访问let/const变量会报错</span>
+{
+    <span class="code-comment">// console.log(x); // 报错！Cannot access 'x' before initialization</span>
+    <span class="code-keyword">let</span> <span class="code-variable">x</span> = <span class="code-number">10</span>;
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">x</span>);  <span class="code-comment">// 10</span>
+}
+
+<span class="code-comment">// const 必须初始化</span>
+<span class="code-keyword">const</span> <span class="code-variable">PI</span> = <span class="code-number">3.14159</span>;
+<span class="code-comment">// const x; // 报错！Missing initializer</span>
+
+<span class="code-comment">// const 引用不可变，但对象属性可变</span>
+<span class="code-keyword">const</span> <span class="code-variable">obj</span> = { <span class="code-variable">name</span>: <span class="code-string">"张三"</span> };
+<span class="code-variable">obj</span>.<span class="code-variable">name</span> = <span class="code-string">"李四"</span>;  <span class="code-comment">// 允许</span>
+<span class="code-comment">// obj = {}; // 报错！不能重新赋值</span>
+
+<span class="code-comment">// 冻结对象（使属性也不可变）</span>
+<span class="code-keyword">const</span> <span class="code-variable">frozenObj</span> = <span class="code-variable">Object</span>.<span class="code-function">freeze</span>({ <span class="code-variable">value</span>: <span class="code-number">100</span> });
+<span class="code-comment">// frozenObj.value = 200; // 静默失败（严格模式下报错）</span>
+</div>
+</div>
+
+<div class="tip">
+<strong>最佳实践：</strong>
+<p>
+    默认使用 <strong>const</strong>，只有需要重新赋值时才用 <strong>let</strong><br>
+    避免使用 <strong>var</strong><br>
+    const 声明的对象，如需不可变，使用 Object.freeze()
+</p>
+</div>
+
+<hr>
+
+<h2>二、模板字符串</h2>
+
+<div class="knowledge-box">
+<h4>核心概念：模板字符串</h4>
+<p><strong>什么是模板字符串？</strong></p>
+<p>模板字符串使用反引号（`）包裹，支持插值表达式、多行字符串和标签模板，比传统字符串拼接更简洁、更强大。</p>
+</div>
+
+<h4>插值与多行字符串</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 传统字符串拼接</span>
+<span class="code-keyword">const</span> <span class="code-variable">name</span> = <span class="code-string">"张三"</span>;
+<span class="code-keyword">const</span> <span class="code-variable">age</span> = <span class="code-number">25</span>;
+<span class="code-keyword">const</span> <span class="code-variable">oldWay</span> = <span class="code-string">"姓名："</span> + <span class="code-variable">name</span> + <span class="code-string">"，年龄："</span> + <span class="code-variable">age</span>;
+
+<span class="code-comment">// 模板字符串插值</span>
+<span class="code-keyword">const</span> <span class="code-variable">newWay</span> = <span class="code-string">`姓名：${name}，年龄：${age}`</span>;
+
+<span class="code-comment">// 插值可以是任意表达式</span>
+<span class="code-keyword">const</span> <span class="code-variable">a</span> = <span class="code-number">10</span>;
+<span class="code-keyword">const</span> <span class="code-variable">b</span> = <span class="code-number">20</span>;
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">`${a} + ${b} = ${a + b}`</span>);  <span class="code-comment">// "10 + 20 = 30"</span>
+
+<span class="code-comment">// 多行字符串</span>
+<span class="code-keyword">const</span> <span class="code-variable">html</span> = <span class="code-string">`
+&lt;div class="card"&gt;
+    &lt;h2&gt;${name}&lt;/h2&gt;
+    &lt;p&gt;年龄：${age}岁&lt;/p&gt;
+&lt;/div&gt;
+`</span>;
+
+<span class="code-comment">// 嵌套模板</span>
+<span class="code-keyword">const</span> <span class="code-variable">items</span> = [<span class="code-string">"苹果"</span>, <span class="code-string">"香蕉"</span>, <span class="code-string">"橙子"</span>];
+<span class="code-keyword">const</span> <span class="code-variable">list</span> = <span class="code-string">`&lt;ul&gt;
+    ${items.map(item => `&lt;li&gt;${item}&lt;/li&gt;`).join("\n    ")}
+&lt;/ul&gt;`</span>;
+</div>
+<button onclick="demoTemplateString()">运行示例</button>
+<div id="template-output" class="output-box"></div>
+</div>
+
+<h4>标签模板</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 标签模板：模板字符串可以紧跟在一个函数后面</span>
+<span class="code-keyword">function</span> <span class="code-function">tag</span>(<span class="code-variable">strings</span>, ...<span class="code-variable">values</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">strings</span>);  <span class="code-comment">// 字符串数组</span>
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">values</span>);   <span class="code-comment">// 插值数组</span>
+    <span class="code-keyword">return</span> <span class="code-variable">strings</span>.<span class="code-function">reduce</span>((<span class="code-variable">result</span>, <span class="code-variable">str</span>, <span class="code-variable">i</span>) => 
+        <span class="code-variable">result</span> + <span class="code-variable">str</span> + (<span class="code-variable">values</span>[<span class="code-variable">i</span>] !== <span class="code-keyword">undefined</span> ? <span class="code-variable">values</span>[<span class="code-variable">i</span>] : <span class="code-string">""</span>), <span class="code-string">""</span>);
+}
+
+<span class="code-keyword">const</span> <span class="code-variable">name</span> = <span class="code-string">"张三"</span>;
+<span class="code-keyword">const</span> <span class="code-variable">age</span> = <span class="code-number">25</span>;
+<span class="code-function">tag</span><span class="code-string">`你好，${name}！你今年${age}岁了。`</span>;
+
+<span class="code-comment">// 实际应用：HTML转义</span>
+<span class="code-keyword">function</span> <span class="code-function">safeHtml</span>(<span class="code-variable">strings</span>, ...<span class="code-variable">values</span>) {
+    <span class="code-keyword">const</span> <span class="code-variable">escape</span> = (<span class="code-variable">str</span>) => <span class="code-variable">String</span>(<span class="code-variable">str</span>)
+        .<span class="code-function">replace</span>(<span class="code-string">/&/g</span>, <span class="code-string">"&amp;amp;"</span>)
+        .<span class="code-function">replace</span>(<span class="code-string">/</g</span>, <span class="code-string">"&amp;gt;"</span>)
+        .<span class="code-function">replace</span>(<span class="code-string">/"/g</span>, <span class="code-string">"&amp;quot;"</span>);
+    
+    <span class="code-keyword">return</span> <span class="code-variable">strings</span>.<span class="code-function">reduce</span>((<span class="code-variable">result</span>, <span class="code-variable">str</span>, <span class="code-variable">i</span>) => 
+        <span class="code-variable">result</span> + <span class="code-variable">str</span> + (<span class="code-variable">values</span>[<span class="code-variable">i</span>] !== <span class="code-keyword">undefined</span> ? <span class="code-function">escape</span>(<span class="code-variable">values</span>[<span class="code-variable">i</span>]) : <span class="code-string">""</span>), <span class="code-string">""</span>);
+}
+
+<span class="code-keyword">const</span> <span class="code-variable">userInput</span> = <span class="code-string">'&lt;script&gt;alert("XSS")&lt;/script&gt;'</span>;
+<span class="code-keyword">const</span> <span class="code-variable">safe</span> = <span class="code-function">safeHtml</span><span class="code-string">`&lt;div&gt;${userInput}&lt;/div&gt;`</span>;
+</div>
+</div>
+
+<hr>
+
+<h2>三、函数增强</h2>
+
+<h3>3.1 箭头函数</h3>
+
+<div class="knowledge-box">
+<h4>核心概念：箭头函数</h4>
+<p><strong>箭头函数的特点：</strong></p>
+<p>
+    语法更简洁<br>
+    没有自己的this，继承外层作用域的this<br>
+    没有arguments对象<br>
+    不能作为构造函数（不能用new调用）<br>
+    没有prototype属性
+</p>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 箭头函数语法</span>
+<span class="code-comment">// 传统函数</span>
+<span class="code-keyword">const</span> <span class="code-variable">add1</span> = <span class="code-keyword">function</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>) {
+    <span class="code-keyword">return</span> <span class="code-variable">a</span> + <span class="code-variable">b</span>;
+};
+
+<span class="code-comment">// 箭头函数</span>
+<span class="code-keyword">const</span> <span class="code-variable">add2</span> = (<span class="code-variable">a</span>, <span class="code-variable">b</span>) => {
+    <span class="code-keyword">return</span> <span class="code-variable">a</span> + <span class="code-variable">b</span>;
+};
+
+<span class="code-comment">// 简写：单行可省略大括号和return</span>
+<span class="code-keyword">const</span> <span class="code-variable">add3</span> = (<span class="code-variable">a</span>, <span class="code-variable">b</span>) => <span class="code-variable">a</span> + <span class="code-variable">b</span>;
+
+<span class="code-comment">// 单参数可省略括号</span>
+<span class="code-keyword">const</span> <span class="code-variable">double</span> = <span class="code-variable">x</span> => <span class="code-variable">x</span> * <span class="code-number">2</span>;
+
+<span class="code-comment">// 返回对象需要加括号</span>
+<span class="code-keyword">const</span> <span class="code-variable">createPerson</span> = (<span class="code-variable">name</span>, <span class="code-variable">age</span>) => ({ <span class="code-variable">name</span>, <span class="code-variable">age</span> });
+</div>
+</div>
+
+<h4>this 绑定</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 传统函数的this问题</span>
+<span class="code-keyword">const</span> <span class="code-variable">obj1</span> = {
+    <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+    <span class="code-variable">greet</span>: <span class="code-keyword">function</span>() {
+        <span class="code-function">setTimeout</span>(<span class="code-keyword">function</span>() {
+            <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">this</span>.<span class="code-variable">name</span>);  <span class="code-comment">// undefined（this丢失）</span>
+        }, <span class="code-number">100</span>);
+    }
+};
+
+<span class="code-comment">// 箭头函数继承this</span>
+<span class="code-keyword">const</span> <span class="code-variable">obj2</span> = {
+    <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+    <span class="code-variable">greet</span>: <span class="code-keyword">function</span>() {
+        <span class="code-function">setTimeout</span>(() => {
+            <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-keyword">this</span>.<span class="code-variable">name</span>);  <span class="code-comment">// "张三"（继承外层this）</span>
+        }, <span class="code-number">100</span>);
+    }
+};
+
+<span class="code-comment">// 医疗场景：患者信息处理</span>
+<span class="code-keyword">const</span> <span class="code-variable">patient</span> = {
+    <span class="code-variable">name</span>: <span class="code-string">"李四"</span>,
+    <span class="code-variable">vitals</span>: [<span class="code-number">120</span>, <span class="code-number">80</span>, <span class="code-number">72</span>],
+    <span class="code-variable">analyze</span>: <span class="code-keyword">function</span>() {
+        <span class="code-keyword">this</span>.<span class="code-variable">vitals</span>.<span class="code-function">forEach</span>((<span class="code-variable">v</span>, <span class="code-variable">i</span>) => {
+            <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">`${this.name}的第${i+1}项生命体征：${v}`</span>);
+        });
+    }
+};
+</div>
+<button onclick="demoArrowFunction()">运行示例</button>
+<div id="arrow-output" class="output-box"></div>
+</div>
+
+<h3>3.2 函数默认参数</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// ES5 默认参数</span>
+<span class="code-keyword">function</span> <span class="code-function">greet1</span>(<span class="code-variable">name</span>) {
+    <span class="code-variable">name</span> = <span class="code-variable">name</span> || <span class="code-string">"访客"</span>;  <span class="code-comment">// 问题：空字符串也会被替换</span>
+    <span class="code-keyword">return</span> <span class="code-string">`你好，${name}！`</span>;
+}
+
+<span class="code-comment">// ES6 默认参数</span>
+<span class="code-keyword">function</span> <span class="code-function">greet2</span>(<span class="code-variable">name</span> = <span class="code-string">"访客"</span>) {
+    <span class="code-keyword">return</span> <span class="code-string">`你好，${name}！`</span>;
+}
+
+<span class="code-function">greet2</span>();         <span class="code-comment">// "你好，访客！"</span>
+<span class="code-function">greet2</span>(<span class="code-string">"张三"</span>);    <span class="code-comment">// "你好，张三！"</span>
+<span class="code-function">greet2</span>(<span class="code-string">""</span>);        <span class="code-comment">// "你好，！"</span>（空字符串不会被替换）</span>
+
+<span class="code-comment">// 默认参数可以是表达式</span>
+<span class="code-keyword">function</span> <span class="code-function">getConfig</span>(<span class="code-variable">url</span>, <span class="code-variable">timeout</span> = <span class="code-function">fetchTimeout</span>(), <span class="code-variable">headers</span> = {}) {
+    <span class="code-comment">// ...</span>
+}
+
+<span class="code-comment">// 默认参数在参数列表中的位置</span>
+<span class="code-keyword">function</span> <span class="code-function">fn</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span> = <span class="code-number">2</span>, <span class="code-variable">c</span>) {  <span class="code-comment">// c没有默认值，但在b之后</span>
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>, <span class="code-variable">c</span>);
+}
+<span class="code-function">fn</span>(<span class="code-number">1</span>);          <span class="code-comment">// 1, 2, undefined</span>
+<span class="code-function">fn</span>(<span class="code-number">1</span>, <span class="code-keyword">undefined</span>, <span class="code-number">3</span>);  <span class="code-comment">// 1, 2, 3</span>
+</div>
+</div>
+
+<h3>3.3 剩余参数与展开运算符</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 剩余参数（Rest Parameters）</span>
+<span class="code-keyword">function</span> <span class="code-function">sum</span>(...<span class="code-variable">numbers</span>) {
+    <span class="code-keyword">return</span> <span class="code-variable">numbers</span>.<span class="code-function">reduce</span>((<span class="code-variable">total</span>, <span class="code-variable">n</span>) => <span class="code-variable">total</span> + <span class="code-variable">n</span>, <span class="code-number">0</span>);
+}
+
+<span class="code-function">sum</span>(<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>);  <span class="code-comment">// 15</span>
+
+<span class="code-comment">// 剩余参数必须是最后一个参数</span>
+<span class="code-keyword">function</span> <span class="code-function">log</span>(<span class="code-variable">prefix</span>, ...<span class="code-variable">messages</span>) {
+    <span class="code-variable">messages</span>.<span class="code-function">forEach</span>(<span class="code-variable">msg</span> => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">prefix</span> + <span class="code-variable">msg</span>));
+}
+
+<span class="code-comment">// 展开运算符（Spread Operator）</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr1</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>];
+<span class="code-keyword">const</span> <span class="code-variable">arr2</span> = [<span class="code-number">4</span>, <span class="code-number">5</span>, <span class="code-number">6</span>];
+
+<span class="code-comment">// 数组展开</span>
+<span class="code-keyword">const</span> <span class="code-variable">merged</span> = [...<span class="code-variable">arr1</span>, ...<span class="code-variable">arr2</span>];  <span class="code-comment">// [1, 2, 3, 4, 5, 6]</span>
+<span class="code-keyword">const</span> <span class="code-variable">copied</span> = [...<span class="code-variable">arr1</span>];         <span class="code-comment">// [1, 2, 3]（浅拷贝）</span>
+
+<span class="code-comment">// 函数调用时展开</span>
+<span class="code-variable">Math</span>.<span class="code-function">max</span>(...<span class="code-variable">arr1</span>);  <span class="code-comment">// 3</span>
+
+<span class="code-comment">// 对象展开</span>
+<span class="code-keyword">const</span> <span class="code-variable">obj1</span> = { <span class="code-variable">a</span>: <span class="code-number">1</span>, <span class="code-variable">b</span>: <span class="code-number">2</span> };
+<span class="code-keyword">const</span> <span class="code-variable">obj2</span> = { <span class="code-variable">c</span>: <span class="code-number">3</span>, ...<span class="code-variable">obj1</span> };  <span class="code-comment">// { c: 3, a: 1, b: 2 }</span>
+
+<span class="code-comment">// 医疗场景：合并患者信息</span>
+<span class="code-keyword">const</span> <span class="code-variable">baseInfo</span> = { <span class="code-variable">hospital</span>: <span class="code-string">"中心医院"</span>, <span class="code-variable">department</span>: <span class="code-string">"内科"</span> };
+<span class="code-keyword">const</span> <span class="code-variable">patientInfo</span> = { ...<span class="code-variable">baseInfo</span>, <span class="code-variable">name</span>: <span class="code-string">"王五"</span>, <span class="code-variable">age</span>: <span class="code-number">45</span> };
+</div>
+<button onclick="demoRestSpread()">运行示例</button>
+<div id="restspread-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>四、解构赋值</h2>
+
+<div class="knowledge-box">
+<h4>核心概念：解构赋值</h4>
+<p><strong>什么是解构赋值？</strong></p>
+<p>解构赋值是一种从数组或对象中提取值并赋给变量的语法。它可以让代码更简洁，特别是在处理复杂数据结构时。</p>
+</div>
+
+<h4>数组解构</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 基本数组解构</span>
+<span class="code-keyword">const</span> [<span class="code-variable">a</span>, <span class="code-variable">b</span>] = [<span class="code-number">1</span>, <span class="code-number">2</span>];
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>);  <span class="code-comment">// 1 2</span>
+
+<span class="code-comment">// 跳过元素</span>
+<span class="code-keyword">const</span> [<span class="code-variable">x</span>, , <span class="code-variable">y</span>] = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>];
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">x</span>, <span class="code-variable">y</span>);  <span class="code-comment">// 1 3</span>
+
+<span class="code-comment">// 剩余元素</span>
+<span class="code-keyword">const</span> [<span class="code-variable">first</span>, ...<span class="code-variable">rest</span>] = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">4</span>, <span class="code-number">5</span>];
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">first</span>);  <span class="code-comment">// 1</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">rest</span>);    <span class="code-comment">// [2, 3, 4, 5]</span>
+
+<span class="code-comment">// 默认值</span>
+<span class="code-keyword">const</span> [<span class="code-variable">m</span> = <span class="code-number">10</span>, <span class="code-variable">n</span> = <span class="code-number">20</span>] = [<span class="code-keyword">undefined</span>, <span class="code-number">5</span>];
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">m</span>, <span class="code-variable">n</span>);  <span class="code-comment">// 10 5</span>
+
+<span class="code-comment">// 交换变量</span>
+<span class="code-keyword">let</span> <span class="code-variable">p</span> = <span class="code-number">1</span>, <span class="code-variable">q</span> = <span class="code-number">2</span>;
+[<span class="code-variable">p</span>, <span class="code-variable">q</span>] = [<span class="code-variable">q</span>, <span class="code-variable">p</span>];
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">p</span>, <span class="code-variable">q</span>);  <span class="code-comment">// 2 1</span>
+</div>
+</div>
+
+<h4>对象解构</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 基本对象解构</span>
+<span class="code-keyword">const</span> { <span class="code-variable">name</span>, <span class="code-variable">age</span> } = { <span class="code-variable">name</span>: <span class="code-string">"张三"</span>, <span class="code-variable">age</span>: <span class="code-number">25</span> };
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>);  <span class="code-comment">// "张三" 25</span>
+
+<span class="code-comment">// 重命名变量</span>
+<span class="code-keyword">const</span> { <span class="code-variable">name</span>: <span class="code-variable">userName</span>, <span class="code-variable">age</span>: <span class="code-variable">userAge</span> } = { <span class="code-variable">name</span>: <span class="code-string">"李四"</span>, <span class="code-variable">age</span>: <span class="code-number">30</span> };
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">userName</span>, <span class="code-variable">userAge</span>);  <span class="code-comment">// "李四" 30</span>
+
+<span class="code-comment">// 默认值</span>
+<span class="code-keyword">const</span> { <span class="code-variable">x</span> = <span class="code-number">100</span>, <span class="code-variable">y</span> = <span class="code-number">200</span> } = { <span class="code-variable">x</span>: <span class="code-number">10</span> };
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">x</span>, <span class="code-variable">y</span>);  <span class="code-comment">// 10 200</span>
+
+<span class="code-comment">// 剩余属性</span>
+<span class="code-keyword">const</span> { <span class="code-variable">a</span>, ...<span class="code-variable">others</span> } = { <span class="code-variable">a</span>: <span class="code-number">1</span>, <span class="code-variable">b</span>: <span class="code-number">2</span>, <span class="code-variable">c</span>: <span class="code-number">3</span> };
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">a</span>);       <span class="code-comment">// 1</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">others</span>);  <span class="code-comment">// { b: 2, c: 3 }</span>
+
+<span class="code-comment">// 医疗场景：解构患者数据</span>
+<span class="code-keyword">const</span> <span class="code-variable">patient</span> = {
+    <span class="code-variable">id</span>: <span class="code-string">"P001"</span>,
+    <span class="code-variable">name</span>: <span class="code-string">"王五"</span>,
+    <span class="code-variable">vitals</span>: {
+        <span class="code-variable">bloodPressure</span>: { <span class="code-variable">systolic</span>: <span class="code-number">120</span>, <span class="code-variable">diastolic</span>: <span class="code-number">80</span> },
+        <span class="code-variable">heartRate</span>: <span class="code-number">72</span>
+    }
+};
+
+<span class="code-keyword">const</span> { <span class="code-variable">id</span>, <span class="code-variable">name</span>: <span class="code-variable">patientName</span>, <span class="code-variable">vitals</span>: { <span class="code-variable">bloodPressure</span>: { <span class="code-variable">systolic</span> } } } = <span class="code-variable">patient</span>;
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">patientName</span>, <span class="code-variable">systolic</span>);  <span class="code-comment">// "王五" 120</span>
+</div>
+<button onclick="demoDestructuring()">运行示例</button>
+<div id="destructuring-output" class="output-box"></div>
+</div>
+
+<h4>嵌套解构与默认值</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 嵌套数组解构</span>
+<span class="code-keyword">const</span> [[<span class="code-variable">a1</span>, <span class="code-variable">a2</span>], [<span class="code-variable">b1</span>, <span class="code-variable">b2</span>]] = [[<span class="code-number">1</span>, <span class="code-number">2</span>], [<span class="code-number">3</span>, <span class="code-number">4</span>]];
+
+<span class="code-comment">// 嵌套对象解构</span>
+<span class="code-keyword">const</span> <span class="code-variable">data</span> = {
+    <span class="code-variable">user</span>: {
+        <span class="code-variable">profile</span>: {
+            <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+            <span class="code-variable">settings</span>: {
+                <span class="code-variable">theme</span>: <span class="code-string">"dark"</span>
+            }
+        }
+    }
+};
+
+<span class="code-keyword">const</span> { <span class="code-variable">user</span>: { <span class="code-variable">profile</span>: { <span class="code-variable">name</span>, <span class="code-variable">settings</span>: { <span class="code-variable">theme</span> = <span class="code-string">"light"</span> } = {} } = {} } = {} } = <span class="code-variable">data</span>;
+
+<span class="code-comment">// 函数参数解构</span>
+<span class="code-keyword">function</span> <span class="code-function">createUser</span>({ <span class="code-variable">name</span>, <span class="code-variable">age</span> = <span class="code-number">0</span>, <span class="code-variable">role</span> = <span class="code-string">"user"</span> } = {}) {
+    <span class="code-keyword">return</span> { <span class="code-variable">name</span>, <span class="code-variable">age</span>, <span class="code-variable">role</span> };
+}
+
+<span class="code-function">createUser</span>({ <span class="code-variable">name</span>: <span class="code-string">"张三"</span> });  <span class="code-comment">// { name: "张三", age: 0, role: "user" }</span>
+<span class="code-function">createUser</span>();                <span class="code-comment">// { name: undefined, age: 0, role: "user" }</span>
+</div>
+</div>
+
+<hr>
+
+<h2>五、对象字面量增强</h2>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 属性简写</span>
+<span class="code-keyword">const</span> <span class="code-variable">name</span> = <span class="code-string">"张三"</span>;
+<span class="code-keyword">const</span> <span class="code-variable">age</span> = <span class="code-number">25</span>;
+
+<span class="code-comment">// ES5</span>
+<span class="code-keyword">const</span> <span class="code-variable">user1</span> = { <span class="code-variable">name</span>: <span class="code-variable">name</span>, <span class="code-variable">age</span>: <span class="code-variable">age</span> };
+
+<span class="code-comment">// ES6 简写</span>
+<span class="code-keyword">const</span> <span class="code-variable">user2</span> = { <span class="code-variable">name</span>, <span class="code-variable">age</span> };
+
+<span class="code-comment">// 方法简写</span>
+<span class="code-keyword">const</span> <span class="code-variable">obj</span> = {
+    <span class="code-comment">// ES5</span>
+    <span class="code-function">sayHello</span>: <span class="code-keyword">function</span>() {
+        <span class="code-keyword">return</span> <span class="code-string">"Hello"</span>;
+    },
+    
+    <span class="code-comment">// ES6 简写</span>
+    <span class="code-function">greet</span>() {
+        <span class="code-keyword">return</span> <span class="code-string">"Hi"</span>;
+    }
+};
+
+<span class="code-comment">// 计算属性名</span>
+<span class="code-keyword">const</span> <span class="code-variable">key</span> = <span class="code-string">"dynamic"</span>;
+<span class="code-keyword">const</span> <span class="code-variable">obj2</span> = {
+    [<span class="code-variable">key</span>]: <span class="code-string">"value"</span>,
+    [<span class="code-string">`prefix_${key}`</span>]: <span class="code-string">"another value"</span>
+};
+<span class="code-comment">// { dynamic: "value", prefix_dynamic: "another value" }</span>
+
+<span class="code-comment">// 医疗场景</span>
+<span class="code-keyword">const</span> <span class="code-variable">createPatient</span> = (<span class="code-variable">id</span>, <span class="code-variable">name</span>, <span class="code-variable">ward</span>) => ({
+    <span class="code-variable">id</span>,
+    <span class="code-variable">name</span>,
+    <span class="code-variable">ward</span>,
+    [<span class="code-string">`ward_${ward}`</span>]: <span class="code-keyword">true</span>,
+    <span class="code-function">getInfo</span>() {
+        <span class="code-keyword">return</span> <span class="code-string">`患者${this.name}，编号${this.id}`</span>;
+    }
+});
+</div>
+<button onclick="demoObjectLiteral()">运行示例</button>
+<div id="objectliteral-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>六、数组与对象扩展</h2>
+
+<h3>6.1 数组方法</h3>
+
+<div class="demo-box">
+<p><strong>ES6+ 新增数组方法：</strong></p>
+<table>
+<tr><th>方法</th><th>说明</th><th>返回值</th></tr>
+<tr><td>forEach()</td><td>遍历数组</td><td>undefined</td></tr>
+<tr><td>map()</td><td>映射转换</td><td>新数组</td></tr>
+<tr><td>filter()</td><td>过滤元素</td><td>新数组</td></tr>
+<tr><td>reduce()</td><td>累积计算</td><td>累积值</td></tr>
+<tr><td>find()</td><td>查找元素</td><td>元素或undefined</td></tr>
+<tr><td>findIndex()</td><td>查找索引</td><td>索引或-1</td></tr>
+<tr><td>some()</td><td>是否存在满足条件的元素</td><td>boolean</td></tr>
+<tr><td>every()</td><td>是否所有元素都满足条件</td><td>boolean</td></tr>
+<tr><td>includes()</td><td>是否包含某值</td><td>boolean</td></tr>
+<tr><td>Array.from()</td><td>从类数组创建数组</td><td>新数组</td></tr>
+<tr><td>Array.of()</td><td>创建数组</td><td>新数组</td></tr>
+</table>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">const</span> <span class="code-variable">patients</span> = [
+    { <span class="code-variable">id</span>: <span class="code-number">1</span>, <span class="code-variable">name</span>: <span class="code-string">"张三"</span>, <span class="code-variable">age</span>: <span class="code-number">45</span>, <span class="code-variable">department</span>: <span class="code-string">"内科"</span> },
+    { <span class="code-variable">id</span>: <span class="code-number">2</span>, <span class="code-variable">name</span>: <span class="code-string">"李四"</span>, <span class="code-variable">age</span>: <span class="code-number">32</span>, <span class="code-variable">department</span>: <span class="code-string">"外科"</span> },
+    { <span class="code-variable">id</span>: <span class="code-number">3</span>, <span class="code-variable">name</span>: <span class="code-string">"王五"</span>, <span class="code-variable">age</span>: <span class="code-number">58</span>, <span class="code-variable">department</span>: <span class="code-string">"内科"</span> }
+];
+
+<span class="code-comment">// forEach - 遍历</span>
+<span class="code-variable">patients</span>.<span class="code-function">forEach</span>(<span class="code-variable">p</span> => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">p</span>.<span class="code-variable">name</span>));
+
+<span class="code-comment">// map - 提取所有姓名</span>
+<span class="code-keyword">const</span> <span class="code-variable">names</span> = <span class="code-variable">patients</span>.<span class="code-function">map</span>(<span class="code-variable">p</span> => <span class="code-variable">p</span>.<span class="code-variable">name</span>);
+<span class="code-comment">// ["张三", "李四", "王五"]</span>
+
+<span class="code-comment">// filter - 筛选内科患者</span>
+<span class="code-keyword">const</span> <span class="code-variable">internalMedicine</span> = <span class="code-variable">patients</span>.<span class="code-function">filter</span>(<span class="code-variable">p</span> => <span class="code-variable">p</span>.<span class="code-variable">department</span> === <span class="code-string">"内科"</span>);
+
+<span class="code-comment">// reduce - 计算平均年龄</span>
+<span class="code-keyword">const</span> <span class="code-variable">avgAge</span> = <span class="code-variable">patients</span>.<span class="code-function">reduce</span>((<span class="code-variable">sum</span>, <span class="code-variable">p</span>) => <span class="code-variable">sum</span> + <span class="code-variable">p</span>.<span class="code-variable">age</span>, <span class="code-number">0</span>) / <span class="code-variable">patients</span>.<span class="code-variable">length</span>;
+
+<span class="code-comment">// find - 查找特定患者</span>
+<span class="code-keyword">const</span> <span class="code-variable">patient</span> = <span class="code-variable">patients</span>.<span class="code-function">find</span>(<span class="code-variable">p</span> => <span class="code-variable">p</span>.<span class="code-variable">id</span> === <span class="code-number">2</span>);
+
+<span class="code-comment">// some/every - 检查条件</span>
+<span class="code-keyword">const</span> <span class="code-variable">hasElderly</span> = <span class="code-variable">patients</span>.<span class="code-function">some</span>(<span class="code-variable">p</span> => <span class="code-variable">p</span>.<span class="code-variable">age</span> >= <span class="code-number">60</span>);  <span class="code-comment">// false</span>
+<span class="code-keyword">const</span> <span class="code-variable">allAdults</span> = <span class="code-variable">patients</span>.<span class="code-function">every</span>(<span class="code-variable">p</span> => <span class="code-variable">p</span>.<span class="code-variable">age</span> >= <span class="code-number">18</span>);  <span class="code-comment">// true</span>
+
+<span class="code-comment">// Array.from - 从类数组创建</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = <span class="code-variable">Array</span>.<span class="code-function">from</span>(<span class="code-string">"hello"</span>);  <span class="code-comment">// ["h", "e", "l", "l", "o"]</span>
+<span class="code-keyword">const</span> <span class="code-variable">nums</span> = <span class="code-variable">Array</span>.<span class="code-function">from</span>({ <span class="code-variable">length</span>: <span class="code-number">5</span> }, (<span class="code-variable">_</span>, <span class="code-variable">i</span>) => <span class="code-variable">i</span> + <span class="code-number">1</span>);  <span class="code-comment">// [1, 2, 3, 4, 5]</span>
+</div>
+<button onclick="demoArrayMethods()">运行示例</button>
+<div id="arraymethods-output" class="output-box"></div>
+</div>
+
+<h3>6.2 对象方法</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">const</span> <span class="code-variable">patient</span> = {
+    <span class="code-variable">id</span>: <span class="code-string">"P001"</span>,
+    <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+    <span class="code-variable">age</span>: <span class="code-number">45</span>
+};
+
+<span class="code-comment">// Object.keys - 获取所有键</span>
+<span class="code-variable">Object</span>.<span class="code-function">keys</span>(<span class="code-variable">patient</span>);  <span class="code-comment">// ["id", "name", "age"]</span>
+
+<span class="code-comment">// Object.values - 获取所有值</span>
+<span class="code-variable">Object</span>.<span class="code-function">values</span>(<span class="code-variable">patient</span>);  <span class="code-comment">// ["P001", "张三", 45]</span>
+
+<span class="code-comment">// Object.entries - 获取键值对数组</span>
+<span class="code-variable">Object</span>.<span class="code-function">entries</span>(<span class="code-variable">patient</span>);
+<span class="code-comment">// [["id", "P001"], ["name", "张三"], ["age", 45]]</span>
+
+<span class="code-comment">// Object.assign - 合并对象</span>
+<span class="code-keyword">const</span> <span class="code-variable">merged</span> = <span class="code-variable">Object</span>.<span class="code-function">assign</span>({}, <span class="code-variable">patient</span>, { <span class="code-variable">department</span>: <span class="code-string">"内科"</span> });
+
+<span class="code-comment">// Object.fromEntries - 从键值对创建对象</span>
+<span class="code-keyword">const</span> <span class="code-variable">obj</span> = <span class="code-variable">Object</span>.<span class="code-function">fromEntries</span>([[<span class="code-string">"a"</span>, <span class="code-number">1</span>], [<span class="code-string">"b"</span>, <span class="code-number">2</span>]]);  <span class="code-comment">// { a: 1, b: 2 }</span>
+</div>
+<button onclick="demoObjectMethods()">运行示例</button>
+<div id="objectmethods-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>七、Symbol 类型</h2>
+
+<div class="knowledge-box">
+<h4>核心概念：Symbol</h4>
+<p><strong>什么是Symbol？</strong></p>
+<p>Symbol是ES6引入的一种新的原始数据类型，表示独一无二的值。每个Symbol值都是唯一的，主要用于创建对象的私有属性和内置行为。</p>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 创建Symbol</span>
+<span class="code-keyword">const</span> <span class="code-variable">sym1</span> = <span class="code-function">Symbol</span>();
+<span class="code-keyword">const</span> <span class="code-variable">sym2</span> = <span class="code-function">Symbol</span>(<span class="code-string">"description"</span>);  <span class="code-comment">// 带描述</span>
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">sym1</span> === <span class="code-variable">sym2</span>);  <span class="code-comment">// false（每个Symbol都是唯一的）</span>
+
+<span class="code-comment">// 用作对象属性（私有属性）</span>
+<span class="code-keyword">const</span> <span class="code-variable">ID</span> = <span class="code-function">Symbol</span>(<span class="code-string">"id"</span>);
+<span class="code-keyword">const</span> <span class="code-variable">user</span> = {
+    <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+    [<span class="code-variable">ID</span>]: <span class="code-number">12345</span>
+};
+
+<span class="code-variable">Object</span>.<span class="code-function">keys</span>(<span class="code-variable">user</span>);     <span class="code-comment">// ["name"] - Symbol属性不会被枚举</span>
+<span class="code-variable">user</span>[<span class="code-variable">ID</span>];              <span class="code-comment">// 12345</span>
+
+<span class="code-comment">// 全局Symbol注册表</span>
+<span class="code-keyword">const</span> <span class="code-variable">globalSym1</span> = <span class="code-function">Symbol.for</span>(<span class="code-string">"app.id"</span>);
+<span class="code-keyword">const</span> <span class="code-variable">globalSym2</span> = <span class="code-function">Symbol.for</span>(<span class="code-string">"app.id"</span>);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">globalSym1</span> === <span class="code-variable">globalSym2</span>);  <span class="code-comment">// true</span>
+</div>
+<button onclick="demoSymbol()">运行示例</button>
+<div id="symbol-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>八、Set 与 Map</h2>
+
+<h3>8.1 Set</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 创建Set</span>
+<span class="code-keyword">const</span> <span class="code-variable">set</span> = <span class="code-keyword">new</span> <span class="code-class">Set</span>([<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">2</span>, <span class="code-number">1</span>]);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">set</span>);  <span class="code-comment">// Set {1, 2, 3} - 自动去重</span>
+
+<span class="code-comment">// 基本操作</span>
+<span class="code-variable">set</span>.<span class="code-function">add</span>(<span class="code-number">4</span>);           <span class="code-comment">// 添加元素</span>
+<span class="code-variable">set</span>.<span class="code-function">delete</span>(<span class="code-number">2</span>);        <span class="code-comment">// 删除元素</span>
+<span class="code-variable">set</span>.<span class="code-function">has</span>(<span class="code-number">1</span>);           <span class="code-comment">// true - 检查是否存在</span>
+<span class="code-variable">set</span>.<span class="code-variable">size</span>;             <span class="code-comment">// 3 - 元素数量</span>
+<span class="code-variable">set</span>.<span class="code-function">clear</span>();         <span class="code-comment">// 清空</span>
+
+<span class="code-comment">// 数组去重</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">2</span>, <span class="code-number">3</span>, <span class="code-number">3</span>, <span class="code-number">3</span>];
+<span class="code-keyword">const</span> <span class="code-variable">unique</span> = [...<span class="code-keyword">new</span> <span class="code-class">Set</span>(<span class="code-variable">arr</span>)];  <span class="code-comment">// [1, 2, 3]</span>
+
+<span class="code-comment">// 遍历Set</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-variable">item</span> <span class="code-keyword">of</span> <span class="code-variable">set</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">item</span>);
+}
+</div>
+<button onclick="demoSet()">运行示例</button>
+<div id="set-output" class="output-box"></div>
+</div>
+
+<h3>8.2 Map</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 创建Map</span>
+<span class="code-keyword">const</span> <span class="code-variable">map</span> = <span class="code-keyword">new</span> <span class="code-class">Map</span>();
+
+<span class="code-comment">// 基本操作</span>
+<span class="code-variable">map</span>.<span class="code-function">set</span>(<span class="code-string">"name"</span>, <span class="code-string">"张三"</span>);   <span class="code-comment">// 设置键值对</span>
+<span class="code-variable">map</span>.<span class="code-function">set</span>(<span class="code-string">"age"</span>, <span class="code-number">25</span>);
+<span class="code-variable">map</span>.<span class="code-function">get</span>(<span class="code-string">"name"</span>);           <span class="code-comment">// "张三" - 获取值</span>
+<span class="code-variable">map</span>.<span class="code-function">has</span>(<span class="code-string">"name"</span>);           <span class="code-comment">// true - 检查是否存在</span>
+<span class="code-variable">map</span>.<span class="code-function">delete</span>(<span class="code-string">"age"</span>);         <span class="code-comment">// 删除</span>
+<span class="code-variable">map</span>.<span class="code-variable">size</span>;                   <span class="code-comment">// 1 - 元素数量</span>
+
+<span class="code-comment">// Map的键可以是任意类型</span>
+<span class="code-keyword">const</span> <span class="code-variable">objKey</span> = { <span class="code-variable">id</span>: <span class="code-number">1</span> };
+<span class="code-variable">map</span>.<span class="code-function">set</span>(<span class="code-variable">objKey</span>, <span class="code-string">"对象作为键"</span>);
+
+<span class="code-comment">// 遍历Map</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">const</span> [<span class="code-variable">key</span>, <span class="code-variable">value</span>] <span class="code-keyword">of</span> <span class="code-variable">map</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">key</span>, <span class="code-variable">value</span>);
+}
+
+<span class="code-comment">// Map与Object对比</span>
+<span class="code-comment">// Map: 键可以是任意类型，有序，有size属性</span>
+<span class="code-comment">// Object: 键只能是字符串或Symbol，无序</span>
+</div>
+<button onclick="demoMap()">运行示例</button>
+<div id="map-output" class="output-box"></div>
+</div>
+
+<h3>8.3 WeakSet 与 WeakMap</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// WeakMap - 键必须是对象，弱引用</span>
+<span class="code-keyword">const</span> <span class="code-variable">weakMap</span> = <span class="code-keyword">new</span> <span class="code-class">WeakMap</span>();
+<span class="code-keyword">let</span> <span class="code-variable">key</span> = { <span class="code-variable">id</span>: <span class="code-number">1</span> };
+<span class="code-variable">weakMap</span>.<span class="code-function">set</span>(<span class="code-variable">key</span>, <span class="code-string">"私有数据"</span>);
+<span class="code-variable">weakMap</span>.<span class="code-function">get</span>(<span class="code-variable">key</span>);  <span class="code-comment">// "私有数据"</span>
+<span class="code-variable">key</span> = <span class="code-keyword">null</span>;  <span class="code-comment">// key会被垃圾回收，WeakMap中的条目自动清除</span>
+
+<span class="code-comment">// WeakMap 应用场景：存储DOM元素的关联数据</span>
+<span class="code-keyword">const</span> <span class="code-variable">domData</span> = <span class="code-keyword">new</span> <span class="code-class">WeakMap</span>();
+<span class="code-keyword">const</span> <span class="code-variable">element</span> = <span class="code-variable">document</span>.<span class="code-function">getElementById</span>(<span class="code-string">"myElement"</span>);
+<span class="code-variable">domData</span>.<span class="code-function">set</span>(<span class="code-variable">element</span>, { <span class="code-variable">clickCount</span>: <span class="code-number">0</span> });
+<span class="code-comment">// 当element被删除时，关联数据自动释放</span>
+</div>
+</div>
+
+<div class="tip">
+<strong>WeakSet 与 WeakMap 的特点：</strong>
+<p>
+    只能存储对象作为键/值<br>
+    弱引用：不影响垃圾回收<br>
+    不可遍历（没有size属性、forEach等方法）<br>
+    适用于缓存、私有数据存储等场景
+</p>
+</div>
+
+<hr>
+
+<h2>九、迭代器与生成器</h2>
+
+<h3>9.1 迭代器（Iterator）</h3>
+
+<div class="knowledge-box">
+<h4>核心概念：迭代器</h4>
+<p><strong>什么是迭代器？</strong></p>
+<p>迭代器是一种对象，它提供了一种统一的方式来遍历集合中的元素。任何具有 Symbol.iterator 属性的对象都是可迭代的。</p>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 迭代器协议</span>
+<span class="code-keyword">const</span> <span class="code-variable">iterableObj</span> = {
+    <span class="code-variable">data</span>: [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>],
+    [<span class="code-variable">Symbol</span>.<span class="code-variable">iterator</span>]() {
+        <span class="code-keyword">let</span> <span class="code-variable">index</span> = <span class="code-number">0</span>;
+        <span class="code-keyword">const</span> <span class="code-variable">data</span> = <span class="code-keyword">this</span>.<span class="code-variable">data</span>;
+        <span class="code-keyword">return</span> {
+            <span class="code-function">next</span>() {
+                <span class="code-keyword">if</span> (<span class="code-variable">index</span> < <span class="code-variable">data</span>.<span class="code-variable">length</span>) {
+                    <span class="code-keyword">return</span> { <span class="code-variable">value</span>: <span class="code-variable">data</span>[<span class="code-variable">index</span>++], <span class="code-variable">done</span>: <span class="code-keyword">false</span> };
+                }
+                <span class="code-keyword">return</span> { <span class="code-variable">done</span>: <span class="code-keyword">true</span> };
+            }
+        };
+    }
+};
+
+<span class="code-comment">// 使用迭代器</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-variable">item</span> <span class="code-keyword">of</span> <span class="code-variable">iterableObj</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">item</span>);  <span class="code-comment">// 1, 2, 3</span>
+}
+
+<span class="code-comment">// 手动调用迭代器</span>
+<span class="code-keyword">const</span> <span class="code-variable">iterator</span> = <span class="code-variable">iterableObj</span>[<span class="code-variable">Symbol</span>.<span class="code-variable">iterator</span>]();
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">iterator</span>.<span class="code-function">next</span>());  <span class="code-comment">// { value: 1, done: false }</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">iterator</span>.<span class="code-function">next</span>());  <span class="code-comment">// { value: 2, done: false }</span>
+</div>
+<button onclick="demoIterator()">运行示例</button>
+<div id="iterator-output" class="output-box"></div>
+</div>
+
+<h3>9.2 for...of 循环</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// for...of 遍历可迭代对象</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = [<span class="code-string">"a"</span>, <span class="code-string">"b"</span>, <span class="code-string">"c"</span>];
+
+<span class="code-comment">// 数组</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-variable">item</span> <span class="code-keyword">of</span> <span class="code-variable">arr</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">item</span>);  <span class="code-comment">// a, b, c</span>
+}
+
+<span class="code-comment">// 字符串</span>
+<span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-variable">char</span> <span class="code-keyword">of</span> <span class="code-string">"hello"</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">char</span>);  <span class="code-comment">// h, e, l, l, o</span>
+}
+
+<span class="code-comment">// Map</span>
+<span class="code-keyword">const</span> <span class="code-variable">map</span> = <span class="code-keyword">new</span> <span class="code-class">Map</span>([[<span class="code-string">"a"</span>, <span class="code-number">1</span>], [<span class="code-string">"b"</span>, <span class="code-number">2</span>]]);
+<span class="code-keyword">for</span> (<span class="code-keyword">const</span> [<span class="code-variable">key</span>, <span class="code-variable">value</span>] <span class="code-keyword">of</span> <span class="code-variable">map</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">key</span>, <span class="code-variable">value</span>);
+}
+
+<span class="code-comment">// for...of vs for...in</span>
+<span class="code-comment">// for...of: 遍历值，适用于可迭代对象</span>
+<span class="code-comment">// for...in: 遍历键（索引/属性名），适用于对象</span>
+</div>
+</div>
+
+<h3>9.3 生成器函数</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 生成器函数使用 function* 声明</span>
+<span class="code-keyword">function</span>* <span class="code-function">numberGenerator</span>() {
+    <span class="code-keyword">yield</span> <span class="code-number">1</span>;
+    <span class="code-keyword">yield</span> <span class="code-number">2</span>;
+    <span class="code-keyword">yield</span> <span class="code-number">3</span>;
+}
+
+<span class="code-keyword">const</span> <span class="code-variable">gen</span> = <span class="code-function">numberGenerator</span>();
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">gen</span>.<span class="code-function">next</span>());  <span class="code-comment">// { value: 1, done: false }</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">gen</span>.<span class="code-function">next</span>());  <span class="code-comment">// { value: 2, done: false }</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">gen</span>.<span class="code-function">next</span>());  <span class="code-comment">// { value: 3, done: false }</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">gen</span>.<span class="code-function">next</span>());  <span class="code-comment">// { value: undefined, done: true }</span>
+
+<span class="code-comment">// 生成器实现无限序列</span>
+<span class="code-keyword">function</span>* <span class="code-function">idGenerator</span>() {
+    <span class="code-keyword">let</span> <span class="code-variable">id</span> = <span class="code-number">1</span>;
+    <span class="code-keyword">while</span> (<span class="code-keyword">true</span>) {
+        <span class="code-keyword">yield</span> <span class="code-variable">id</span>++;
+    }
+}
+
+<span class="code-keyword">const</span> <span class="code-variable">ids</span> = <span class="code-function">idGenerator</span>();
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">ids</span>.<span class="code-function">next</span>().<span class="code-variable">value</span>);  <span class="code-comment">// 1</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">ids</span>.<span class="code-function">next</span>().<span class="code-variable">value</span>);  <span class="code-comment">// 2</span>
+
+<span class="code-comment">// 生成器实现异步流程控制</span>
+<span class="code-keyword">function</span>* <span class="code-function">fetchData</span>() {
+    <span class="code-keyword">try</span> {
+        <span class="code-keyword">const</span> <span class="code-variable">user</span> = <span class="code-keyword">yield</span> <span class="code-function">fetch</span>(<span class="code-string">"/api/user"</span>);
+        <span class="code-keyword">const</span> <span class="code-variable">posts</span> = <span class="code-keyword">yield</span> <span class="code-function">fetch</span>(<span class="code-string">`/api/posts/${user.id}`</span>);
+        <span class="code-keyword">return</span> <span class="code-variable">posts</span>;
+    } <span class="code-keyword">catch</span> (<span class="code-variable">e</span>) {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-variable">e</span>);
+    }
+}
+</div>
+<button onclick="demoGenerator()">运行示例</button>
+<div id="generator-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>十、类（class）</h2>
+
+<div class="knowledge-box">
+<h4>核心概念：类</h4>
+<p><strong>ES6 类的本质：</strong></p>
+<p>ES6 的 class 本质上是构造函数的语法糖，它让对象原型的写法更加清晰、更像面向对象编程的语法。类不会提升，必须先定义后使用。</p>
+</div>
+
+<h3>10.1 类的声明与实例化</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 类的声明</span>
+<span class="code-keyword">class</span> <span class="code-class">Person</span> {
+    <span class="code-comment">// 构造函数</span>
+    <span class="code-function">constructor</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>) {
+        <span class="code-keyword">this</span>.<span class="code-variable">name</span> = <span class="code-variable">name</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">age</span> = <span class="code-variable">age</span>;
+    }
+
+    <span class="code-comment">// 实例方法</span>
+    <span class="code-function">greet</span>() {
+        <span class="code-keyword">return</span> <span class="code-string">`你好，我是${this.name}，今年${this.age}岁`</span>;
+    }
+
+    <span class="code-comment">// 静态方法</span>
+    <span class="code-keyword">static</span> <span class="code-function">create</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>) {
+        <span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-class">Person</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>);
+    }
+}
+
+<span class="code-comment">// 实例化</span>
+<span class="code-keyword">const</span> <span class="code-variable">person</span> = <span class="code-keyword">new</span> <span class="code-class">Person</span>(<span class="code-string">"张三"</span>, <span class="code-number">25</span>);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">person</span>.<span class="code-function">greet</span>());  <span class="code-comment">// "你好，我是张三，今年25岁"</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-class">Person</span>.<span class="code-function">create</span>(<span class="code-string">"李四"</span>, <span class="code-number">30</span>).<span class="code-function">greet</span>());
+</div>
+<button onclick="demoClass()">运行示例</button>
+<div id="class-output" class="output-box"></div>
+</div>
+
+<h3>10.2 类的继承</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 父类</span>
+<span class="code-keyword">class</span> <span class="code-class">Animal</span> {
+    <span class="code-function">constructor</span>(<span class="code-variable">name</span>) {
+        <span class="code-keyword">this</span>.<span class="code-variable">name</span> = <span class="code-variable">name</span>;
+    }
+
+    <span class="code-function">speak</span>() {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">`${this.name}发出声音`</span>);
+    }
+}
+
+<span class="code-comment">// 子类继承父类</span>
+<span class="code-keyword">class</span> <span class="code-class">Dog</span> <span class="code-keyword">extends</span> <span class="code-class">Animal</span> {
+    <span class="code-function">constructor</span>(<span class="code-variable">name</span>, <span class="code-variable">breed</span>) {
+        <span class="code-keyword">super</span>(<span class="code-variable">name</span>);  <span class="code-comment">// 调用父类构造函数</span>
+        <span class="code-keyword">this</span>.<span class="code-variable">breed</span> = <span class="code-variable">breed</span>;
+    }
+
+    <span class="code-comment">// 重写父类方法</span>
+    <span class="code-function">speak</span>() {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">`${this.name}汪汪叫`</span>);
+    }
+
+    <span class="code-comment">// 子类特有方法</span>
+    <span class="code-function">fetch</span>() {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">`${this.name}去捡球`</span>);
+    }
+}
+
+<span class="code-keyword">const</span> <span class="code-variable">dog</span> = <span class="code-keyword">new</span> <span class="code-class">Dog</span>(<span class="code-string">"旺财"</span>, <span class="code-string">"金毛"</span>);
+<span class="code-variable">dog</span>.<span class="code-function">speak</span>();   <span class="code-comment">// "旺财汪汪叫"</span>
+<span class="code-variable">dog</span>.<span class="code-function">fetch</span>();   <span class="code-comment">// "旺财去捡球"</span>
+
+<span class="code-comment">// 医疗场景：患者类继承</span>
+<span class="code-keyword">class</span> <span class="code-class">Patient</span> <span class="code-keyword">extends</span> <span class="code-class">Person</span> {
+    <span class="code-function">constructor</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>, <span class="code-variable">medicalRecord</span>) {
+        <span class="code-keyword">super</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>);
+        <span class="code-keyword">this</span>.<span class="code-variable">medicalRecord</span> = <span class="code-variable">medicalRecord</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">admissions</span> = [];
+    }
+
+    <span class="code-function">admit</span>(<span class="code-variable">department</span>) {
+        <span class="code-keyword">this</span>.<span class="code-variable">admissions</span>.<span class="code-function">push</span>({
+            <span class="code-variable">department</span>,
+            <span class="code-variable">date</span>: <span class="code-keyword">new</span> <span class="code-class">Date</span>()
+        });
+    }
+}
+</div>
+<button onclick="demoInheritance()">运行示例</button>
+<div id="inheritance-output" class="output-box"></div>
+</div>
+
+<h3>10.3 私有属性与方法</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// ES2022 私有属性（使用 # 前缀）</span>
+<span class="code-keyword">class</span> <span class="code-class">BankAccount</span> {
+    <span class="code-comment">// 私有属性</span>
+    #<span class="code-variable">balance</span> = <span class="code-number">0</span>;
+    #<span class="code-variable">pin</span>;
+
+    <span class="code-function">constructor</span>(<span class="code-variable">initialBalance</span>, <span class="code-variable">pin</span>) {
+        <span class="code-keyword">this</span>.#<span class="code-variable">balance</span> = <span class="code-variable">initialBalance</span>;
+        <span class="code-keyword">this</span>.#<span class="code-variable">pin</span> = <span class="code-variable">pin</span>;
+    }
+
+    <span class="code-comment">// 私有方法</span>
+    #<span class="code-function">validatePin</span>(<span class="code-variable">inputPin</span>) {
+        <span class="code-keyword">return</span> <span class="code-variable">inputPin</span> === <span class="code-keyword">this</span>.#<span class="code-variable">pin</span>;
+    }
+
+    <span class="code-function">deposit</span>(<span class="code-variable">amount</span>) {
+        <span class="code-keyword">if</span> (<span class="code-variable">amount</span> > <span class="code-number">0</span>) {
+            <span class="code-keyword">this</span>.#<span class="code-variable">balance</span> += <span class="code-variable">amount</span>;
+        }
+    }
+
+    <span class="code-function">withdraw</span>(<span class="code-variable">amount</span>, <span class="code-variable">pin</span>) {
+        <span class="code-keyword">if</span> (<span class="code-keyword">this</span>.#<span class="code-function">validatePin</span>(<span class="code-variable">pin</span>) && <span class="code-variable">amount</span> <= <span class="code-keyword">this</span>.#<span class="code-variable">balance</span>) {
+            <span class="code-keyword">this</span>.#<span class="code-variable">balance</span> -= <span class="code-variable">amount</span>;
+            <span class="code-keyword">return</span> <span class="code-variable">amount</span>;
+        }
+        <span class="code-keyword">return</span> <span class="code-number">0</span>;
+    }
+
+    <span class="code-function">getBalance</span>() {
+        <span class="code-keyword">return</span> <span class="code-keyword">this</span>.#<span class="code-variable">balance</span>;
+    }
+}
+
+<span class="code-keyword">const</span> <span class="code-variable">account</span> = <span class="code-keyword">new</span> <span class="code-class">BankAccount</span>(<span class="code-number">1000</span>, <span class="code-string">"1234"</span>);
+<span class="code-comment">// account.#balance; // 报错！私有属性无法外部访问</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">account</span>.<span class="code-function">getBalance</span>());  <span class="code-comment">// 1000</span>
+</div>
+</div>
+
+<hr>
+
+<h2>十一、模块化</h2>
+
+<div class="knowledge-box">
+<h4>核心概念：ES6 模块</h4>
+<p><strong>模块化的优势：</strong></p>
+<p>
+    代码分割：将代码拆分成独立的模块，便于维护<br>
+    命名空间：避免全局变量污染<br>
+    依赖管理：明确模块之间的依赖关系<br>
+    按需加载：提高页面加载性能
+</p>
+</div>
+
+<h3>11.1 导出（export）</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// ========== utils.js ==========</span>
+
+<span class="code-comment">// 命名导出</span>
+<span class="code-keyword">export</span> <span class="code-keyword">const</span> <span class="code-variable">PI</span> = <span class="code-number">3.14159</span>;
+
+<span class="code-keyword">export</span> <span class="code-keyword">function</span> <span class="code-function">sum</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>) {
+    <span class="code-keyword">return</span> <span class="code-variable">a</span> + <span class="code-variable">b</span>;
+}
+
+<span class="code-keyword">export</span> <span class="code-keyword">class</span> <span class="code-class">Calculator</span> {
+    <span class="code-function">add</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>) { <span class="code-keyword">return</span> <span class="code-variable">a</span> + <span class="code-variable">b</span>; }
+    <span class="code-function">subtract</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>) { <span class="code-keyword">return</span> <span class="code-variable">a</span> - <span class="code-variable">b</span>; }
+}
+
+<span class="code-comment">// 统一导出</span>
+<span class="code-keyword">const</span> <span class="code-variable">name</span> = <span class="code-string">"utils"</span>;
+<span class="code-keyword">const</span> <span class="code-variable">version</span> = <span class="code-string">"1.0.0"</span>;
+<span class="code-keyword">export</span> { <span class="code-variable">name</span>, <span class="code-variable">version</span> };
+
+<span class="code-comment">// 重命名导出</span>
+<span class="code-keyword">export</span> { <span class="code-variable">sum</span> <span class="code-keyword">as</span> <span class="code-variable">addNumbers</span> };
+
+<span class="code-comment">// 默认导出（每个模块只能有一个）</span>
+<span class="code-keyword">export</span> <span class="code-keyword">default</span> <span class="code-keyword">class</span> <span class="code-class">Patient</span> {
+    <span class="code-function">constructor</span>(<span class="code-variable">name</span>, <span class="code-variable">age</span>) {
+        <span class="code-keyword">this</span>.<span class="code-variable">name</span> = <span class="code-variable">name</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">age</span> = <span class="code-variable">age</span>;
+    }
+}
+</div>
+</div>
+
+<h3>11.2 导入（import）</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// ========== main.js ==========</span>
+
+<span class="code-comment">// 导入默认导出</span>
+<span class="code-keyword">import</span> <span class="code-class">Patient</span> <span class="code-keyword">from</span> <span class="code-string">"./utils.js"</span>;
+
+<span class="code-comment">// 导入命名导出</span>
+<span class="code-keyword">import</span> { <span class="code-variable">PI</span>, <span class="code-variable">sum</span>, <span class="code-class">Calculator</span> } <span class="code-keyword">from</span> <span class="code-string">"./utils.js"</span>;
+
+<span class="code-comment">// 导入并重命名</span>
+<span class="code-keyword">import</span> { <span class="code-variable">sum</span> <span class="code-keyword">as</span> <span class="code-variable">add</span> } <span class="code-keyword">from</span> <span class="code-string">"./utils.js"</span>;
+
+<span class="code-comment">// 导入所有（作为命名空间）</span>
+<span class="code-keyword">import</span> * <span class="code-keyword">as</span> <span class="code-variable">Utils</span> <span class="code-keyword">from</span> <span class="code-string">"./utils.js"</span>;
+<span class="code-variable">Utils</span>.<span class="code-variable">PI</span>;  <span class="code-comment">// 3.14159</span>
+
+<span class="code-comment">// 同时导入默认和命名导出</span>
+<span class="code-keyword">import</span> <span class="code-class">Patient</span>, { <span class="code-variable">PI</span>, <span class="code-variable">sum</span> } <span class="code-keyword">from</span> <span class="code-string">"./utils.js"</span>;
+
+<span class="code-comment">// 动态导入（返回Promise）</span>
+<span class="code-keyword">import</span>(<span class="code-string">"./utils.js"</span>).<span class="code-function">then</span>(<span class="code-variable">module</span> => {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">module</span>.<span class="code-variable">PI</span>);
+});
+</div>
+</div>
+
+<div class="tip">
+<strong>模块化注意事项：</strong>
+<p>
+    ES6 模块默认运行在严格模式下<br>
+    模块中的变量是局部的，不会污染全局作用域<br>
+    import 是静态的，必须在模块顶层使用（动态导入除外）<br>
+    导出的值是"活绑定"，导入方可以获取更新后的值
+</p>
+</div>
+
+<hr>
+
+<h2>十二、Promise 基础</h2>
+
+<div class="knowledge-box">
+<h4>核心概念：Promise</h4>
+<p><strong>什么是Promise？</strong></p>
+<p>Promise是ES6引入的异步编程解决方案，它代表一个异步操作的最终完成（或失败）及其结果值。Promise有三种状态：pending（进行中）、fulfilled（已成功）、rejected（已失败），状态一旦改变就不会再变。</p>
+</div>
+
+<h3>12.1 Promise 的创建与状态</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 创建Promise</span>
+<span class="code-keyword">const</span> <span class="code-variable">promise</span> = <span class="code-keyword">new</span> <span class="code-class">Promise</span>((<span class="code-variable">resolve</span>, <span class="code-variable">reject</span>) => {
+    <span class="code-comment">// 异步操作</span>
+    <span class="code-function">setTimeout</span>(() => {
+        <span class="code-keyword">const</span> <span class="code-variable">success</span> = <span class="code-keyword">true</span>;
+        <span class="code-keyword">if</span> (<span class="code-variable">success</span>) {
+            <span class="code-function">resolve</span>(<span class="code-string">"操作成功！"</span>);  <span class="code-comment">// 状态变为 fulfilled</span>
+        } <span class="code-keyword">else</span> {
+            <span class="code-function">reject</span>(<span class="code-string">"操作失败！"</span>);    <span class="code-comment">// 状态变为 rejected</span>
+        }
+    }, <span class="code-number">1000</span>);
+});
+
+<span class="code-comment">// Promise状态</span>
+<span class="code-comment">// pending: 初始状态，操作进行中</span>
+<span class="code-comment">// fulfilled: 操作成功完成</span>
+<span class="code-comment">// rejected: 操作失败</span>
+</div>
+</div>
+
+<h3>12.2 then、catch、finally</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// then - 处理成功</span>
+<span class="code-variable">promise</span>
+    .<span class="code-function">then</span>(<span class="code-variable">result</span> => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"成功："</span> + <span class="code-variable">result</span>);
+        <span class="code-keyword">return</span> <span class="code-string">"处理后的结果"</span>;  <span class="code-comment">// 可以返回值给下一个then</span>
+    })
+    .<span class="code-function">then</span>(<span class="code-variable">data</span> => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">data</span>);  <span class="code-comment">// "处理后的结果"</span>
+    });
+
+<span class="code-comment">// catch - 处理错误</span>
+<span class="code-variable">promise</span>
+    .<span class="code-function">then</span>(<span class="code-variable">result</span> => {
+        <span class="code-comment">// 处理成功</span>
+    })
+    .<span class="code-function">catch</span>(<span class="code-variable">error</span> => {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"错误："</span> + <span class="code-variable">error</span>);
+    });
+
+<span class="code-comment">// finally - 无论成功失败都执行</span>
+<span class="code-variable">promise</span>
+    .<span class="code-function">then</span>(<span class="code-variable">result</span> => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">result</span>))
+    .<span class="code-function">catch</span>(<span class="code-variable">error</span> => <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-variable">error</span>))
+    .<span class="code-function">finally</span>(() => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"操作完成（无论成功或失败）"</span>);
+    });
+</div>
+<button onclick="demoPromise()">运行示例</button>
+<div id="promise-output" class="output-box"></div>
+</div>
+
+<h3>12.3 错误处理</h3>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 模拟医疗数据获取</span>
+<span class="code-keyword">function</span> <span class="code-function">fetchPatientData</span>(<span class="code-variable">id</span>) {
+    <span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-class">Promise</span>((<span class="code-variable">resolve</span>, <span class="code-variable">reject</span>) => {
+        <span class="code-function">setTimeout</span>(() => {
+            <span class="code-keyword">if</span> (<span class="code-variable">id</span> > <span class="code-number">0</span>) {
+                <span class="code-function">resolve</span>({
+                    <span class="code-variable">id</span>,
+                    <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+                    <span class="code-variable">age</span>: <span class="code-number">45</span>,
+                    <span class="code-variable">department</span>: <span class="code-string">"内科"</span>
+                });
+            } <span class="code-keyword">else</span> {
+                <span class="code-function">reject</span>(<span class="code-keyword">new</span> <span class="code-class">Error</span>(<span class="code-string">"无效的患者ID"</span>));
+            }
+        }, <span class="code-number">500</span>);
+    });
+}
+
+<span class="code-comment">// 使用Promise</span>
+<span class="code-function">fetchPatientData</span>(<span class="code-number">1</span>)
+    .<span class="code-function">then</span>(<span class="code-variable">patient</span> => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"患者信息："</span>, <span class="code-variable">patient</span>);
+        <span class="code-keyword">return</span> <span class="code-function">fetchPatientData</span>(<span class="code-number">2</span>);  <span class="code-comment">// 链式调用</span>
+    })
+    .<span class="code-function">then</span>(<span class="code-variable">patient2</span> => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"第二位患者："</span>, <span class="code-variable">patient2</span>);
+    })
+    .<span class="code-function">catch</span>(<span class="code-variable">error</span> => {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"获取失败："</span>, <span class="code-variable">error</span>.<span class="code-variable">message</span>);
+    });
+
+<span class="code-comment">// Promise.all - 并行执行多个Promise</span>
+<span class="code-class">Promise</span>.<span class="code-function">all</span>([
+    <span class="code-function">fetchPatientData</span>(<span class="code-number">1</span>),
+    <span class="code-function">fetchPatientData</span>(<span class="code-number">2</span>),
+    <span class="code-function">fetchPatientData</span>(<span class="code-number">3</span>)
+]).<span class="code-function">then</span>(<span class="code-variable">patients</span> => {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"所有患者："</span>, <span class="code-variable">patients</span>);
+}).<span class="code-function">catch</span>(<span class="code-variable">error</span> => {
+    <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"至少一个请求失败"</span>);
+});
+
+<span class="code-comment">// Promise.race - 返回最先完成的Promise</span>
+<span class="code-class">Promise</span>.<span class="code-function">race</span>([
+    <span class="code-function">fetchPatientData</span>(<span class="code-number">1</span>),
+    <span class="code-keyword">new</span> <span class="code-class">Promise</span>((_, <span class="code-variable">reject</span>) => 
+        <span class="code-function">setTimeout</span>(() => <span class="code-function">reject</span>(<span class="code-keyword">new</span> <span class="code-class">Error</span>(<span class="code-string">"请求超时"</span>)), <span class="code-number">300</span>)
+    )
+]);
+</div>
+<button onclick="demoPromiseAll()">运行示例</button>
+<div id="promiseall-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h2>十三、总结</h2>
+
+<div class="knowledge-box">
+<h4>ES6+ 核心新特性回顾</h4>
+<table>
+<tr><th>类别</th><th>特性</th><th>主要用途</th></tr>
+<tr><td>变量声明</td><td>let、const</td><td>块级作用域、常量声明</td></tr>
+<tr><td>字符串</td><td>模板字符串</td><td>字符串插值、多行文本</td></tr>
+<tr><td>函数</td><td>箭头函数、默认参数、rest/spread</td><td>简洁语法、this绑定、灵活参数</td></tr>
+<tr><td>解构</td><td>数组解构、对象解构</td><td>快速提取数据</td></tr>
+<tr><td>对象</td><td>属性简写、计算属性</td><td>简化对象定义</td></tr>
+<tr><td>数据结构</td><td>Symbol、Set、Map</td><td>唯一值、集合、键值对</td></tr>
+<tr><td>流程控制</td><td>迭代器、生成器</td><td>自定义遍历、惰性计算</td></tr>
+<tr><td>面向对象</td><td>class、extends</td><td>类定义、继承</td></tr>
+<tr><td>模块化</td><td>export、import</td><td>代码组织、依赖管理</td></tr>
+<tr><td>异步编程</td><td>Promise</td><td>异步操作、链式调用</td></tr>
+</table>
+</div>
+
+<div class="tip">
+<strong>学习建议：</strong>
+<p>
+    ES6+ 特性是现代 JavaScript 开发的基础，务必熟练掌握<br>
+    优先使用 const/let 替代 var<br>
+    善用解构和展开运算符简化代码<br>
+    理解 Promise 是学习 async/await 的基础<br>
+    模块化是构建大型应用的必备技能
+</p>
+</div>
+
+<hr>
+
+<h2>十四、学习资源</h2>
+
+<p>
+    <a href="https://es6.ruanyifeng.com/" target="_blank">ECMAScript 6 入门 - 阮一峰</a><br>
+    <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript" target="_blank">MDN JavaScript 文档</a><br>
+    <a href="https://javascript.info/" target="_blank">现代 JavaScript 教程</a><br>
+    <a href="https://www.ecma-international.org/ecma-262/" target="_blank">ECMAScript 规范（需要梯子访问）</a>
+</p>
+
+<script>
+function demoBlockScope() {
+    const output = document.getElementById("blockscope-output");
+    let result = "";
+    
+    result += "var 循环结果：\\n";
+    for (var i = 0; i < 3; i++) {
+        setTimeout(() => result += "var: " + i + "\\n", 100);
+    }
+    
+    setTimeout(() => {
+        result += "\\nlet 循环结果：\\n";
+        for (let j = 0; j < 3; j++) {
+            setTimeout(() => {
+                result += "let: " + j + "\\n";
+                if (j === 2) output.textContent = result;
+            }, 100);
+        }
+    }, 200);
+}
+
+function demoTemplateString() {
+    const output = document.getElementById("template-output");
+    const name = "张三";
+    const age = 25;
+    const a = 10, b = 20;
+    
+    let result = "";
+    result += "插值表达式：\\n";
+    result += `姓名：${name}，年龄：${age}\\n`;
+    result += `${a} + ${b} = ${a + b}\\n\\n`;
+    
+    result += "多行字符串：\\n";
+    result += `<div class="card">
+    <h2>${name}</h2>
+    <p>年龄：${age}岁</p>
+</div>`;
+    
+    output.textContent = result;
+}
+
+function demoArrowFunction() {
+    const output = document.getElementById("arrow-output");
+    let result = "";
+    
+    const patient = {
+        name: "李四",
+        vitals: [120, 80, 72],
+        analyze: function() {
+            this.vitals.forEach((v, i) => {
+                result += `${this.name}的第${i+1}项生命体征：${v}\\n`;
+            });
+        }
+    };
+    
+    patient.analyze();
+    output.textContent = result;
+}
+
+function demoRestSpread() {
+    const output = document.getElementById("restspread-output");
+    let result = "";
+    
+    function sum(...numbers) {
+        return numbers.reduce((total, n) => total + n, 0);
+    }
+    
+    result += "剩余参数 sum(1,2,3,4,5) = " + sum(1, 2, 3, 4, 5) + "\\n\\n";
+    
+    const arr1 = [1, 2, 3];
+    const arr2 = [4, 5, 6];
+    result += "数组展开 [...arr1, ...arr2] = " + JSON.stringify([...arr1, ...arr2]) + "\\n\\n";
+    
+    const baseInfo = { hospital: "中心医院", department: "内科" };
+    const patientInfo = { ...baseInfo, name: "王五", age: 45 };
+    result += "对象展开合并：\\n" + JSON.stringify(patientInfo, null, 2);
+    
+    output.textContent = result;
+}
+
+function demoDestructuring() {
+    const output = document.getElementById("destructuring-output");
+    let result = "";
+    
+    const [a, b] = [1, 2];
+    result += `数组解构：a=${a}, b=${b}\\n`;
+    
+    const [first, ...rest] = [1, 2, 3, 4, 5];
+    result += `剩余元素：first=${first}, rest=[${rest}]\\n`;
+    
+    let p = 1, q = 2;
+    [p, q] = [q, p];
+    result += `交换变量：p=${p}, q=${q}\\n\\n`;
+    
+    const patient = {
+        id: "P001",
+        name: "王五",
+        vitals: {
+            bloodPressure: { systolic: 120, diastolic: 80 },
+            heartRate: 72
+        }
+    };
+    
+    const { id, name: patientName, vitals: { bloodPressure: { systolic } } } = patient;
+    result += `对象嵌套解构：\\n`;
+    result += `id=${id}, name=${patientName}, systolic=${systolic}`;
+    
+    output.textContent = result;
+}
+
+function demoArrayMethods() {
+    const output = document.getElementById("arraymethods-output");
+    let result = "";
+    
+    const patients = [
+        { id: 1, name: "张三", age: 45, department: "内科" },
+        { id: 2, name: "李四", age: 32, department: "外科" },
+        { id: 3, name: "王五", age: 58, department: "内科" }
+    ];
+    
+    result += "map 提取姓名：" + patients.map(p => p.name).join(", ") + "\\n";
+    result += "filter 筛选内科：" + patients.filter(p => p.department === "内科").map(p => p.name).join(", ") + "\\n";
+    result += "reduce 计算平均年龄：" + (patients.reduce((sum, p) => sum + p.age, 0) / patients.length).toFixed(1) + "\\n";
+    result += "find 查找id=2：" + patients.find(p => p.id === 2).name + "\\n";
+    result += "some 是否有老年人：" + patients.some(p => p.age >= 60) + "\\n";
+    result += "every 是否都是成年人：" + patients.every(p => p.age >= 18);
+    
+    output.textContent = result;
+}
+
+function demoObjectMethods() {
+    const output = document.getElementById("objectmethods-output");
+    let result = "";
+    
+    const patient = { id: "P001", name: "张三", age: 45 };
+    
+    result += "Object.keys: " + JSON.stringify(Object.keys(patient)) + "\\n";
+    result += "Object.values: " + JSON.stringify(Object.values(patient)) + "\\n";
+    result += "Object.entries: " + JSON.stringify(Object.entries(patient)) + "\\n";
+    
+    const merged = Object.assign({}, patient, { department: "内科" });
+    result += "Object.assign 合并后: " + JSON.stringify(merged);
+    
+    output.textContent = result;
+}
+
+function demoSymbol() {
+    const output = document.getElementById("symbol-output");
+    let result = "";
+    
+    const sym1 = Symbol("desc");
+    const sym2 = Symbol("desc");
+    result += "Symbol 唯一性：sym1 === sym2 ? " + (sym1 === sym2) + "\\n\\n";
+    
+    const ID = Symbol("id");
+    const user = { name: "张三", [ID]: 12345 };
+    result += "Object.keys(user): " + JSON.stringify(Object.keys(user)) + "\\n";
+    result += "user[ID]: " + user[ID] + "\\n\\n";
+    
+    const globalSym1 = Symbol.for("app.id");
+    const globalSym2 = Symbol.for("app.id");
+    result += "全局 Symbol：globalSym1 === globalSym2 ? " + (globalSym1 === globalSym2);
+    
+    output.textContent = result;
+}
+
+function demoSet() {
+    const output = document.getElementById("set-output");
+    let result = "";
+    
+    const set = new Set([1, 2, 3, 2, 1]);
+    result += "创建 Set: Set {1, 2, 3}\\n";
+    result += "set.has(1): " + set.has(1) + "\\n";
+    result += "set.size: " + set.size + "\\n\\n";
+    
+    const arr = [1, 2, 2, 3, 3, 3];
+    result += "数组去重 [1,2,2,3,3,3]: " + JSON.stringify([...new Set(arr)]);
+    
+    output.textContent = result;
+}
+
+function demoMap() {
+    const output = document.getElementById("map-output");
+    let result = "";
+    
+    const map = new Map();
+    map.set("name", "张三");
+    map.set("age", 25);
+    
+    result += "map.get('name'): " + map.get("name") + "\\n";
+    result += "map.has('age'): " + map.has("age") + "\\n";
+    result += "map.size: " + map.size + "\\n\\n";
+    
+    const objKey = { id: 1 };
+    map.set(objKey, "对象作为键");
+    result += "对象作为键：map.get({id:1}) = " + map.get(objKey);
+    
+    output.textContent = result;
+}
+
+function demoIterator() {
+    const output = document.getElementById("iterator-output");
+    let result = "";
+    
+    const iterableObj = {
+        data: [1, 2, 3],
+        [Symbol.iterator]() {
+            let index = 0;
+            const data = this.data;
+            return {
+                next() {
+                    if (index < data.length) {
+                        return { value: data[index++], done: false };
+                    }
+                    return { done: true };
+                }
+            };
+        }
+    };
+    
+    result += "for...of 遍历：\\n";
+    for (const item of iterableObj) {
+        result += item + " ";
+    }
+    
+    result += "\\n\\n手动调用迭代器：\\n";
+    const iterator = iterableObj[Symbol.iterator]();
+    result += JSON.stringify(iterator.next()) + "\\n";
+    result += JSON.stringify(iterator.next()) + "\\n";
+    result += JSON.stringify(iterator.next()) + "\\n";
+    result += JSON.stringify(iterator.next());
+    
+    output.textContent = result;
+}
+
+function demoGenerator() {
+    const output = document.getElementById("generator-output");
+    let result = "";
+    
+    function* numberGenerator() {
+        yield 1;
+        yield 2;
+        yield 3;
+    }
+    
+    const gen = numberGenerator();
+    result += "生成器函数：\\n";
+    result += JSON.stringify(gen.next()) + "\\n";
+    result += JSON.stringify(gen.next()) + "\\n";
+    result += JSON.stringify(gen.next()) + "\\n";
+    result += JSON.stringify(gen.next()) + "\\n\\n";
+    
+    function* idGenerator() {
+        let id = 1;
+        while (true) {
+            yield id++;
+        }
+    }
+    
+    const ids = idGenerator();
+    result += "无限ID生成器：\\n";
+    result += ids.next().value + ", ";
+    result += ids.next().value + ", ";
+    result += ids.next().value + ", ";
+    result += ids.next().value + ", ";
+    result += ids.next().value;
+    
+    output.textContent = result;
+}
+
+function demoClass() {
+    const output = document.getElementById("class-output");
+    let result = "";
+    
+    class Person {
+        constructor(name, age) {
+            this.name = name;
+            this.age = age;
+        }
+        
+        greet() {
+            return `你好，我是${this.name}，今年${this.age}岁`;
+        }
+        
+        static create(name, age) {
+            return new Person(name, age);
+        }
+    }
+    
+    const person = new Person("张三", 25);
+    result += "实例方法：person.greet()\\n";
+    result += person.greet() + "\\n\\n";
+    result += "静态方法：Person.create('李四', 30)\\n";
+    result += Person.create("李四", 30).greet();
+    
+    output.textContent = result;
+}
+
+function demoInheritance() {
+    const output = document.getElementById("inheritance-output");
+    let result = "";
+    
+    class Animal {
+        constructor(name) {
+            this.name = name;
+        }
+        speak() {
+            return `${this.name}发出声音`;
+        }
+    }
+    
+    class Dog extends Animal {
+        constructor(name, breed) {
+            super(name);
+            this.breed = breed;
+        }
+        speak() {
+            return `${this.name}汪汪叫`;
+        }
+        fetch() {
+            return `${this.name}去捡球`;
+        }
+    }
+    
+    const dog = new Dog("旺财", "金毛");
+    result += "继承示例：\\n";
+    result += "dog.speak(): " + dog.speak() + "\\n";
+    result += "dog.fetch(): " + dog.fetch() + "\\n";
+    result += "dog.breed: " + dog.breed;
+    
+    output.textContent = result;
+}
+
+function demoPromise() {
+    const output = document.getElementById("promise-output");
+    let result = "Promise 执行中...\\n";
+    output.textContent = result;
+    
+    const promise = new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve("操作成功！");
+        }, 1000);
+    });
+    
+    promise
+        .then(res => {
+            result += "then: " + res + "\\n";
+            return "处理后的结果";
+        })
+        .then(data => {
+            result += "链式调用: " + data + "\\n";
+            output.textContent = result;
+        })
+        .finally(() => {
+            result += "finally: 操作完成";
+            output.textContent = result;
+        });
+}
+
+function demoPromiseAll() {
+    const output = document.getElementById("promiseall-output");
+    let result = "并行获取患者数据...\\n";
+    output.textContent = result;
+    
+    function fetchPatientData(id) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({ id, name: "患者" + id, age: 30 + id * 5 });
+            }, 500);
+        });
+    }
+    
+    Promise.all([
+        fetchPatientData(1),
+        fetchPatientData(2),
+        fetchPatientData(3)
+    ]).then(patients => {
+        result += "\\nPromise.all 结果：\\n";
+        patients.forEach(p => {
+            result += `ID: ${p.id}, 姓名: ${p.name}, 年龄: ${p.age}\\n`;
+        });
+        output.textContent = result;
+    });
+}
+</script>
+
+</body>
+</html>
