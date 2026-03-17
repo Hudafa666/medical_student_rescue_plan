@@ -1,0 +1,1185 @@
+---
+title: "R语言基础教程"
+author: "医学生拯救计划"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, comment = "")
+```
+
+# 一、R 语言基础入门
+
+## 1.1 R 语言简介
+
+### R 是什么
+
+R 是一种用于统计计算和图形展示的编程语言和软件环境。它由 Ross Ihaka 和 Robert Gentleman 在新西兰奥克兰大学创建，目前由 R 开发核心团队维护。
+
+**R 的特点与优势：**
+
+**开源免费**：R 是 GNU 项目的一部分，任何人都可以免费使用、修改和分发
+
+**统计分析强大**：R 专为统计分析设计，拥有丰富的统计函数和模型
+
+**可视化能力出色**：R 提供了强大的绘图功能，可创建高质量的图表
+
+**扩展性强**：CRAN 上有超过 20000 个扩展包，覆盖各个领域
+
+**社区活跃**：庞大的用户社区提供丰富的学习资源和技术支持
+
+**跨平台**：支持 Windows、macOS 和 Linux 系统
+
+### R 与 RStudio 的关系
+
+| 项目 | R | RStudio |
+|------|---|---------|
+| 类型 | 编程语言 + 运行环境 | 集成开发环境（IDE） |
+| 功能 | 执行 R 代码 | 提供友好的编辑、调试界面 |
+| 关系 | 核心引擎 | 前端工具 |
+
+**简单来说：R 是"引擎"，RStudio 是"驾驶舱"。** 使用 RStudio 需要先安装 R 基础环境。
+
+---
+
+## 1.2 安装与环境配置
+
+### 安装 R 基础环境
+
+1. 访问 CRAN 官网：https://cran.r-project.org/
+2. 根据操作系统选择对应版本下载
+3. 运行安装程序，按提示完成安装
+
+### 安装 RStudio
+
+1. 访问 RStudio 官网：https://posit.co/download/rstudio-desktop-download/
+2. 下载 RStudio Desktop 免费版
+3. 运行安装程序完成安装
+
+### RStudio 界面介绍
+
+RStudio 界面主要分为四个面板：
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    菜单栏 / 工具栏                      │
+├──────────────────────┬──────────────────────────────────┤
+│                      │                                  │
+│   脚本编辑器         │         环境面板                 │
+│   (Source Editor)    │       (Environment)              │
+│                      │                                  │
+│   编写和保存代码     │     查看变量和函数               │
+│                      │                                  │
+├──────────────────────┼──────────────────────────────────┤
+│                      │                                  │
+│    控制台            │         文件面板                 │
+│   (Console)          │       (Files/Plots/Packages)     │
+│                      │                                  │
+│   交互式执行命令     │     文件管理/图形输出/包管理     │
+│                      │                                  │
+└──────────────────────┴──────────────────────────────────┘
+```
+
+**各面板功能：**
+
+**控制台（Console）**：直接输入 R 命令并立即执行
+
+**脚本编辑器（Source Editor）**：编写、编辑和保存 R 脚本文件
+
+**环境面板（Environment）**：显示当前工作空间中的所有变量和函数
+
+**文件面板**：包含文件管理、图形输出、包管理、帮助文档等功能
+
+---
+
+## 1.3 第一个 R 程序
+
+### 输出 "Hello, World!"
+
+```{r}
+print("Hello, World!")
+```
+
+`print()` 是 R 中最基本的输出函数，用于在控制台显示内容。
+
+### R 作为计算器使用
+
+R 可以直接进行数学运算：
+
+```{r}
+# 基本算术运算
+3 + 5
+10 - 4
+6 * 7
+20 / 4
+2 ^ 3
+```
+
+```{r}
+# 更复杂的计算
+sqrt(16)
+log(100)
+exp(1)
+abs(-10)
+```
+
+---
+
+## 1.4 基本语法
+
+### 注释写法
+
+R 使用 `#` 符号进行注释，`#` 后面的内容不会被执行：
+
+```{r}
+# 这是单行注释
+
+print("Hello")  # 行末注释
+
+# 注释可以用来解释代码的功能
+# 多行注释需要每行都加 #
+```
+
+### 语句分隔
+
+R 语句可以用换行或分号分隔：
+
+```{r}
+# 使用换行分隔
+x <- 1
+y <- 2
+x + y
+```
+
+```{r}
+# 使用分号分隔（不推荐）
+a <- 10; b <- 20; a + b
+```
+
+**推荐使用换行分隔，代码更清晰易读。**
+
+### 大小写敏感性
+
+R 是大小写敏感的语言：
+
+```{r}
+# Variable 和 variable 是两个不同的变量
+Variable <- 100
+variable <- 200
+
+print(Variable)
+print(variable)
+
+# 内置函数也是大小写敏感的
+# print() 正确，Print() 会报错
+```
+
+---
+
+# 二、R 语言核心语法
+
+## 2.1 变量与赋值
+
+### 赋值操作符
+
+R 中有多种赋值方式：
+
+```{r}
+# 使用 <- 赋值（推荐，R 风格）
+x <- 10
+x
+
+# 使用 = 赋值（常见于函数参数）
+y = 20
+y
+
+# 使用 -> 赋值（从左向右，较少使用）
+30 -> z
+z
+```
+
+**赋值操作符对比：**
+
+| 操作符 | 方向 | 使用场景 | 推荐度 |
+|--------|------|----------|--------|
+| `<-` | 右向左 | 变量赋值 | 非常推荐，这是最规范化的写法
+| `=` | 右向左 | 函数参数赋值 | 非常推荐，我个人很喜欢用
+| `->` | 左向右 | 特殊场景 | 非特殊情况不建议使用，易引起代码混淆
+### 变量命名规则
+
+```{r}
+# 合法的变量名
+my_var <- 1
+my.var <- 2
+myVar <- 3
+var1 <- 4
+.var <- 5  # 以点开头
+
+# 变量命名规则：
+# 1. 可以包含字母、数字、点(.)、下划线(_)
+# 2. 必须以字母或点开头（点后不能跟数字）
+# 3. 不能包含空格或特殊字符
+# 4. 不能使用 R 保留字（如 if, else, for, while 等）
+
+# 不合法的变量名（会报错）：
+# 1var <- 1      # 不能以数字开头
+# .1var <- 1     # 点后不能跟数字
+# my-var <- 1    # 不能包含减号
+# my var <- 1    # 不能包含空格
+```
+
+### 查看与删除变量
+
+```{r}
+# 查看当前环境中的所有变量
+ls()
+
+# 查看以特定模式开头的变量
+ls(pattern = "my")
+
+# 删除单个变量
+rm(my_var)
+
+# 删除多个变量
+rm(my.var, myVar)
+
+# 删除所有变量
+# rm(list = ls())  # 取消注释以执行
+```
+
+---
+
+## 2.2 基本数据类型
+
+R 中有六种基本数据类型：
+
+### 数值型（numeric）
+
+```{r}
+# 数值型（默认为双精度浮点数）
+num <- 3.14
+class(num)
+typeof(num)
+
+# 数值运算
+num + 10
+num * 2
+```
+
+### 整型（integer）
+
+```{r}
+# 整型（需要加 L 后缀）
+int_num <- 100L
+class(int_num)
+typeof(int_num)
+
+# 普通数字默认是 numeric
+normal_num <- 100
+class(normal_num)  # numeric，不是 integer
+```
+
+### 字符型（character）
+
+```{r}
+# 字符型（字符串）
+char1 <- "Hello, R!"
+char2 <- '单引号也可以'
+
+class(char1)
+nchar(char1)  # 字符串长度
+
+# 字符串操作
+paste("Hello", "World")      # 拼接
+paste0("A", "B", "C")        # 无分隔拼接
+toupper("hello")             # 转大写
+tolower("HELLO")             # 转小写
+```
+
+### 逻辑型（logical）
+
+```{r}
+# 逻辑型（布尔值）
+logi_true <- TRUE
+logi_false <- FALSE
+
+class(logi_true)
+typeof(logi_true)
+
+# 逻辑值可以简写
+logi_true <- T
+logi_false <- F
+
+# 逻辑运算
+TRUE & FALSE   # 与
+TRUE | FALSE   # 或
+!TRUE          # 非
+
+# 逻辑值可以转换为数值
+as.numeric(TRUE)   # 1
+as.numeric(FALSE)  # 0
+```
+
+### 复数型（complex）
+
+```{r}
+# 复数型
+comp <- 3 + 2i
+class(comp)
+
+# 复数运算
+comp + (1 + 1i)
+comp * 2i
+Re(comp)   # 实部
+Im(comp)   # 虚部
+Mod(comp)  # 模
+```
+
+### 原始型（raw）
+
+```{r}
+# 原始型（字节）
+raw_data <- charToRaw("Hello")
+class(raw_data)
+raw_data
+
+# 原始型转字符
+rawToChar(raw_data)
+```
+
+### 类型判断与转换
+
+```{r}
+# 类型判断
+x <- 100
+is.numeric(x)
+is.integer(x)
+is.character(x)
+is.logical(x)
+
+# 类型转换
+as.numeric("3.14")
+as.character(100)
+as.logical(1)
+as.integer(3.7)  # 向下取整
+```
+
+---
+
+## 2.3 基本运算符
+
+### 算术运算符
+
+```{r}
+a <- 10
+b <- 3
+
+# 加法
+a + b
+
+# 减法
+a - b
+
+# 乘法
+a * b
+
+# 除法
+a / b
+
+# 幂运算
+a ^ b
+a ** b  # 等价写法
+
+# 取模（求余数）
+a %% b
+
+# 整除（商的整数部分）
+a %/% b
+```
+
+**算术运算符汇总：**
+
+| 运算符 | 描述 | 示例 | 结果 |
+|--------|------|------|------|
+| `+` | 加法 | 10 + 3 | 13 |
+| `-` | 减法 | 10 - 3 | 7 |
+| `*` | 乘法 | 10 * 3 | 30 |
+| `/` | 除法 | 10 / 3 | 3.333... |
+| `^` 或 `**` | 幂运算 | 10 ^ 3 | 1000 |
+| `%%` | 取模 | 10 %% 3 | 1 |
+| `%/%` | 整除 | 10 %/% 3 | 3 |
+
+### 关系运算符
+
+```{r}
+x <- 5
+y <- 10
+
+# 大于
+x > y
+
+# 小于
+x < y
+
+# 大于等于
+x >= 5
+
+# 小于等于
+y <= 10
+
+# 等于
+x == 5
+
+# 不等于
+x != y
+```
+
+**关系运算符汇总：**
+
+| 运算符 | 描述 | 示例 |
+|--------|------|------|
+| `>` | 大于 | `5 > 3` → TRUE |
+| `<` | 小于 | `5 < 3` → FALSE |
+| `>=` | 大于等于 | `5 >= 5` → TRUE |
+| `<=` | 小于等于 | `5 <= 3` → FALSE |
+| `==` | 等于 | `5 == 5` → TRUE |
+| `!=` | 不等于 | `5 != 3` → TRUE |
+
+### 逻辑运算符
+
+```{r}
+# 逐元素逻辑运算（可向量化）
+TRUE & FALSE   # 与
+TRUE | FALSE   # 或
+!TRUE          # 非
+
+# 短路逻辑运算（只返回单个值）
+TRUE && FALSE  # 短路与
+TRUE || FALSE  # 短路或
+```
+
+**`&` 与 `&&` 的区别：**
+
+```{r}
+# & 和 | 是向量化的，对每个元素进行运算
+c(TRUE, FALSE, TRUE) & c(TRUE, TRUE, FALSE)
+
+# && 和 || 只用于单个逻辑值（常用于 if 条件判断）
+# 在新版 R 中，它们只能处理长度为 1 的向量
+TRUE && FALSE
+TRUE || FALSE
+
+# 如果对向量使用 && 或 ||，只会比较第一个元素（但会警告）
+# 建议仅在 if 语句中使用 && 和 ||
+```
+
+**逻辑运算符汇总：**
+
+| 运算符 | 描述 | 类型 |
+|--------|------|------|
+| `&` | 逻辑与（向量化） | 逐元素 |
+| `\|` | 逻辑或（向量化） | 逐元素 |
+| `!` | 逻辑非 | 逐元素 |
+| `&&` | 逻辑与（短路） | 仅首元素 |
+| `\|\|` | 逻辑或（短路） | 仅首元素 |
+
+### 其他运算符
+
+```{r}
+# 冒号运算符：创建序列
+1:5
+5:1
+
+# %in%：判断元素是否在向量中
+3 %in% 1:5
+10 %in% 1:5
+
+# %*%：矩阵乘法
+mat1 <- matrix(1:4, nrow = 2)
+mat2 <- matrix(5:8, nrow = 2)
+mat1 %*% mat2
+```
+
+---
+
+# 三、R 语言数据结构
+
+## 3.1 向量（Vector）
+
+向量是 R 中最基本的数据结构，用于存储同一类型的元素序列。
+
+### 创建向量
+
+```{r}
+# 使用 c() 函数创建向量
+vec1 <- c(1, 2, 3, 4, 5)
+vec1
+
+vec2 <- c("a", "b", "c", "d")
+vec2
+
+vec3 <- c(TRUE, FALSE, TRUE)
+vec3
+
+# 使用 seq() 创建序列向量
+seq1 <- seq(1, 10, by = 2)   # 步长为2
+seq1
+
+seq2 <- seq(1, 10, length.out = 5)  # 指定长度
+seq2
+
+# 使用 rep() 创建重复向量
+rep1 <- rep(1, times = 5)    # 重复5次
+rep1
+
+rep2 <- rep(1:3, times = 2)  # 整体重复
+rep2
+
+rep3 <- rep(1:3, each = 2)   # 每个元素重复
+rep3
+```
+
+### 向量类型与类型转换
+
+```{r}
+# 向量只能存储同一类型的数据
+mix_vec <- c(1, "two", 3)  # 自动转换为字符型
+mix_vec
+class(mix_vec)
+
+# 类型转换
+num_vec <- c(1, 2, 3)
+as.character(num_vec)  # 转为字符型
+
+char_vec <- c("1", "2", "3")
+as.numeric(char_vec)   # 转为数值型
+```
+
+### 向量化操作
+
+R 的核心思想是向量化操作，无需循环即可对整个向量进行运算：
+
+```{r}
+x <- c(1, 2, 3, 4, 5)
+y <- c(10, 20, 30, 40, 50)
+
+# 向量运算
+x + y
+x * 2
+x^2
+sqrt(x)
+
+# 向量化的条件判断
+x > 3
+x[x > 3]  # 筛选大于3的元素
+```
+
+### 向量索引与切片
+
+```{r}
+vec <- c(10, 20, 30, 40, 50)
+
+# 正整数索引（从1开始）
+vec[1]        # 第一个元素
+vec[c(1, 3)]  # 第1和第3个元素
+vec[1:3]      # 第1到第3个元素
+
+# 负整数索引（排除元素）
+vec[-1]       # 排除第1个元素
+vec[-c(1, 2)] # 排除第1和第2个元素
+
+# 逻辑索引
+vec[vec > 25]
+
+# 名称索引
+names(vec) <- c("a", "b", "c", "d", "e")
+vec["a"]
+vec[c("a", "c")]
+```
+
+**`[]` 与 `[[]]` 的区别：**
+
+```{r}
+vec <- c(a = 1, b = 2, c = 3)
+
+# [] 返回向量（可能包含多个元素）
+vec[1]       # 返回命名向量
+vec[1:2]     # 可以返回多个元素
+
+# [[]] 返回单个元素值
+vec[[1]]     # 返回元素值本身
+# vec[[1:2]] # 错误：只能提取单个元素
+```
+
+### 向量排序
+
+```{r}
+vec <- c(30, 10, 50, 20, 40)
+
+# sort()：返回排序后的向量
+sort(vec)           # 升序
+sort(vec, decreasing = TRUE)  # 降序
+
+# order()：返回排序后的索引位置
+order(vec)          # 升序索引
+vec[order(vec)]     # 等价于 sort(vec)
+
+# rank()：返回元素的排名
+rank(vec)           # 升序排名
+
+# rev()：反转向量
+rev(vec)
+```
+
+**排序函数对比：**
+
+| 函数 | 返回值 | 用途 |
+|------|--------|------|
+| `sort()` | 排序后的向量 | 直接获取排序结果 |
+| `order()` | 排序索引 | 用于对其他相关向量排序 |
+| `rank()` | 元素排名 | 获取各元素的排名值 |
+| `rev()` | 反转向量 | 逆序排列 |
+
+---
+
+## 3.2 矩阵（Matrix）
+
+矩阵是二维的、存储同一类型元素的数据结构。
+
+### 创建矩阵
+
+```{r}
+# 使用 matrix() 创建矩阵
+mat <- matrix(1:12, nrow = 3, ncol = 4)
+mat
+
+# 按行填充
+mat_byrow <- matrix(1:12, nrow = 3, ncol = 4, byrow = TRUE)
+mat_byrow
+
+# 带行列名
+mat_named <- matrix(1:9, nrow = 3, 
+                    dimnames = list(c("R1", "R2", "R3"), 
+                                   c("C1", "C2", "C3")))
+mat_named
+
+# 查看矩阵属性
+dim(mat)      # 维度
+nrow(mat)     # 行数
+ncol(mat)     # 列数
+rownames(mat_named)
+colnames(mat_named)
+```
+
+### 矩阵运算
+
+```{r}
+A <- matrix(1:4, nrow = 2)
+B <- matrix(5:8, nrow = 2)
+
+A
+B
+
+# 矩阵加减（对应元素）
+A + B
+A - B
+
+# 矩阵与标量运算
+A * 2
+A / 2
+
+# 矩阵对应元素相乘
+A * B
+
+# 矩阵乘法
+A %*% B
+
+# 转置
+t(A)
+
+# 逆矩阵（需要确保矩阵可逆）
+C <- matrix(c(1, 2, 3, 4), nrow = 2)
+solve(C)
+
+# 行列式
+det(C)
+
+# 对角矩阵
+diag(c(1, 2, 3))
+
+# 单位矩阵
+diag(3)
+```
+
+### 矩阵索引与子集
+
+```{r}
+mat <- matrix(1:12, nrow = 3, ncol = 4)
+mat
+
+# 单个元素：mat[行索引, 列索引]
+mat[1, 2]    # 第1行第2列
+
+# 整行
+mat[1, ]     # 第1行
+
+# 整列
+mat[, 2]     # 第2列
+
+# 子矩阵
+mat[1:2, 2:3]
+
+# 使用逻辑条件
+mat[mat > 5]
+
+# 按名称索引（如果有命名）
+mat_named <- matrix(1:9, nrow = 3, 
+                    dimnames = list(c("R1", "R2", "R3"), 
+                                   c("C1", "C2", "C3")))
+mat_named["R1", "C2"]
+```
+
+---
+
+## 3.3 数组（Array）
+
+数组是多维的、存储同一类型元素的数据结构，可以看作是矩阵的扩展。
+
+### 创建多维数组
+
+```{r}
+# 创建三维数组
+arr <- array(1:24, dim = c(3, 4, 2))
+arr
+
+# 带维度名称
+arr_named <- array(1:24, dim = c(3, 4, 2),
+                   dimnames = list(
+                     c("R1", "R2", "R3"),
+                     c("C1", "C2", "C3", "C4"),
+                     c("Layer1", "Layer2")
+                   ))
+arr_named
+
+# 查看维度
+dim(arr)
+length(dim(arr))  # 维度数量
+```
+
+### 数组维度与索引
+
+```{r}
+arr <- array(1:24, dim = c(3, 4, 2))
+
+# 访问单个元素
+arr[1, 2, 1]   # 第1维第1个，第2维第2个，第3维第1个
+
+# 访问切片
+arr[1, , ]     # 第1维第1个的所有元素
+arr[, 2, ]     # 第2维第2个的所有元素
+arr[, , 1]     # 第3维第1个的所有元素（矩阵）
+
+# 访问子数组
+arr[1:2, 1:2, 1]
+
+# 查看数组各维度
+dimnames(arr_named)
+```
+
+---
+
+## 3.4 列表（List）
+
+列表是 R 中最灵活的数据结构，可以存储不同类型的元素。
+
+### 创建列表
+
+```{r}
+# 创建列表
+my_list <- list(
+  name = "张三",
+  age = 25,
+  scores = c(85, 90, 78),
+  passed = TRUE
+)
+my_list
+
+# 无名称列表
+unnamed_list <- list(1, "two", TRUE, c(1, 2, 3))
+unnamed_list
+
+# 查看列表结构
+str(my_list)
+
+# 列表长度
+length(my_list)
+```
+
+### 列表索引与操作
+
+```{r}
+my_list <- list(
+  name = "张三",
+  age = 25,
+  scores = c(85, 90, 78),
+  passed = TRUE
+)
+
+# [] 返回子列表
+my_list[1]       # 返回列表
+class(my_list[1])
+my_list[c(1, 2)] # 返回多个元素的子列表
+
+# [[]] 返回元素本身
+my_list[[1]]     # 返回元素值
+class(my_list[[1]])
+
+# $ 按名称访问
+my_list$name
+my_list$scores
+
+# 修改元素
+my_list$age <- 26
+my_list[["name"]] <- "李四"
+
+# 添加新元素
+my_list$gender <- "男"
+my_list[[5]] <- "新元素"
+
+# 删除元素
+my_list$passed <- NULL
+```
+
+**列表索引方式对比：**
+
+| 方式 | 返回类型 | 用途 |
+|------|----------|------|
+| `list[i]` | 列表 | 获取子列表 |
+| `list[[i]]` | 元素本身 | 获取单个元素 |
+| `list$name` | 元素本身 | 按名称获取元素 |
+
+---
+
+## 3.5 数据框（Data Frame）
+
+数据框是 R 中最常用的数据结构，类似于 Excel 表格，每列可以是不同类型。
+
+### 创建数据框
+
+```{r}
+# 创建数据框
+df <- data.frame(
+  name = c("张三", "李四", "王五"),
+  age = c(25, 30, 28),
+  score = c(85.5, 90.0, 78.5),
+  passed = c(TRUE, TRUE, FALSE)
+)
+df
+
+# 查看数据框结构
+str(df)
+
+# 查看维度
+dim(df)
+nrow(df)
+ncol(df)
+
+# 查看列名和行名
+names(df)
+colnames(df)
+rownames(df)
+
+# 查看前几行和后几行
+head(df, 2)
+tail(df, 1)
+```
+
+### 数据框的基本操作
+
+```{r}
+df <- data.frame(
+  name = c("张三", "李四", "王五"),
+  age = c(25, 30, 28),
+  score = c(85.5, 90.0, 78.5)
+)
+
+# 列索引
+df$name          # 使用 $
+df[, "name"]     # 使用列名
+df[, 1]          # 使用列索引
+df[["name"]]     # 使用 [[]]
+
+# 行索引
+df[1, ]          # 第1行
+df[1:2, ]        # 第1-2行
+
+# 单元格索引
+df[1, 2]         # 第1行第2列
+df[1, "age"]     # 使用行列名
+
+# 条件筛选
+df[df$age > 26, ]
+df[df$score > 80, c("name", "score")]
+
+# 添加列
+df$gender <- c("男", "男", "女")
+df[, "grade"] <- c("A", "A", "B")
+df
+
+# 添加行
+new_row <- data.frame(name = "赵六", age = 22, score = 88, gender = "男", grade = "A")
+df <- rbind(df, new_row)
+df
+
+# 删除列
+df$grade <- NULL
+
+# 删除行
+df <- df[-4, ]
+```
+
+### 数据框合并
+
+```{r}
+df1 <- data.frame(id = 1:3, name = c("张三", "李四", "王五"))
+df2 <- data.frame(id = 2:4, score = c(85, 90, 78))
+
+# 按列合并（列数增加）
+cbind(df1, extra = c("A", "B", "C"))
+
+# 按行合并（行数增加）
+df3 <- data.frame(id = 4:5, name = c("赵六", "钱七"))
+rbind(df1, df3)
+
+# merge 合并（类似 SQL join）
+merge(df1, df2, by = "id", all = TRUE)      # 全连接
+merge(df1, df2, by = "id", all.x = TRUE)    # 左连接
+merge(df1, df2, by = "id", all.y = TRUE)    # 右连接
+merge(df1, df2, by = "id")                  # 内连接
+```
+
+### 数据框与 tibble 的区别
+
+```{r, message=TRUE}
+# 安装并加载 tibble 包（如果未安装）
+# install.packages("tibble")
+library(tibble)
+
+# 创建 tibble
+tbl <- tibble(
+  name = c("张三", "李四", "王五"),
+  age = c(25, 30, 28),
+  score = c(85.5, 90.0, 78.5)
+)
+tbl
+```
+
+**数据框与 tibble 的主要区别：**
+
+| 特性 | data.frame | tibble |
+|------|------------|--------|
+| 打印显示 | 显示全部内容 | 显示前10行，列类型 |
+| 列名处理 | 自动简化 | 保留原始名称 |
+| 字符串处理 | 自动转为因子 | 保持字符型 |
+| 子集提取 | 简化返回 | 不简化，保持类型 |
+| 兼容性 | 基础 R | tidyverse 生态 |
+
+```{r}
+# tibble 的特点展示
+# 创建包含特殊列名的 tibble
+tbl_special <- tibble(
+  `column name` = 1:3,    # 列名包含空格
+  `2024` = c("a", "b", "c")  # 列名以数字开头
+)
+tbl_special
+
+# tibble 不会简化子集
+df_test <- data.frame(a = 1:3)
+tbl_test <- tibble(a = 1:3)
+
+class(df_test[, "a"])   # data.frame 会简化为向量
+class(tbl_test[, "a"])  # tibble 保持为 tibble
+```
+
+---
+
+## 3.6 因子（Factor）
+
+因子用于存储分类数据，是 R 中处理分类变量的重要数据结构。
+
+### 创建因子
+
+```{r}
+# 创建因子
+gender <- factor(c("男", "女", "男", "男", "女"))
+gender
+
+# 查看因子属性
+class(gender)
+levels(gender)    # 因子水平
+nlevels(gender)   # 水平数量
+
+# 指定水平顺序
+size <- factor(c("S", "M", "L", "M", "S"), 
+               levels = c("S", "M", "L"))
+size
+levels(size)
+```
+
+### 有序因子与无序因子
+
+```{r}
+# 无序因子（默认）
+color <- factor(c("红", "绿", "蓝", "红"))
+color
+
+# 有序因子
+quality <- factor(c("差", "中", "好", "优"), 
+                  levels = c("差", "中", "好", "优"),
+                  ordered = TRUE)
+quality
+
+# 有序因子可以比较
+quality[1] < quality[3]
+
+# 无序因子不能比较（会报错）
+# color[1] < color[2]
+```
+
+### 因子水平操作
+
+```{r}
+# 创建因子
+fruit <- factor(c("苹果", "香蕉", "苹果", "橙子"))
+fruit
+
+# 查看水平
+levels(fruit)
+
+# 添加新水平
+levels(fruit) <- c(levels(fruit), "葡萄")
+levels(fruit)
+
+# 重新排列水平
+fruit <- factor(fruit, levels = c("香蕉", "苹果", "橙子", "葡萄"))
+levels(fruit)
+
+# 合并水平
+fruit <- factor(fruit, levels = c("苹果", "香蕉", "橙子", "葡萄"),
+                labels = c("苹果类", "香蕉类", "柑橘类", "葡萄类"))
+fruit
+
+# 删除未使用的水平
+fruit <- droplevels(fruit)
+levels(fruit)
+
+# 因子与数值转换
+num_factor <- factor(c(1, 2, 1, 3))
+as.numeric(num_factor)           # 返回水平编码
+as.numeric(as.character(num_factor))  # 返回实际数值
+
+# 统计各水平频数
+table(fruit)
+```
+
+---
+
+## 3.7 时间序列（ts）
+
+时间序列对象用于存储和操作时间序列数据。
+
+### 创建时间序列对象
+
+```{r}
+# 创建简单时间序列
+sales <- c(100, 120, 115, 130, 125, 140, 135, 150, 145, 160, 155, 170)
+ts_sales <- ts(sales, start = c(2023, 1), frequency = 12)
+ts_sales
+
+# 查看时间序列属性
+start(ts_sales)
+end(ts_sales)
+frequency(ts_sales)
+time(ts_sales)
+
+# 创建季度数据
+quarterly_data <- c(100, 120, 130, 110, 115, 135, 145, 125)
+ts_quarterly <- ts(quarterly_data, start = 2022, frequency = 4)
+ts_quarterly
+
+# 创建年度数据
+yearly_data <- c(1000, 1200, 1150, 1300, 1250)
+ts_yearly <- ts(yearly_data, start = 2019)
+ts_yearly
+```
+
+### 时间序列基本操作
+
+```{r}
+ts_sales <- ts(c(100, 120, 115, 130, 125, 140), 
+               start = c(2023, 1), frequency = 12)
+
+# 索引
+ts_sales[1]      # 第一个值
+ts_sales[1:3]    # 前三个值
+
+# 窗口函数：提取子序列
+window(ts_sales, start = c(2023, 2), end = c(2023, 4))
+
+# 时间序列聚合
+aggregate(ts_sales, nfrequency = 4, FUN = mean)  # 转为季度数据
+
+# 差分
+diff(ts_sales)
+
+# 滞后
+lag(ts_sales, k = 1)
+```
+
+### 时间序列扩展包
+
+R 有多个强大的时间序列扩展包：
+
+```{r, eval=FALSE}
+# tsibble 包（tidyverse 风格的时间序列）
+# install.packages("tsibble")
+library(tsibble)
+
+# 创建 tsibble
+tsibble_data <- tibble(
+  date = seq(as.Date("2023-01-01"), by = "month", length.out = 12),
+  value = c(100, 120, 115, 130, 125, 140, 135, 150, 145, 160, 155, 170)
+) %>%
+  as_tsibble(index = date)
+
+# xts 包（扩展时间序列）
+# install.packages("xts")
+library(xts)
+
+dates <- seq(as.Date("2023-01-01"), by = "day", length.out = 10)
+values <- 1:10
+xts_obj <- xts(values, order.by = dates)
+
+# zoo 包（不规则时间序列）
+# install.packages("zoo")
+library(zoo)
+
+zoo_obj <- zoo(values, dates)
+```
+
+**时间序列包对比：**
+
+| 包名 | 特点 | 适用场景 |
+|------|------|----------|
+| `ts` (基础) | R 内置，功能基础 | 规则时间序列 |
+| `tsibble` | tidyverse 风格 | 数据分析流程 |
+| `xts` | 高性能，功能丰富 | 金融数据分析 |
+| `zoo` | 支持不规则时间 | 复杂时间索引 |
+---
+# 总结
+本教程涵盖了 R 语言的基础知识，包括：
+1. **基础入门**：R 语言简介、安装配置、第一个程序、基本语法
+2. **核心语法**：变量赋值、数据类型、运算符
+3. **数据结构**：向量、矩阵、数组、列表、数据框、因子、时间序列
+
+记得在R studio中使用`?function``help(function)`查看帮助文档
