@@ -1384,14 +1384,14 @@ as.Date(&quot;2024/03/15&quot;, format = &quot;%Y/%m/%d&quot;)</code></pre>
 <pre class="r"><code># Sys.time()：获取当前日期和时间
 now &lt;- Sys.time()
 now</code></pre>
-<pre><code>## [1] &quot;2026-03-19 20:21:15 CST&quot;</code></pre>
+<pre><code>## [1] &quot;2026-03-19 20:48:30 CST&quot;</code></pre>
 <pre class="r"><code># 查看类型：POSIXct类型（包含日期和时间）
 class(now)</code></pre>
 <pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
 <pre class="r"><code># format()：格式化日期时间输出
 # %Y年%m月%d日 %H:%M:%S 表示：年月日 时分秒
 format(now, &quot;%Y年%m月%d日 %H:%M:%S&quot;)</code></pre>
-<pre><code>## [1] &quot;2026年03月19日 20:21:15&quot;</code></pre>
+<pre><code>## [1] &quot;2026年03月19日 20:48:30&quot;</code></pre>
 <p><strong>常用日期格式符号</strong>：</p>
 <table>
 <thead>
@@ -1745,6 +1745,7 @@ diag(c(1, 2, 3))</code></pre>
 <pre class="r"><code># 矩阵乘法
 A &lt;- matrix(1:4, nrow = 2)
 B &lt;- matrix(5:8, nrow = 2)
+#矩阵乘法很重要，在机器学习、深度学习中都有大量应用，忘记了的同学回去看看线代书
 
 # %*%：矩阵乘法（线性代数中的矩阵乘法）
 A %*% B</code></pre>
@@ -3640,7 +3641,7 @@ my_func(5)</code></pre>
 </div>
 <div id="总结" class="section level1">
 <h1>总结</h1>
-<p>恭喜你完成了R语言基础教程的学习！本教程涵盖了以下核心内容：</p>
+<p>本节课涵盖了以下核心内容：</p>
 <ol style="list-style-type: decimal">
 <li><strong>环境搭建</strong>：R和RStudio的安装与配置</li>
 <li><strong>基础语法</strong>：变量、运算符、表达式</li>
@@ -3653,10 +3654,6 @@ my_func(5)</code></pre>
 <li><strong>数据I/O</strong>：文件读写操作</li>
 <li><strong>包管理</strong>：安装、加载、更新R包</li>
 </ol>
-<p>继续学习的建议： - 多动手实践，边学边练 -
-遇到问题善用帮助系统（<code>?函数名</code>） - 学习数据可视化（ggplot2）
-- 学习数据处理（dplyr、tidyr） - 参与R社区交流</p>
-<p>祝你学习愉快！</p>
 </div>
 
 
