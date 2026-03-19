@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="小天使格礼" />
+<meta name="author" content="医学研究生救星计划" />
 
 
 <title>R语言基础教程</title>
@@ -350,449 +350,364 @@ display: none;
 
 
 <h1 class="title toc-ignore">R语言基础教程</h1>
-<h4 class="author">医学生拯救计划</h4>
-<h5>小天使格礼</h5>
+<h4 class="author">医学研究生救星计划</h4>
+
 </div>
 
 
-<div id="一r-语言基础入门" class="section level1">
-<h1>一、R 语言基础入门</h1>
-<div id="r-语言简介" class="section level2">
-<h2>1.1 R 语言简介</h2>
-<div id="r-是什么" class="section level3">
-<h3>R 是什么</h3>
-<p>R 是一种用于统计计算和图形展示的编程语言和软件环境。它由 Ross Ihaka
-和 Robert Gentleman 在新西兰奥克兰大学创建，目前由 R
-开发核心团队维护。</p>
-<p><strong>R 的特点与优势：</strong></p>
-<p><strong>开源免费</strong>：R 是 GNU
-项目的一部分，任何人都可以免费使用、修改和分发</p>
-<p><strong>统计分析强大</strong>：R
-专为统计分析设计，拥有丰富的统计函数和模型</p>
-<p><strong>可视化能力出色</strong>：R
-提供了强大的绘图功能，可创建高质量的图表</p>
-<p><strong>扩展性强</strong>：CRAN 上有超过 20000
-个扩展包，覆盖各个领域</p>
-<p><strong>社区活跃</strong>：庞大的用户社区提供丰富的学习资源和技术支持</p>
-<p><strong>跨平台</strong>：支持 Windows、macOS 和 Linux 系统</p>
+<div id="第一章r与rstudio环境搭建" class="section level1">
+<h1>第一章：R与RStudio环境搭建</h1>
+<div id="r语言简介与特点" class="section level2">
+<h2>1.1 R语言简介与特点</h2>
+<div id="什么是r语言" class="section level3">
+<h3>什么是R语言？</h3>
+<p>R语言是一种专门用于<strong>统计分析</strong>和<strong>数据可视化</strong>的编程语言。简单来说，它是一个强大的”计算器”，不仅能做加减乘除，还能处理复杂的数据分析任务。</p>
 </div>
-<div id="r-与-rstudio-的关系" class="section level3">
-<h3>R 与 RStudio 的关系</h3>
-<table>
-<thead>
-<tr class="header">
-<th>项目</th>
-<th>R</th>
-<th>RStudio</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>类型</td>
-<td>编程语言 + 运行环境</td>
-<td>集成开发环境（IDE）</td>
-</tr>
-<tr class="even">
-<td>功能</td>
-<td>执行 R 代码</td>
-<td>提供友好的编辑、调试界面</td>
-</tr>
-<tr class="odd">
-<td>关系</td>
-<td>核心引擎</td>
-<td>前端工具</td>
-</tr>
-</tbody>
-</table>
-<p><strong>简单来说：R 是”引擎”，RStudio 是”驾驶舱”。</strong> 使用
-RStudio 需要先安装 R 基础环境。</p>
+<div id="r语言的主要特点" class="section level3">
+<h3>R语言的主要特点</h3>
+<ol style="list-style-type: decimal">
+<li><strong>免费开源</strong>：任何人都可以免费使用和修改</li>
+<li><strong>专为数据分析设计</strong>：内置大量统计函数</li>
+<li><strong>丰富的扩展包</strong>：全球开发者贡献了数万个扩展包</li>
+<li><strong>强大的可视化能力</strong>：可以绘制精美的统计图形</li>
+<li><strong>活跃的社区</strong>：遇到问题很容易找到解决方案</li>
+</ol>
+</div>
+<div id="r语言能做什么" class="section level3">
+<h3>R语言能做什么？</h3>
+<ul>
+<li>数据清洗和整理</li>
+<li>统计分析和假设检验</li>
+<li>机器学习建模</li>
+<li>数据可视化（图表制作）</li>
+<li>生物信息学分析（基因数据处理）</li>
+<li>生成自动化报告</li>
+</ul>
 <hr />
 </div>
 </div>
-<div id="安装与环境配置" class="section level2">
-<h2>1.2 安装与环境配置</h2>
-<div id="安装-r-基础环境" class="section level3">
-<h3>安装 R 基础环境</h3>
+<div id="r软件的下载与安装" class="section level2">
+<h2>1.2 R软件的下载与安装</h2>
+<div id="下载r软件" class="section level3">
+<h3>下载R软件</h3>
 <ol style="list-style-type: decimal">
-<li>访问 CRAN 官网：<a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></li>
-<li>根据操作系统选择对应版本下载</li>
-<li>运行安装程序，按提示完成安装</li>
+<li>访问CRAN官网：<a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></li>
+<li>根据你的操作系统选择对应版本：
+<ul>
+<li>Windows用户：点击”Download R for Windows”</li>
+<li>Mac用户：点击”Download R for macOS”</li>
+<li>Linux用户：选择对应的发行版</li>
+</ul></li>
+<li>下载最新版本的安装包</li>
 </ol>
 </div>
-<div id="安装-rstudio" class="section level3">
-<h3>安装 RStudio</h3>
+<div id="安装步骤windows" class="section level3">
+<h3>安装步骤（Windows）</h3>
 <ol style="list-style-type: decimal">
-<li>访问 RStudio 官网：<a href="https://posit.co/download/rstudio-desktop-download/" class="uri">https://posit.co/download/rstudio-desktop-download/</a></li>
-<li>下载 RStudio Desktop 免费版</li>
-<li>运行安装程序完成安装</li>
+<li>双击下载的安装文件</li>
+<li>选择安装语言（建议选择中文或英文）</li>
+<li>点击”下一步”接受许可协议</li>
+<li>选择安装路径（建议不要安装在中文路径下）</li>
+<li>选择组件（默认即可）</li>
+<li>选择启动选项（建议选择”No”以自定义设置）</li>
+<li>完成安装</li>
 </ol>
-</div>
-<div id="rstudio-界面介绍" class="section level3">
-<h3>RStudio 界面介绍</h3>
-<p>RStudio 界面主要分为四个面板：</p>
-<pre><code>┌─────────────────────────────────────────────────────────┐
-│                    菜单栏 / 工具栏                      │
-├──────────────────────┬──────────────────────────────────┤
-│                      │                                  │
-│   脚本编辑器         │         环境面板                 │
-│   (Source Editor)    │       (Environment)              │
-│                      │                                  │
-│   编写和保存代码     │     查看变量和函数               │
-│                      │                                  │
-├──────────────────────┼──────────────────────────────────┤
-│                      │                                  │
-│    控制台            │         文件面板                 │
-│   (Console)          │       (Files/Plots/Packages)     │
-│                      │                                  │
-│   交互式执行命令     │     文件管理/图形输出/包管理     │
-│                      │                                  │
-└──────────────────────┴──────────────────────────────────┘</code></pre>
-<p><strong>各面板功能：</strong></p>
-<p><strong>控制台（Console）</strong>：直接输入 R 命令并立即执行</p>
-<p><strong>脚本编辑器（Source Editor）</strong>：编写、编辑和保存 R
-脚本文件</p>
-<p><strong>环境面板（Environment）</strong>：显示当前工作空间中的所有变量和函数</p>
-<p><strong>文件面板</strong>：包含文件管理、图形输出、包管理、帮助文档等功能</p>
+<blockquote>
+<p><strong>提示</strong>：安装路径中避免出现中文和空格，例如
+<code>C:\Program Files\R\R-4.x.x</code> 是推荐的路径格式。</p>
+</blockquote>
 <hr />
 </div>
 </div>
-<div id="第一个-r-程序" class="section level2">
-<h2>1.3 第一个 R 程序</h2>
-<div id="输出-hello-world" class="section level3">
-<h3>输出 “Hello, World!”</h3>
-<pre class="r"><code>print(&quot;Hello, World!&quot;)</code></pre>
-<pre><code>[1] &quot;Hello, World!&quot;</code></pre>
-<p><code>print()</code> 是 R
-中最基本的输出函数，用于在控制台显示内容。</p>
+<div id="rstudio的下载安装与界面介绍" class="section level2">
+<h2>1.3 RStudio的下载、安装与界面介绍</h2>
+<div id="什么是rstudio" class="section level3">
+<h3>什么是RStudio？</h3>
+<p>RStudio是R语言的<strong>集成开发环境</strong>（IDE）。如果把R比作汽车的发动机，那么RStudio就是一辆完整的汽车——它让R更易用、更美观、功能更强大。</p>
 </div>
-<div id="r-作为计算器使用" class="section level3">
-<h3>R 作为计算器使用</h3>
-<p>R 可以直接进行数学运算：</p>
-<pre class="r"><code># 基本算术运算
-3 + 5</code></pre>
-<pre><code>[1] 8</code></pre>
-<pre class="r"><code>10 - 4</code></pre>
-<pre><code>[1] 6</code></pre>
-<pre class="r"><code>6 * 7</code></pre>
-<pre><code>[1] 42</code></pre>
-<pre class="r"><code>20 / 4</code></pre>
-<pre><code>[1] 5</code></pre>
-<pre class="r"><code>2 ^ 3</code></pre>
-<pre><code>[1] 8</code></pre>
-<pre class="r"><code># 更复杂的计算
+<div id="为什么需要rstudio" class="section level3">
+<h3>为什么需要RStudio？</h3>
+<p>虽然R自带了一个简单的界面，但RStudio提供了： -
+代码高亮显示（不同颜色区分代码元素） - 代码自动补全 - 项目管理功能 -
+内置帮助系统 - 更好的图形显示</p>
+</div>
+<div id="下载rstudio" class="section level3">
+<h3>下载RStudio</h3>
+<ol style="list-style-type: decimal">
+<li>访问：<a href="https://posit.co/download/rstudio/" class="uri">https://posit.co/download/rstudio/</a></li>
+<li>选择免费版本（RStudio Desktop Free）</li>
+<li>下载对应操作系统的安装包</li>
+</ol>
+</div>
+<div id="安装rstudio" class="section level3">
+<h3>安装RStudio</h3>
+<p>安装过程非常简单，按照向导点击”下一步”即可。<strong>重要提示：必须先安装R，再安装RStudio</strong>。</p>
+<hr />
+</div>
+</div>
+<div id="rstudio主要面板介绍" class="section level2">
+<h2>1.4 RStudio主要面板介绍</h2>
+<p>打开RStudio后，你会看到四个主要面板：</p>
+<div id="左上角脚本编辑器source" class="section level3">
+<h3>左上角：脚本编辑器（Source）</h3>
+<p>这是你<strong>编写代码</strong>的地方。你可以： -
+创建新的R脚本文件（File → New File → R Script） - 保存代码以便下次使用 -
+选中代码按 <code>Ctrl+Enter</code> 运行</p>
+</div>
+<div id="左下角控制台console" class="section level3">
+<h3>左下角：控制台（Console）</h3>
+<p>这是<strong>执行代码</strong>的地方。你可以： -
+直接输入代码并按回车执行 - 查看代码运行结果 - 查看错误和警告信息</p>
+<pre class="r"><code># 这是一个简单的加法运算
+# R会自动计算并输出结果
+1 + 1</code></pre>
+<pre><code>## [1] 2</code></pre>
+</div>
+<div id="右上角环境历史environmenthistory" class="section level3">
+<h3>右上角：环境/历史（Environment/History）</h3>
+<ul>
+<li><strong>Environment</strong>：显示当前创建的所有变量和数据</li>
+<li><strong>History</strong>：记录你执行过的所有命令</li>
+</ul>
+</div>
+<div id="右下角多用途面板" class="section level3">
+<h3>右下角：多用途面板</h3>
+<p>包含多个标签页： -
+<strong>Files</strong>：文件浏览器，显示当前目录的文件 -
+<strong>Plots</strong>：显示绘制的图形 -
+<strong>Packages</strong>：管理已安装的R包 -
+<strong>Help</strong>：查看函数帮助文档 -
+<strong>Viewer</strong>：显示本地网页内容</p>
+<hr />
+</div>
+</div>
+<div id="r项目的创建与管理.rproj" class="section level2">
+<h2>1.5 R项目的创建与管理（.Rproj）</h2>
+<div id="什么是r项目" class="section level3">
+<h3>什么是R项目？</h3>
+<p>R项目是RStudio提供的一种<strong>工作组织方式</strong>。它将所有相关的代码、数据、结果保存在一个文件夹中，方便管理和分享。</p>
+</div>
+<div id="为什么使用r项目" class="section level3">
+<h3>为什么使用R项目？</h3>
+<ol style="list-style-type: decimal">
+<li><strong>自动设置工作目录</strong>：打开项目自动定位到项目文件夹</li>
+<li><strong>保持工作独立</strong>：不同项目之间互不干扰</li>
+<li><strong>方便分享</strong>：整个项目文件夹可以直接分享给他人</li>
+<li><strong>版本控制友好</strong>：便于与Git配合使用</li>
+</ol>
+</div>
+<div id="创建r项目" class="section level3">
+<h3>创建R项目</h3>
+<ol style="list-style-type: decimal">
+<li>点击菜单：File → New Project</li>
+<li>选择”New Directory”（新建目录）或”Existing
+Directory”（已有目录）</li>
+<li>输入项目名称，选择保存位置</li>
+<li>点击”Create Project”</li>
+</ol>
+<p>创建后会生成一个 <code>.Rproj</code>
+文件，双击它即可打开整个项目。</p>
+<hr />
+</div>
+</div>
+<div id="工作目录的查看与设置" class="section level2">
+<h2>1.6 工作目录的查看与设置</h2>
+<div id="什么是工作目录" class="section level3">
+<h3>什么是工作目录？</h3>
+<p>工作目录是R<strong>默认读取和保存文件的文件夹</strong>。就像你在电脑上有一个”我的文档”文件夹一样，R也需要知道从哪里找文件、把文件存到哪里。</p>
+</div>
+<div id="查看当前工作目录" class="section level3">
+<h3>查看当前工作目录</h3>
+<p>使用 <code>getwd()</code> 函数：</p>
+<pre class="r"><code># getwd() 函数用于获取当前工作目录
+# 工作目录是R默认读取和保存文件的文件夹
+getwd()</code></pre>
+<pre><code>## [1] &quot;C:/Users/XTS-green/Desktop/medical_student_rescue_plan-main/R语言与生信分析/R语言/001R语言基础&quot;</code></pre>
+</div>
+<div id="设置工作目录" class="section level3">
+<h3>设置工作目录</h3>
+<p>使用 <code>setwd()</code> 函数：</p>
+<pre class="r"><code># setwd() 函数用于设置工作目录
+# 注意：Windows系统中路径使用正斜杠 / 或双反斜杠 \\
+# 单反斜杠 \ 会被R识别为转义字符，导致错误
+setwd(&quot;C:/Users/你的用户名/Documents/my_project&quot;)</code></pre>
+<blockquote>
+<p><strong>注意</strong>：Windows系统中路径使用正斜杠 <code>/</code>
+或双反斜杠 <code>\\</code>，不能使用单反斜杠 <code>\</code>。</p>
+</blockquote>
+</div>
+<div id="在rstudio中设置工作目录" class="section level3">
+<h3>在RStudio中设置工作目录</h3>
+<p>更简单的方法： 1. 点击菜单：Session → Set Working Directory → Choose
+Directory 2. 或在Files面板中导航到目标文件夹，点击”More” → “Set As
+Working Directory”</p>
+<hr />
+</div>
+</div>
+<div id="r语言的注释与代码排版" class="section level2">
+<h2>1.7 R语言的注释与代码排版</h2>
+<div id="什么是注释" class="section level3">
+<h3>什么是注释？</h3>
+<p>注释是<strong>给人看的说明文字</strong>，R在执行代码时会忽略注释内容。注释的作用是：
+解释代码的功能 标记重要信息 暂时禁用某些代码</p>
+</div>
+<div id="如何写注释" class="section level3">
+<h3>如何写注释</h3>
+<p>使用 <code>#</code> 符号：</p>
+<pre class="r"><code># 使用 &lt;- 进行赋值，这是R语言最常用的赋值方式
+# 将数值10存储到变量x中
+x &lt;- 10
+
+# 使用变量x进行计算
+# R会输出计算结果
+x + 5</code></pre>
+<pre><code>## [1] 15</code></pre>
+</div>
+<div id="代码排版建议" class="section level3">
+<h3>代码排版建议</h3>
+<p>良好的代码排版让代码更易读：</p>
+<pre class="r"><code># 创建数值向量x，包含1到5
+x &lt;- c(1, 2, 3, 4, 5)
+
+# 创建数值向量y，包含偶数序列
+y &lt;- c(2, 4, 6, 8, 10)
+
+# 计算向量x的平均值
+mean_x &lt;- mean(x)
+
+# 计算向量y的平均值
+mean_y &lt;- mean(y)
+
+# 将两个平均值相加
+result &lt;- mean_x + mean_y
+
+# 输出结果
+result</code></pre>
+<pre><code>## [1] 9</code></pre>
+</div>
+<div id="排版原则" class="section level3">
+<h3>排版原则</h3>
+<ol style="list-style-type: decimal">
+<li><strong>适当空行</strong>：不同功能的代码块之间空一行</li>
+<li><strong>合理缩进</strong>：使用Tab或2个空格缩进</li>
+<li><strong>有意义的变量名</strong>：变量名要能表达其含义</li>
+<li><strong>添加注释</strong>：复杂逻辑要添加说明</li>
+</ol>
+<hr />
+</div>
+</div>
+</div>
+<div id="第二章r语言基础语法与操作" class="section level1">
+<h1>第二章：R语言基础语法与操作</h1>
+<div id="表达式与赋值" class="section level2">
+<h2>2.1 表达式与赋值</h2>
+<div id="什么是表达式" class="section level3">
+<h3>什么是表达式？</h3>
+<p>表达式是可以被R计算并产生结果的代码片段。最简单的表达式就是数学运算：</p>
+<pre class="r"><code># 加法表达式：1加2
+1 + 2</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># 乘法表达式：3乘以4
+3 * 4</code></pre>
+<pre><code>## [1] 12</code></pre>
+<pre class="r"><code># 函数调用表达式：计算16的平方根
 sqrt(16)</code></pre>
-<pre><code>[1] 4</code></pre>
-<pre class="r"><code>log(100)</code></pre>
-<pre><code>[1] 4.60517</code></pre>
-<pre class="r"><code>exp(1)</code></pre>
-<pre><code>[1] 2.718282</code></pre>
-<pre class="r"><code>abs(-10)</code></pre>
-<pre><code>[1] 10</code></pre>
-<hr />
+<pre><code>## [1] 4</code></pre>
 </div>
+<div id="什么是赋值" class="section level3">
+<h3>什么是赋值？</h3>
+<p>赋值就是把一个值<strong>存储</strong>到变量中，以便后续使用。可以理解为给数据起一个名字。</p>
 </div>
-<div id="基本语法" class="section level2">
-<h2>1.4 基本语法</h2>
-<div id="注释写法" class="section level3">
-<h3>注释写法</h3>
-<p>R 使用 <code>#</code> 符号进行注释，<code>#</code>
-后面的内容不会被执行：</p>
-<pre class="r"><code># 这是单行注释
-
-print(&quot;Hello&quot;)  # 行末注释</code></pre>
-<pre><code>[1] &quot;Hello&quot;</code></pre>
-<pre class="r"><code># 注释可以用来解释代码的功能
-# 多行注释需要每行都加 #</code></pre>
-</div>
-<div id="语句分隔" class="section level3">
-<h3>语句分隔</h3>
-<p>R 语句可以用换行或分号分隔：</p>
-<pre class="r"><code># 使用换行分隔
-x &lt;- 1
-y &lt;- 2
-x + y</code></pre>
-<pre><code>[1] 3</code></pre>
-<pre class="r"><code># 使用分号分隔（不推荐）
-a &lt;- 10; b &lt;- 20; a + b</code></pre>
-<pre><code>[1] 30</code></pre>
-<p><strong>推荐使用换行分隔，代码更清晰易读。</strong></p>
-</div>
-<div id="大小写敏感性" class="section level3">
-<h3>大小写敏感性</h3>
-<p>R 是大小写敏感的语言：</p>
-<pre class="r"><code># Variable 和 variable 是两个不同的变量
-Variable &lt;- 100
-variable &lt;- 200
-
-print(Variable)</code></pre>
-<pre><code>[1] 100</code></pre>
-<pre class="r"><code>print(variable)</code></pre>
-<pre><code>[1] 200</code></pre>
-<pre class="r"><code># 内置函数也是大小写敏感的
-# print() 正确，Print() 会报错</code></pre>
-<hr />
-</div>
-</div>
-</div>
-<div id="二r-语言核心语法" class="section level1">
-<h1>二、R 语言核心语法</h1>
-<div id="变量与赋值" class="section level2">
-<h2>2.1 变量与赋值</h2>
-<div id="赋值操作符" class="section level3">
-<h3>赋值操作符</h3>
-<p>R 中有多种赋值方式：</p>
-<pre class="r"><code># 使用 &lt;- 赋值（推荐，R 风格）
+<div id="赋值符号" class="section level3">
+<h3>赋值符号</h3>
+<p>R语言有多种赋值方式：</p>
+<pre class="r"><code># 方式1：使用 &lt;- 赋值（推荐）
+# 将数值10存储到变量x中
 x &lt;- 10
 x</code></pre>
-<pre><code>[1] 10</code></pre>
-<pre class="r"><code># 使用 = 赋值（常见于函数参数）
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code># 方式2：使用 = 赋值
+# 将数值20存储到变量y中
 y = 20
 y</code></pre>
-<pre><code>[1] 20</code></pre>
-<pre class="r"><code># 使用 -&gt; 赋值（从左向右，较少使用）
+<pre><code>## [1] 20</code></pre>
+<pre class="r"><code># 方式3：使用 -&gt; 赋值（从左向右）
+# 将数值30存储到变量z中
 30 -&gt; z
 z</code></pre>
-<pre><code>[1] 30</code></pre>
-<p><strong>赋值操作符对比：</strong></p>
+<pre><code>## [1] 30</code></pre>
+</div>
+<div id="三种赋值符号的区别" class="section level3">
+<h3>三种赋值符号的区别</h3>
 <table>
 <thead>
 <tr class="header">
-<th>操作符</th>
+<th>符号</th>
 <th>方向</th>
-<th>使用场景</th>
-<th>推荐度</th>
+<th>推荐使用场景</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><code>&lt;-</code></td>
-<td>右向左</td>
-<td>变量赋值</td>
-<td>非常推荐，这是最规范化的写法</td>
+<td>左箭头（向左赋值）</td>
+<td>R语言传统写法，<strong>推荐使用</strong></td>
 </tr>
 <tr class="even">
 <td><code>=</code></td>
-<td>右向左</td>
-<td>函数参数赋值</td>
-<td>非常推荐，我个人很喜欢用</td>
+<td>等号</td>
+<td>函数参数设置时使用</td>
 </tr>
 <tr class="odd">
 <td><code>-&gt;</code></td>
-<td>左向右</td>
-<td>特殊场景</td>
-<td>非特殊情况不建议使用，易引起代码混淆</td>
+<td>右箭头（向右赋值）</td>
+<td>较少使用，管道操作时可能用到</td>
 </tr>
 </tbody>
 </table>
-</div>
-<div id="变量命名规则" class="section level3">
-<h3>变量命名规则</h3>
-<pre class="r"><code># 合法的变量名
-my_var &lt;- 1
-my.var &lt;- 2
-myVar &lt;- 3
-var1 &lt;- 4
-.var &lt;- 5  # 以点开头
-
-# 变量命名规则：
-# 1. 可以包含字母、数字、点(.)、下划线(_)
-# 2. 必须以字母或点开头（点后不能跟数字）
-# 3. 不能包含空格或特殊字符
-# 4. 不能使用 R 保留字（如 if, else, for, while 等）
-
-# 不合法的变量名（会报错）：
-# 1var &lt;- 1      # 不能以数字开头
-# .1var &lt;- 1     # 点后不能跟数字
-# my-var &lt;- 1    # 不能包含减号
-# my var &lt;- 1    # 不能包含空格</code></pre>
-</div>
-<div id="查看与删除变量" class="section level3">
-<h3>查看与删除变量</h3>
-<pre class="r"><code># 查看当前环境中的所有变量
-ls()</code></pre>
-<pre><code> [1] &quot;a&quot;        &quot;b&quot;        &quot;my.var&quot;   &quot;my_var&quot;   &quot;myVar&quot;    &quot;var1&quot;    
- [7] &quot;variable&quot; &quot;Variable&quot; &quot;x&quot;        &quot;y&quot;        &quot;z&quot;       </code></pre>
-<pre class="r"><code># 查看以特定模式开头的变量
-ls(pattern = &quot;my&quot;)</code></pre>
-<pre><code>[1] &quot;my.var&quot; &quot;my_var&quot; &quot;myVar&quot; </code></pre>
-<pre class="r"><code># 删除单个变量
-rm(my_var)
-
-# 删除多个变量
-rm(my.var, myVar)
-
-# 删除所有变量
-# rm(list = ls())  # 取消注释以执行</code></pre>
+<pre class="r"><code># 使用 &lt;- 进行赋值并计算
+# 先计算5+3得到8，再将8存储到result变量中
+result &lt;- 5 + 3
+result</code></pre>
+<pre><code>## [1] 8</code></pre>
 <hr />
 </div>
 </div>
-<div id="基本数据类型" class="section level2">
-<h2>2.2 基本数据类型</h2>
-<p>R 中有六种基本数据类型：</p>
-<div id="数值型numeric" class="section level3">
-<h3>数值型（numeric）</h3>
-<pre class="r"><code># 数值型（默认为双精度浮点数）
-num &lt;- 3.14
-class(num)</code></pre>
-<pre><code>[1] &quot;numeric&quot;</code></pre>
-<pre class="r"><code>typeof(num)</code></pre>
-<pre><code>[1] &quot;double&quot;</code></pre>
-<pre class="r"><code># 数值运算
-num + 10</code></pre>
-<pre><code>[1] 13.14</code></pre>
-<pre class="r"><code>num * 2</code></pre>
-<pre><code>[1] 6.28</code></pre>
-</div>
-<div id="整型integer" class="section level3">
-<h3>整型（integer）</h3>
-<pre class="r"><code># 整型（需要加 L 后缀）
-int_num &lt;- 100L
-class(int_num)</code></pre>
-<pre><code>[1] &quot;integer&quot;</code></pre>
-<pre class="r"><code>typeof(int_num)</code></pre>
-<pre><code>[1] &quot;integer&quot;</code></pre>
-<pre class="r"><code># 普通数字默认是 numeric
-normal_num &lt;- 100
-class(normal_num)  # numeric，不是 integer</code></pre>
-<pre><code>[1] &quot;numeric&quot;</code></pre>
-</div>
-<div id="字符型character" class="section level3">
-<h3>字符型（character）</h3>
-<pre class="r"><code># 字符型（字符串）
-char1 &lt;- &quot;Hello, R!&quot;
-char2 &lt;- &#39;单引号也可以&#39;
-
-class(char1)</code></pre>
-<pre><code>[1] &quot;character&quot;</code></pre>
-<pre class="r"><code>nchar(char1)  # 字符串长度</code></pre>
-<pre><code>[1] 9</code></pre>
-<pre class="r"><code># 字符串操作
-paste(&quot;Hello&quot;, &quot;World&quot;)      # 拼接</code></pre>
-<pre><code>[1] &quot;Hello World&quot;</code></pre>
-<pre class="r"><code>paste0(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)        # 无分隔拼接</code></pre>
-<pre><code>[1] &quot;ABC&quot;</code></pre>
-<pre class="r"><code>toupper(&quot;hello&quot;)             # 转大写</code></pre>
-<pre><code>[1] &quot;HELLO&quot;</code></pre>
-<pre class="r"><code>tolower(&quot;HELLO&quot;)             # 转小写</code></pre>
-<pre><code>[1] &quot;hello&quot;</code></pre>
-</div>
-<div id="逻辑型logical" class="section level3">
-<h3>逻辑型（logical）</h3>
-<pre class="r"><code># 逻辑型（布尔值）
-logi_true &lt;- TRUE
-logi_false &lt;- FALSE
-
-class(logi_true)</code></pre>
-<pre><code>[1] &quot;logical&quot;</code></pre>
-<pre class="r"><code>typeof(logi_true)</code></pre>
-<pre><code>[1] &quot;logical&quot;</code></pre>
-<pre class="r"><code># 逻辑值可以简写
-logi_true &lt;- T
-logi_false &lt;- F
-
-# 逻辑运算
-TRUE &amp; FALSE   # 与</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code>TRUE | FALSE   # 或</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code>!TRUE          # 非</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code># 逻辑值可以转换为数值
-as.numeric(TRUE)   # 1</code></pre>
-<pre><code>[1] 1</code></pre>
-<pre class="r"><code>as.numeric(FALSE)  # 0</code></pre>
-<pre><code>[1] 0</code></pre>
-</div>
-<div id="复数型complex" class="section level3">
-<h3>复数型（complex）</h3>
-<pre class="r"><code># 复数型
-comp &lt;- 3 + 2i
-class(comp)</code></pre>
-<pre><code>[1] &quot;complex&quot;</code></pre>
-<pre class="r"><code># 复数运算
-comp + (1 + 1i)</code></pre>
-<pre><code>[1] 4+3i</code></pre>
-<pre class="r"><code>comp * 2i</code></pre>
-<pre><code>[1] -4+6i</code></pre>
-<pre class="r"><code>Re(comp)   # 实部</code></pre>
-<pre><code>[1] 3</code></pre>
-<pre class="r"><code>Im(comp)   # 虚部</code></pre>
-<pre><code>[1] 2</code></pre>
-<pre class="r"><code>Mod(comp)  # 模</code></pre>
-<pre><code>[1] 3.605551</code></pre>
-</div>
-<div id="原始型raw" class="section level3">
-<h3>原始型（raw）</h3>
-<pre class="r"><code># 原始型（字节）
-raw_data &lt;- charToRaw(&quot;Hello&quot;)
-class(raw_data)</code></pre>
-<pre><code>[1] &quot;raw&quot;</code></pre>
-<pre class="r"><code>raw_data</code></pre>
-<pre><code>[1] 48 65 6c 6c 6f</code></pre>
-<pre class="r"><code># 原始型转字符
-rawToChar(raw_data)</code></pre>
-<pre><code>[1] &quot;Hello&quot;</code></pre>
-</div>
-<div id="类型判断与转换" class="section level3">
-<h3>类型判断与转换</h3>
-<pre class="r"><code># 类型判断
-x &lt;- 100
-is.numeric(x)</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code>is.integer(x)</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code>is.character(x)</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code>is.logical(x)</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code># 类型转换
-as.numeric(&quot;3.14&quot;)</code></pre>
-<pre><code>[1] 3.14</code></pre>
-<pre class="r"><code>as.character(100)</code></pre>
-<pre><code>[1] &quot;100&quot;</code></pre>
-<pre class="r"><code>as.logical(1)</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code>as.integer(3.7)  # 向下取整</code></pre>
-<pre><code>[1] 3</code></pre>
-<hr />
-</div>
-</div>
-<div id="基本运算符" class="section level2">
-<h2>2.3 基本运算符</h2>
-<div id="算术运算符" class="section level3">
-<h3>算术运算符</h3>
-<pre class="r"><code>a &lt;- 10
+<div id="基本算术运算" class="section level2">
+<h2>2.2 基本算术运算</h2>
+<p>R支持所有常见的数学运算：</p>
+<pre class="r"><code># 定义两个变量
+a &lt;- 10
 b &lt;- 3
 
-# 加法
+# 加法：10 + 3 = 13
 a + b</code></pre>
-<pre><code>[1] 13</code></pre>
-<pre class="r"><code># 减法
+<pre><code>## [1] 13</code></pre>
+<pre class="r"><code># 减法：10 - 3 = 7
 a - b</code></pre>
-<pre><code>[1] 7</code></pre>
-<pre class="r"><code># 乘法
+<pre><code>## [1] 7</code></pre>
+<pre class="r"><code># 乘法：10 * 3 = 30
 a * b</code></pre>
-<pre><code>[1] 30</code></pre>
-<pre class="r"><code># 除法
+<pre><code>## [1] 30</code></pre>
+<pre class="r"><code># 除法：10 / 3 = 3.333...
 a / b</code></pre>
-<pre><code>[1] 3.333333</code></pre>
-<pre class="r"><code># 幂运算
+<pre><code>## [1] 3.333333</code></pre>
+<pre class="r"><code># 幂运算：10的3次方 = 1000
 a ^ b</code></pre>
-<pre><code>[1] 1000</code></pre>
-<pre class="r"><code>a ** b  # 等价写法</code></pre>
-<pre><code>[1] 1000</code></pre>
-<pre class="r"><code># 取模（求余数）
+<pre><code>## [1] 1000</code></pre>
+<pre class="r"><code># 取余数：10除以3的余数 = 1
 a %% b</code></pre>
-<pre><code>[1] 1</code></pre>
-<pre class="r"><code># 整除（商的整数部分）
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># 整除：10除以3的整数部分 = 3
 a %/% b</code></pre>
-<pre><code>[1] 3</code></pre>
-<p><strong>算术运算符汇总：</strong></p>
+<pre><code>## [1] 3</code></pre>
+<div id="算术运算符总结" class="section level3">
+<h3>算术运算符总结</h3>
 <table>
 <thead>
 <tr class="header">
 <th>运算符</th>
-<th>描述</th>
+<th>含义</th>
 <th>示例</th>
 <th>结果</th>
 </tr>
@@ -801,77 +716,83 @@ a %/% b</code></pre>
 <tr class="odd">
 <td><code>+</code></td>
 <td>加法</td>
-<td>10 + 3</td>
-<td>13</td>
+<td>5 + 3</td>
+<td>8</td>
 </tr>
 <tr class="even">
 <td><code>-</code></td>
 <td>减法</td>
-<td>10 - 3</td>
-<td>7</td>
+<td>5 - 3</td>
+<td>2</td>
 </tr>
 <tr class="odd">
 <td><code>*</code></td>
 <td>乘法</td>
-<td>10 * 3</td>
-<td>30</td>
+<td>5 * 3</td>
+<td>15</td>
 </tr>
 <tr class="even">
 <td><code>/</code></td>
 <td>除法</td>
-<td>10 / 3</td>
-<td>3.333…</td>
+<td>5 / 3</td>
+<td>1.667</td>
 </tr>
 <tr class="odd">
-<td><code>^</code> 或 <code>**</code></td>
+<td><code>^</code></td>
 <td>幂运算</td>
-<td>10 ^ 3</td>
-<td>1000</td>
+<td>5 ^ 3</td>
+<td>125</td>
 </tr>
 <tr class="even">
 <td><code>%%</code></td>
-<td>取模</td>
-<td>10 %% 3</td>
-<td>1</td>
+<td>取余数</td>
+<td>5 %% 3</td>
+<td>2</td>
 </tr>
 <tr class="odd">
 <td><code>%/%</code></td>
 <td>整除</td>
-<td>10 %/% 3</td>
-<td>3</td>
+<td>5 %/% 3</td>
+<td>1</td>
 </tr>
 </tbody>
 </table>
+<hr />
 </div>
-<div id="关系运算符" class="section level3">
-<h3>关系运算符</h3>
-<pre class="r"><code>x &lt;- 5
+</div>
+<div id="关系运算" class="section level2">
+<h2>2.3 关系运算</h2>
+<p>关系运算用于<strong>比较两个值</strong>，结果是逻辑值（TRUE或FALSE）：</p>
+<pre class="r"><code># 定义两个变量用于比较
+x &lt;- 5
 y &lt;- 10
 
-# 大于
+# 大于：5 &gt; 10 吗？结果为 FALSE
 x &gt; y</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code># 小于
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># 小于：5 &lt; 10 吗？结果为 TRUE
 x &lt; y</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code># 大于等于
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 大于等于：5 &gt;= 5 吗？结果为 TRUE
 x &gt;= 5</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code># 小于等于
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 小于等于：10 &lt;= 10 吗？结果为 TRUE
 y &lt;= 10</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code># 等于
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 等于：x的值等于5吗？结果为 TRUE
+# 注意：判断相等用双等号 ==
 x == 5</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code># 不等于
-x != y</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<p><strong>关系运算符汇总：</strong></p>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 不等于：x的值不等于5吗？结果为 FALSE
+x != 5</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<div id="关系运算符总结" class="section level3">
+<h3>关系运算符总结</h3>
 <table>
 <thead>
 <tr class="header">
 <th>运算符</th>
-<th>描述</th>
+<th>含义</th>
 <th>示例</th>
 </tr>
 </thead>
@@ -879,259 +800,1538 @@ x != y</code></pre>
 <tr class="odd">
 <td><code>&gt;</code></td>
 <td>大于</td>
-<td><code>5 &gt; 3</code> → TRUE</td>
+<td><code>5 &gt; 3</code> 返回 TRUE</td>
 </tr>
 <tr class="even">
 <td><code>&lt;</code></td>
 <td>小于</td>
-<td><code>5 &lt; 3</code> → FALSE</td>
+<td><code>5 &lt; 3</code> 返回 FALSE</td>
 </tr>
 <tr class="odd">
 <td><code>&gt;=</code></td>
 <td>大于等于</td>
-<td><code>5 &gt;= 5</code> → TRUE</td>
+<td><code>5 &gt;= 5</code> 返回 TRUE</td>
 </tr>
 <tr class="even">
 <td><code>&lt;=</code></td>
 <td>小于等于</td>
-<td><code>5 &lt;= 3</code> → FALSE</td>
+<td><code>5 &lt;= 3</code> 返回 FALSE</td>
 </tr>
 <tr class="odd">
 <td><code>==</code></td>
 <td>等于</td>
-<td><code>5 == 5</code> → TRUE</td>
+<td><code>5 == 5</code> 返回 TRUE</td>
 </tr>
 <tr class="even">
 <td><code>!=</code></td>
 <td>不等于</td>
-<td><code>5 != 3</code> → TRUE</td>
+<td><code>5 != 3</code> 返回 TRUE</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>重要提示</strong>：判断相等用
+<code>==</code>（双等号），单等号 <code>=</code> 是赋值！</p>
+</blockquote>
+<hr />
 </div>
-<div id="逻辑运算符" class="section level3">
-<h3>逻辑运算符</h3>
-<pre class="r"><code># 逐元素逻辑运算（可向量化）
-TRUE &amp; FALSE   # 与</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code>TRUE | FALSE   # 或</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code>!TRUE          # 非</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code># 短路逻辑运算（只返回单个值）
-TRUE &amp;&amp; FALSE  # 短路与</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code>TRUE || FALSE  # 短路或</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<p><strong><code>&amp;</code> 与 <code>&amp;&amp;</code>
-的区别：</strong></p>
-<pre class="r"><code># &amp; 和 | 是向量化的，对每个元素进行运算
-c(TRUE, FALSE, TRUE) &amp; c(TRUE, TRUE, FALSE)</code></pre>
-<pre><code>[1]  TRUE FALSE FALSE</code></pre>
-<pre class="r"><code># &amp;&amp; 和 || 只用于单个逻辑值（常用于 if 条件判断）
-# 在新版 R 中，它们只能处理长度为 1 的向量
+</div>
+<div id="逻辑运算" class="section level2">
+<h2>2.4 逻辑运算</h2>
+<p>逻辑运算用于<strong>组合多个条件</strong>：</p>
+<pre class="r"><code>x &lt;- 5
+
+# 与运算（AND）：两个条件都为TRUE才返回TRUE
+# x &gt; 3 且 x &lt; 10 吗？结果为 TRUE
+x &gt; 3 &amp; x &lt; 10</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 或运算（OR）：只要有一个条件为TRUE就返回TRUE
+# x &lt; 3 或 x &gt; 10 吗？结果为 FALSE
+x &lt; 3 | x &gt; 10</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># 非运算（NOT）：取反
+# !TRUE 结果为 FALSE
+!TRUE</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># 对逻辑表达式取反
+# x &gt; 10 为 FALSE，取反后为 TRUE
+!(x &gt; 10)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<div id="逻辑运算符详解" class="section level3">
+<h3>逻辑运算符详解</h3>
+<pre class="r"><code># 定义两个逻辑变量
+a &lt;- TRUE
+b &lt;- FALSE
+
+# 与运算：TRUE AND FALSE = FALSE
+a &amp; b</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># 或运算：TRUE OR FALSE = TRUE
+a | b</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 非运算：NOT TRUE = FALSE
+!a</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+</div>
+<div id="单符号与双符号的区别" class="section level3">
+<h3>单符号与双符号的区别</h3>
+<p><code>&amp;</code>/<code>|</code> 与
+<code>&amp;&amp;</code>/<code>||</code> 的区别：</p>
+<pre class="r"><code># 创建两个逻辑向量
+x &lt;- c(TRUE, FALSE, TRUE)
+y &lt;- c(FALSE, FALSE, TRUE)
+
+# &amp; 是向量化运算，对每个元素逐一进行AND运算
+# TRUE &amp; FALSE = FALSE, FALSE &amp; FALSE = FALSE, TRUE &amp; TRUE = TRUE
+x &amp; y</code></pre>
+<pre><code>## [1] FALSE FALSE  TRUE</code></pre>
+<pre class="r"><code># &amp;&amp; 是标量运算，只比较第一个元素
+# TRUE &amp;&amp; FALSE = FALSE
 TRUE &amp;&amp; FALSE</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code>TRUE || FALSE</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code># 如果对向量使用 &amp;&amp; 或 ||，只会比较第一个元素（但会警告）
-# 建议仅在 if 语句中使用 &amp;&amp; 和 ||</code></pre>
-<p><strong>逻辑运算符汇总：</strong></p>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># TRUE &amp;&amp; TRUE = TRUE
+TRUE &amp;&amp; TRUE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># || 是标量运算，只比较第一个元素
+# TRUE || FALSE = TRUE
+TRUE || FALSE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
 <table>
 <thead>
 <tr class="header">
 <th>运算符</th>
-<th>描述</th>
-<th>类型</th>
+<th>说明</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td><code>&amp;</code></td>
-<td>逻辑与（向量化）</td>
-<td>逐元素</td>
-</tr>
-<tr class="even">
-<td><code>\|</code></td>
-<td>逻辑或（向量化）</td>
-<td>逐元素</td>
-</tr>
-<tr class="odd">
-<td><code>!</code></td>
-<td>逻辑非</td>
-<td>逐元素</td>
+<td>向量化AND，对每个元素进行运算</td>
 </tr>
 <tr class="even">
 <td><code>&amp;&amp;</code></td>
-<td>逻辑与（短路）</td>
-<td>仅首元素</td>
+<td>标量AND，只用于单个逻辑值（if条件判断）</td>
 </tr>
 <tr class="odd">
-<td><code>\|\|</code></td>
-<td>逻辑或（短路）</td>
-<td>仅首元素</td>
+<td><code>|</code></td>
+<td>向量化OR，对每个元素进行运算</td>
+</tr>
+<tr class="even">
+<td><code>||</code></td>
+<td>标量OR，只用于单个逻辑值（if条件判断）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>建议</strong>：处理向量时用 <code>&amp;</code> 和
+<code>|</code>；if条件判断时用 <code>&amp;&amp;</code> 和
+<code>||</code>。</p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="常见数学函数" class="section level2">
+<h2>2.5 常见数学函数</h2>
+<p>R内置了丰富的数学函数：</p>
+<pre class="r"><code># 定义一个负数
+x &lt;- -4.5
+
+# abs()：取绝对值，|-4.5| = 4.5
+abs(x)</code></pre>
+<pre><code>## [1] 4.5</code></pre>
+<pre class="r"><code># sqrt()：计算平方根，√16 = 4
+sqrt(16)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># log()：自然对数（以e为底），ln(100) ≈ 4.605
+log(100)</code></pre>
+<pre><code>## [1] 4.60517</code></pre>
+<pre class="r"><code># log10()：以10为底的对数，log10(100) = 2
+log10(100)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code># log2()：以2为底的对数，log2(8) = 3
+log2(8)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># exp()：e的x次方，e^1 ≈ 2.718
+exp(1)</code></pre>
+<pre><code>## [1] 2.718282</code></pre>
+<pre class="r"><code># sin()：正弦函数，sin(π/2) = 1
+# pi 是R内置的圆周率常量
+sin(pi/2)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># cos()：余弦函数，cos(0) = 1
+cos(0)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># tan()：正切函数，tan(π/4) ≈ 1
+tan(pi/4)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># round()：四舍五入到指定小数位
+# 将3.14159保留2位小数 = 3.14
+round(3.14159, 2)</code></pre>
+<pre><code>## [1] 3.14</code></pre>
+<pre class="r"><code># ceiling()：向上取整，3.2 → 4
+ceiling(3.2)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># floor()：向下取整，3.8 → 3
+floor(3.8)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># sign()：符号函数，负数返回-1，正数返回1，零返回0
+sign(-5)</code></pre>
+<pre><code>## [1] -1</code></pre>
+<div id="数学函数总结" class="section level3">
+<h3>数学函数总结</h3>
+<table>
+<thead>
+<tr class="header">
+<th>函数</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>abs(x)</code></td>
+<td>绝对值</td>
+<td><code>abs(-5)</code> = 5</td>
+</tr>
+<tr class="even">
+<td><code>sqrt(x)</code></td>
+<td>平方根</td>
+<td><code>sqrt(16)</code> = 4</td>
+</tr>
+<tr class="odd">
+<td><code>log(x)</code></td>
+<td>自然对数</td>
+<td><code>log(2.718)</code> ≈ 1</td>
+</tr>
+<tr class="even">
+<td><code>log10(x)</code></td>
+<td>以10为底的对数</td>
+<td><code>log10(100)</code> = 2</td>
+</tr>
+<tr class="odd">
+<td><code>log2(x)</code></td>
+<td>以2为底的对数</td>
+<td><code>log2(8)</code> = 3</td>
+</tr>
+<tr class="even">
+<td><code>exp(x)</code></td>
+<td>e的x次方</td>
+<td><code>exp(1)</code> ≈ 2.718</td>
+</tr>
+<tr class="odd">
+<td><code>sin(x)</code></td>
+<td>正弦</td>
+<td><code>sin(0)</code> = 0</td>
+</tr>
+<tr class="even">
+<td><code>cos(x)</code></td>
+<td>余弦</td>
+<td><code>cos(0)</code> = 1</td>
+</tr>
+<tr class="odd">
+<td><code>tan(x)</code></td>
+<td>正切</td>
+<td><code>tan(0)</code> = 0</td>
+</tr>
+<tr class="even">
+<td><code>round(x, n)</code></td>
+<td>四舍五入到n位小数</td>
+<td><code>round(3.14, 1)</code> = 3.1</td>
+</tr>
+<tr class="odd">
+<td><code>ceiling(x)</code></td>
+<td>向上取整</td>
+<td><code>ceiling(3.1)</code> = 4</td>
+</tr>
+<tr class="even">
+<td><code>floor(x)</code></td>
+<td>向下取整</td>
+<td><code>floor(3.9)</code> = 3</td>
+</tr>
+<tr class="odd">
+<td><code>sign(x)</code></td>
+<td>符号函数</td>
+<td><code>sign(-5)</code> = -1</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+</div>
+<div id="变量命名规则与查看变量" class="section level2">
+<h2>2.6 变量命名规则与查看变量</h2>
+<div id="变量命名规则" class="section level3">
+<h3>变量命名规则</h3>
+<p>变量名必须遵循以下规则：</p>
+<pre class="r"><code># 以下是合法的变量名
+# 使用下划线连接（推荐风格）
+my_data &lt;- 1
+
+# 使用点连接
+my.data &lt;- 2
+
+# 驼峰命名法
+myData &lt;- 3
+
+# 输出变量值
+my_data</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p><strong>命名规则</strong>： 1. 只能包含字母、数字、下划线
+<code>_</code> 和点 <code>.</code> 2.
+必须以字母或点开头（不能以数字开头） 3. 不能使用R的保留字（如
+<code>if</code>、<code>else</code>、<code>for</code>、<code>while</code>等）
+4. 区分大小写（<code>myVar</code> 和 <code>myvar</code>
+是不同的变量）</p>
+<pre class="r"><code># 这是错误的命名方式（以数字开头），会报错
+2nd_value &lt;- 10</code></pre>
+</div>
+<div id="查看当前变量" class="section level3">
+<h3>查看当前变量</h3>
+<p>使用 <code>ls()</code> 函数列出当前环境中的所有变量：</p>
+<pre class="r"><code># 创建几个变量
+a &lt;- 1
+b &lt;- 2
+my_var &lt;- 3
+
+# ls() 列出所有变量名
+ls()</code></pre>
+<pre><code>##  [1] &quot;a&quot;       &quot;b&quot;       &quot;mean_x&quot;  &quot;mean_y&quot;  &quot;my.data&quot; &quot;my_data&quot; &quot;my_var&quot; 
+##  [8] &quot;myData&quot;  &quot;result&quot;  &quot;x&quot;       &quot;y&quot;       &quot;z&quot;</code></pre>
+<p>使用 <code>ls.str()</code> 查看变量及其结构：</p>
+<pre class="r"><code># ls.str() 显示变量名和简要结构信息
+ls.str()</code></pre>
+<pre><code>## a :  num 1
+## b :  num 2
+## mean_x :  num 3
+## mean_y :  num 6
+## my.data :  num 2
+## my_data :  num 1
+## my_var :  num 3
+## myData :  num 3
+## result :  num 8
+## x :  num -4.5
+## y :  logi [1:3] FALSE FALSE TRUE
+## z :  num 30</code></pre>
+<hr />
+</div>
+</div>
+<div id="删除变量" class="section level2">
+<h2>2.7 删除变量</h2>
+<div id="删除单个变量" class="section level3">
+<h3>删除单个变量</h3>
+<pre class="r"><code># 创建一个临时变量
+temp_var &lt;- 100
+temp_var</code></pre>
+<pre><code>## [1] 100</code></pre>
+<pre class="r"><code># 使用 rm() 函数删除变量
+rm(temp_var)
+
+# 此时再输出 temp_var 会报错（变量已不存在）
+# temp_var</code></pre>
+</div>
+<div id="删除多个变量" class="section level3">
+<h3>删除多个变量</h3>
+<pre class="r"><code># 创建三个变量
+x &lt;- 1
+y &lt;- 2
+z &lt;- 3
+
+# 删除 x 和 y 两个变量
+rm(x, y)
+
+# 查看剩余变量，z 还在
+ls()</code></pre>
+<pre><code>##  [1] &quot;a&quot;       &quot;b&quot;       &quot;mean_x&quot;  &quot;mean_y&quot;  &quot;my.data&quot; &quot;my_data&quot; &quot;my_var&quot; 
+##  [8] &quot;myData&quot;  &quot;result&quot;  &quot;z&quot;</code></pre>
+</div>
+<div id="删除所有变量" class="section level3">
+<h3>删除所有变量</h3>
+<pre class="r"><code># 删除当前环境中的所有变量
+# list = ls() 表示&quot;所有变量组成的列表&quot;
+rm(list = ls())</code></pre>
+<blockquote>
+<p><strong>警告</strong>：此操作会删除当前环境中的所有变量，请谨慎使用！</p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="对象查看与概览" class="section level2">
+<h2>2.8 对象查看与概览</h2>
+<p>R提供了多个函数来查看对象的详细信息：</p>
+<pre class="r"><code># 创建一个数值向量
+my_vector &lt;- c(1, 2, 3, 4, 5)
+
+# str()：显示对象的结构（structure）
+# 输出：类型、长度、内容预览
+str(my_vector)</code></pre>
+<pre><code>##  num [1:5] 1 2 3 4 5</code></pre>
+<pre class="r"><code># class()：显示对象的类
+# 数值向量的类是 &quot;numeric&quot;
+class(my_vector)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code># mode()：显示存储模式
+# 表示数据的存储方式
+mode(my_vector)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code># typeof()：显示底层类型
+# R内部存储的具体类型
+typeof(my_vector)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code># length()：显示长度（元素个数）
+length(my_vector)</code></pre>
+<pre><code>## [1] 5</code></pre>
+<div id="各函数的区别" class="section level3">
+<h3>各函数的区别</h3>
+<table>
+<thead>
+<tr class="header">
+<th>函数</th>
+<th>作用</th>
+<th>返回内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>str()</code></td>
+<td>显示对象结构</td>
+<td>类型、维度、内容预览</td>
+</tr>
+<tr class="even">
+<td><code>class()</code></td>
+<td>显示对象类</td>
+<td>面向对象的类属性</td>
+</tr>
+<tr class="odd">
+<td><code>mode()</code></td>
+<td>显示存储模式</td>
+<td>数据的存储方式</td>
+</tr>
+<tr class="even">
+<td><code>typeof()</code></td>
+<td>显示底层类型</td>
+<td>R内部存储类型</td>
+</tr>
+<tr class="odd">
+<td><code>length()</code></td>
+<td>显示长度</td>
+<td>元素个数</td>
 </tr>
 </tbody>
 </table>
 </div>
-<div id="其他运算符" class="section level3">
-<h3>其他运算符</h3>
-<pre class="r"><code># 冒号运算符：创建序列
-1:5</code></pre>
-<pre><code>[1] 1 2 3 4 5</code></pre>
-<pre class="r"><code>5:1</code></pre>
-<pre><code>[1] 5 4 3 2 1</code></pre>
-<pre class="r"><code># %in%：判断元素是否在向量中
-3 %in% 1:5</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code>10 %in% 1:5</code></pre>
-<pre><code>[1] FALSE</code></pre>
-<pre class="r"><code># %*%：矩阵乘法
-mat1 &lt;- matrix(1:4, nrow = 2)
-mat2 &lt;- matrix(5:8, nrow = 2)
-mat1 %*% mat2</code></pre>
-<pre><code>     [,1] [,2]
-[1,]   23   31
-[2,]   34   46</code></pre>
+<div id="不同类型对象的查看" class="section level3">
+<h3>不同类型对象的查看</h3>
+<pre class="r"><code># 创建一个列表（包含不同类型的数据）
+my_list &lt;- list(name = &quot;张三&quot;, age = 25, scores = c(85, 90, 78))
+
+# str() 显示列表的完整结构
+# 可以看到每个元素的名称、类型和内容
+str(my_list)</code></pre>
+<pre><code>## List of 3
+##  $ name  : chr &quot;张三&quot;
+##  $ age   : num 25
+##  $ scores: num [1:3] 85 90 78</code></pre>
+<pre class="r"><code># class() 显示对象是列表类型
+class(my_list)</code></pre>
+<pre><code>## [1] &quot;list&quot;</code></pre>
+<pre class="r"><code># length() 显示列表有3个元素
+length(my_list)</code></pre>
+<pre><code>## [1] 3</code></pre>
 <hr />
 </div>
 </div>
 </div>
-<div id="三r-语言数据结构" class="section level1">
-<h1>三、R 语言数据结构</h1>
+<div id="第三章数据类型与数据结构" class="section level1">
+<h1>第三章：数据类型与数据结构</h1>
+<div id="基本数据类型" class="section level2">
+<h2>3.1 基本数据类型</h2>
+<p>R语言有几种基本数据类型，理解它们是学习R的基础。</p>
+<div id="数值型numeric" class="section level3">
+<h3>3.1.1 数值型（numeric）</h3>
+<p>数值型是最常用的数据类型，包括整数和双精度浮点数：</p>
+<pre class="r"><code># 双精度浮点数（带小数点的数）
+x &lt;- 3.14
+class(x)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code># 整数：加 L 后缀表示整数类型
+y &lt;- 100L
+class(y)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code># is.numeric()：检查是否为数值型
+# 整数和双精度都是数值型
+is.numeric(x)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.integer()：检查是否为整数类型
+is.integer(y)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.double()：检查是否为双精度浮点数
+is.double(x)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p><strong>整数与双精度的区别</strong>： - 整数：不带小数点的整数，加
+<code>L</code> 后缀表示 - 双精度：带小数点的数，R默认的数值类型</p>
+<pre class="r"><code># typeof() 查看R内部存储类型
+# 3.14 是双精度浮点数
+typeof(3.14)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code># 不加L，R默认存储为双精度
+typeof(3)</code></pre>
+<pre><code>## [1] &quot;double&quot;</code></pre>
+<pre class="r"><code># 加L，存储为整数
+typeof(3L)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+</div>
+<div id="字符型character" class="section level3">
+<h3>3.1.2 字符型（character）</h3>
+<p>字符型用于存储文本数据：</p>
+<pre class="r"><code># 使用双引号创建字符串
+name &lt;- &quot;张三&quot;
+class(name)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code># 使用单引号也可以创建字符串
+message &lt;- &#39;Hello World&#39;
+class(message)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code># 字符串中包含引号：外双内单，或外单内双
+sentence &lt;- &quot;这是一个包含&#39;引号&#39;的字符串&quot;
+sentence</code></pre>
+<pre><code>## [1] &quot;这是一个包含&#39;引号&#39;的字符串&quot;</code></pre>
+<pre class="r"><code># nchar()：计算字符串的字符数
+nchar(&quot;你好世界&quot;)</code></pre>
+<pre><code>## [1] 4</code></pre>
+</div>
+<div id="逻辑型logical" class="section level3">
+<h3>3.1.3 逻辑型（logical）</h3>
+<p>逻辑型只有两个值：TRUE 和 FALSE：</p>
+<pre class="r"><code># 定义逻辑变量
+flag1 &lt;- TRUE
+flag2 &lt;- FALSE
+
+# 查看类型
+class(flag1)</code></pre>
+<pre><code>## [1] &quot;logical&quot;</code></pre>
+<pre class="r"><code># 比较运算返回逻辑值
+# 5 &gt; 3 为 TRUE
+5 &gt; 3</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># 10 == 20 为 FALSE
+10 == 20</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># 数值转逻辑：非0为TRUE，0为FALSE
+as.logical(1)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>as.logical(0)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># 逻辑转数值：TRUE为1，FALSE为0
+as.numeric(TRUE)</code></pre>
+<pre><code>## [1] 1</code></pre>
+</div>
+<div id="因子型factor" class="section level3">
+<h3>3.1.4 因子型（factor）</h3>
+<p>因子型用于存储<strong>分类数据</strong>，如性别、血型等：</p>
+<pre class="r"><code># 创建因子：将字符向量转换为因子
+gender &lt;- factor(c(&quot;男&quot;, &quot;女&quot;, &quot;男&quot;, &quot;男&quot;, &quot;女&quot;))
+gender</code></pre>
+<pre><code>## [1] 男 女 男 男 女
+## Levels: 男 女</code></pre>
+<pre class="r"><code># levels()：查看因子的水平（所有可能的类别）
+levels(gender)</code></pre>
+<pre><code>## [1] &quot;男&quot; &quot;女&quot;</code></pre>
+<pre class="r"><code># nlevels()：查看水平的数量
+nlevels(gender)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code># 指定水平的顺序
+# levels参数定义所有可能的水平（包括数据中没有的）
+blood_type &lt;- factor(c(&quot;A&quot;, &quot;B&quot;, &quot;O&quot;, &quot;AB&quot;, &quot;A&quot;), 
+                     levels = c(&quot;A&quot;, &quot;B&quot;, &quot;AB&quot;, &quot;O&quot;))
+blood_type</code></pre>
+<pre><code>## [1] A  B  O  AB A 
+## Levels: A B AB O</code></pre>
+<pre class="r"><code># 创建有序因子（有大小关系）
+# ordered = TRUE 表示这是一个有序因子
+status &lt;- factor(c(&quot;低&quot;, &quot;中&quot;, &quot;高&quot;, &quot;低&quot;), 
+                 levels = c(&quot;低&quot;, &quot;中&quot;, &quot;高&quot;),
+                 ordered = TRUE)
+status</code></pre>
+<pre><code>## [1] 低 中 高 低
+## Levels: 低 &lt; 中 &lt; 高</code></pre>
+<pre class="r"><code># 有序因子可以比较大小
+# &quot;低&quot; &lt; &quot;高&quot; 为 TRUE
+status[1] &lt; status[3]</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="日期与时间" class="section level3">
+<h3>3.1.5 日期与时间</h3>
+<p>R有专门的日期和时间类型：</p>
+<pre class="r"><code># Sys.Date()：获取当前日期
+today &lt;- Sys.Date()
+today</code></pre>
+<pre><code>## [1] &quot;2026-03-19&quot;</code></pre>
+<pre class="r"><code># 查看类型：Date类型
+class(today)</code></pre>
+<pre><code>## [1] &quot;Date&quot;</code></pre>
+<pre class="r"><code># as.Date()：将字符串转换为日期
+my_date &lt;- as.Date(&quot;2024-01-15&quot;)
+my_date</code></pre>
+<pre><code>## [1] &quot;2024-01-15&quot;</code></pre>
+<pre class="r"><code># 日期可以进行算术运算
+# 日期加7天
+my_date + 7</code></pre>
+<pre><code>## [1] &quot;2024-01-22&quot;</code></pre>
+<pre class="r"><code># 自定义日期格式
+# format参数指定输入格式
+as.Date(&quot;2024/03/15&quot;, format = &quot;%Y/%m/%d&quot;)</code></pre>
+<pre><code>## [1] &quot;2024-03-15&quot;</code></pre>
+<pre class="r"><code># Sys.time()：获取当前日期和时间
+now &lt;- Sys.time()
+now</code></pre>
+<pre><code>## [1] &quot;2026-03-19 20:21:15 CST&quot;</code></pre>
+<pre class="r"><code># 查看类型：POSIXct类型（包含日期和时间）
+class(now)</code></pre>
+<pre><code>## [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</code></pre>
+<pre class="r"><code># format()：格式化日期时间输出
+# %Y年%m月%d日 %H:%M:%S 表示：年月日 时分秒
+format(now, &quot;%Y年%m月%d日 %H:%M:%S&quot;)</code></pre>
+<pre><code>## [1] &quot;2026年03月19日 20:21:15&quot;</code></pre>
+<p><strong>常用日期格式符号</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>符号</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>%Y</code></td>
+<td>四位年份</td>
+<td>2024</td>
+</tr>
+<tr class="even">
+<td><code>%y</code></td>
+<td>两位年份</td>
+<td>24</td>
+</tr>
+<tr class="odd">
+<td><code>%m</code></td>
+<td>月份（01-12）</td>
+<td>03</td>
+</tr>
+<tr class="even">
+<td><code>%d</code></td>
+<td>日期（01-31）</td>
+<td>15</td>
+</tr>
+<tr class="odd">
+<td><code>%H</code></td>
+<td>小时（00-23）</td>
+<td>14</td>
+</tr>
+<tr class="even">
+<td><code>%M</code></td>
+<td>分钟（00-59）</td>
+<td>30</td>
+</tr>
+<tr class="odd">
+<td><code>%S</code></td>
+<td>秒（00-59）</td>
+<td>45</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+</div>
 <div id="向量vector" class="section level2">
-<h2>3.1 向量（Vector）</h2>
-<p>向量是 R 中最基本的数据结构，用于存储同一类型的元素序列。</p>
-<div id="创建向量" class="section level3">
-<h3>创建向量</h3>
-<pre class="r"><code># 使用 c() 函数创建向量
-vec1 &lt;- c(1, 2, 3, 4, 5)
-vec1</code></pre>
-<pre><code>[1] 1 2 3 4 5</code></pre>
-<pre class="r"><code>vec2 &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;)
-vec2</code></pre>
-<pre><code>[1] &quot;a&quot; &quot;b&quot; &quot;c&quot; &quot;d&quot;</code></pre>
-<pre class="r"><code>vec3 &lt;- c(TRUE, FALSE, TRUE)
-vec3</code></pre>
-<pre><code>[1]  TRUE FALSE  TRUE</code></pre>
-<pre class="r"><code># 使用 seq() 创建序列向量
-seq1 &lt;- seq(1, 10, by = 2)   # 步长为2
-seq1</code></pre>
-<pre><code>[1] 1 3 5 7 9</code></pre>
-<pre class="r"><code>seq2 &lt;- seq(1, 10, length.out = 5)  # 指定长度
-seq2</code></pre>
-<pre><code>[1]  1.00  3.25  5.50  7.75 10.00</code></pre>
-<pre class="r"><code># 使用 rep() 创建重复向量
-rep1 &lt;- rep(1, times = 5)    # 重复5次
-rep1</code></pre>
-<pre><code>[1] 1 1 1 1 1</code></pre>
-<pre class="r"><code>rep2 &lt;- rep(1:3, times = 2)  # 整体重复
-rep2</code></pre>
-<pre><code>[1] 1 2 3 1 2 3</code></pre>
-<pre class="r"><code>rep3 &lt;- rep(1:3, each = 2)   # 每个元素重复
-rep3</code></pre>
-<pre><code>[1] 1 1 2 2 3 3</code></pre>
+<h2>3.2 向量（Vector）</h2>
+<div id="什么是向量" class="section level3">
+<h3>什么是向量？</h3>
+<p>向量是R中<strong>最基本的数据结构</strong>，它是一组相同类型数据的有序集合。可以把向量理解为一个”一排数据”。</p>
 </div>
-<div id="向量类型与类型转换" class="section level3">
-<h3>向量类型与类型转换</h3>
-<pre class="r"><code># 向量只能存储同一类型的数据
-mix_vec &lt;- c(1, &quot;two&quot;, 3)  # 自动转换为字符型
-mix_vec</code></pre>
-<pre><code>[1] &quot;1&quot;   &quot;two&quot; &quot;3&quot;  </code></pre>
-<pre class="r"><code>class(mix_vec)</code></pre>
-<pre><code>[1] &quot;character&quot;</code></pre>
-<pre class="r"><code># 类型转换
-num_vec &lt;- c(1, 2, 3)
-as.character(num_vec)  # 转为字符型</code></pre>
-<pre><code>[1] &quot;1&quot; &quot;2&quot; &quot;3&quot;</code></pre>
-<pre class="r"><code>char_vec &lt;- c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;)
-as.numeric(char_vec)   # 转为数值型</code></pre>
-<pre><code>[1] 1 2 3</code></pre>
+<div id="向量的创建" class="section level3">
+<h3>3.2.1 向量的创建</h3>
+<p>使用 <code>c()</code> 函数创建向量（c代表combine，合并）：</p>
+<pre class="r"><code># 创建数值向量
+# c() 函数将多个值合并成一个向量
+numbers &lt;- c(1, 2, 3, 4, 5)
+numbers</code></pre>
+<pre><code>## [1] 1 2 3 4 5</code></pre>
+<pre class="r"><code># 创建字符向量
+names &lt;- c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;)
+names</code></pre>
+<pre><code>## [1] &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;</code></pre>
+<pre class="r"><code># 创建逻辑向量
+logics &lt;- c(TRUE, FALSE, TRUE, FALSE)
+logics</code></pre>
+<pre><code>## [1]  TRUE FALSE  TRUE FALSE</code></pre>
+<p>使用 <code>seq()</code> 创建等差序列：</p>
+<pre class="r"><code># seq(from, to)：从1到10，默认步长为1
+seq(1, 10)</code></pre>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+<pre class="r"><code># seq(from, to, by)：从1到10，步长为2
+# 结果：1, 3, 5, 7, 9
+seq(1, 10, by = 2)</code></pre>
+<pre><code>## [1] 1 3 5 7 9</code></pre>
+<pre class="r"><code># seq(from, to, length.out)：从1到10，生成5个等间距的数
+seq(1, 10, length.out = 5)</code></pre>
+<pre><code>## [1]  1.00  3.25  5.50  7.75 10.00</code></pre>
+<p>使用 <code>rep()</code> 创建重复序列：</p>
+<pre class="r"><code># rep(x, times)：将1重复5次
+rep(1, times = 5)</code></pre>
+<pre><code>## [1] 1 1 1 1 1</code></pre>
+<pre class="r"><code># rep(x, times)：将向量c(1,2)整体重复3次
+# 结果：1, 2, 1, 2, 1, 2
+rep(c(1, 2), times = 3)</code></pre>
+<pre><code>## [1] 1 2 1 2 1 2</code></pre>
+<pre class="r"><code># rep(x, each)：将向量中每个元素各重复3次
+# 结果：1, 1, 1, 2, 2, 2
+rep(c(1, 2), each = 3)</code></pre>
+<pre><code>## [1] 1 1 1 2 2 2</code></pre>
+<p>使用 <code>:</code> 运算符创建连续整数：</p>
+<pre class="r"><code># 从1到5的连续整数
+1:5</code></pre>
+<pre><code>## [1] 1 2 3 4 5</code></pre>
+<pre class="r"><code># 从5到1的递减序列
+5:1</code></pre>
+<pre><code>## [1] 5 4 3 2 1</code></pre>
 </div>
-<div id="向量化操作" class="section level3">
-<h3>向量化操作</h3>
-<p>R 的核心思想是向量化操作，无需循环即可对整个向量进行运算：</p>
+<div id="向量的命名" class="section level3">
+<h3>3.2.2 向量的命名</h3>
+<p>可以为向量的每个元素命名：</p>
+<pre class="r"><code># 创建分数向量
+scores &lt;- c(85, 90, 78, 92)
+
+# 使用 names() 为每个元素命名
+names(scores) &lt;- c(&quot;语文&quot;, &quot;数学&quot;, &quot;英语&quot;, &quot;物理&quot;)
+scores</code></pre>
+<pre><code>## 语文 数学 英语 物理 
+##   85   90   78   92</code></pre>
+<pre class="r"><code># 通过名称访问元素
+scores[&quot;数学&quot;]</code></pre>
+<pre><code>## 数学 
+##   90</code></pre>
+<pre class="r"><code>ages &lt;- c(张三 = 25, 李四 = 30, 王五 = 28)
+ages</code></pre>
+<pre><code>## 张三 李四 王五 
+##   25   30   28</code></pre>
+</div>
+<div id="向量的索引与切片" class="section level3">
+<h3>3.2.3 向量的索引与切片</h3>
+<p><strong>位置索引</strong>（从1开始，不是从0）：</p>
+<pre class="r"><code>x &lt;- c(10, 20, 30, 40, 50)
+
+# 获取第1个元素
+x[1]</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code># 获取第1、3、5个元素
+x[c(1, 3, 5)]</code></pre>
+<pre><code>## [1] 10 30 50</code></pre>
+<pre class="r"><code># 获取第2到第4个元素
+x[2:4]</code></pre>
+<pre><code>## [1] 20 30 40</code></pre>
+<pre class="r"><code># 使用负号排除元素：排除第1个
+x[-1]</code></pre>
+<pre><code>## [1] 20 30 40 50</code></pre>
+<pre class="r"><code># 排除第1和第2个元素
+x[-c(1, 2)]</code></pre>
+<pre><code>## [1] 30 40 50</code></pre>
+<p><strong>逻辑索引</strong>：</p>
+<pre class="r"><code>x &lt;- c(10, 20, 30, 40, 50)
+
+# 筛选大于25的元素
+x[x &gt; 25]</code></pre>
+<pre><code>## [1] 30 40 50</code></pre>
+<pre class="r"><code># 筛选20到40之间的元素
+x[x &gt;= 20 &amp; x &lt;= 40]</code></pre>
+<pre><code>## [1] 20 30 40</code></pre>
+<pre class="r"><code># 使用逻辑向量筛选
+# TRUE表示保留，FALSE表示排除
+x[c(TRUE, FALSE, TRUE, FALSE, TRUE)]</code></pre>
+<pre><code>## [1] 10 30 50</code></pre>
+<p><strong>名称索引</strong>：</p>
+<pre class="r"><code># 创建带名称的向量
+scores &lt;- c(语文 = 85, 数学 = 90, 英语 = 78)
+
+# 通过名称获取元素
+scores[&quot;数学&quot;]</code></pre>
+<pre><code>## 数学 
+##   90</code></pre>
+<pre class="r"><code># 获取多个元素
+scores[c(&quot;语文&quot;, &quot;英语&quot;)]</code></pre>
+<pre><code>## 语文 英语 
+##   85   78</code></pre>
+<p><strong><code>[]</code> 与 <code>[[]]</code> 的区别</strong>：</p>
+<pre class="r"><code>x &lt;- c(a = 10, b = 20, c = 30)
+
+# [] 返回命名的向量（保留名称）
+x[1]</code></pre>
+<pre><code>##  a 
+## 10</code></pre>
+<pre class="r"><code># [[]] 返回元素的值（不保留名称）
+x[[1]]</code></pre>
+<pre><code>## [1] 10</code></pre>
+</div>
+<div id="向量元素的修改与添加" class="section level3">
+<h3>3.2.4 向量元素的修改与添加</h3>
 <pre class="r"><code>x &lt;- c(1, 2, 3, 4, 5)
-y &lt;- c(10, 20, 30, 40, 50)
 
-# 向量运算
-x + y</code></pre>
-<pre><code>[1] 11 22 33 44 55</code></pre>
-<pre class="r"><code>x * 2</code></pre>
-<pre><code>[1]  2  4  6  8 10</code></pre>
-<pre class="r"><code>x^2</code></pre>
-<pre><code>[1]  1  4  9 16 25</code></pre>
-<pre class="r"><code>sqrt(x)</code></pre>
-<pre><code>[1] 1.000000 1.414214 1.732051 2.000000 2.236068</code></pre>
-<pre class="r"><code># 向量化的条件判断
-x &gt; 3</code></pre>
-<pre><code>[1] FALSE FALSE FALSE  TRUE  TRUE</code></pre>
-<pre class="r"><code>x[x &gt; 3]  # 筛选大于3的元素</code></pre>
-<pre><code>[1] 4 5</code></pre>
+# 修改第1个元素为10
+x[1] &lt;- 10
+x</code></pre>
+<pre><code>## [1] 10  2  3  4  5</code></pre>
+<pre class="r"><code># 同时修改多个元素
+x[c(2, 4)] &lt;- c(20, 40)
+x</code></pre>
+<pre><code>## [1] 10 20  3 40  5</code></pre>
+<pre class="r"><code># 添加第6个元素
+x[6] &lt;- 60
+x</code></pre>
+<pre><code>## [1] 10 20  3 40  5 60</code></pre>
+<pre class="r"><code># 使用 c() 在末尾添加元素
+x &lt;- c(x, 70, 80)
+x</code></pre>
+<pre><code>## [1] 10 20  3 40  5 60 70 80</code></pre>
+<pre class="r"><code># append()：在指定位置插入元素
+# 在第3个元素后插入100
+append(x, 100, after = 3)</code></pre>
+<pre><code>## [1]  10  20   3 100  40   5  60  70  80</code></pre>
 </div>
-<div id="向量索引与切片" class="section level3">
-<h3>向量索引与切片</h3>
-<pre class="r"><code>vec &lt;- c(10, 20, 30, 40, 50)
+<div id="向量化运算与循环补齐" class="section level3">
+<h3>3.2.5 向量化运算与循环补齐</h3>
+<p><strong>向量化运算</strong>：R可以直接对向量进行数学运算，无需写循环：</p>
+<pre class="r"><code>a &lt;- c(1, 2, 3, 4, 5)
+b &lt;- c(10, 20, 30, 40, 50)
 
-# 正整数索引（从1开始）
-vec[1]        # 第一个元素</code></pre>
-<pre><code>[1] 10</code></pre>
-<pre class="r"><code>vec[c(1, 3)]  # 第1和第3个元素</code></pre>
-<pre><code>[1] 10 30</code></pre>
-<pre class="r"><code>vec[1:3]      # 第1到第3个元素</code></pre>
-<pre><code>[1] 10 20 30</code></pre>
-<pre class="r"><code># 负整数索引（排除元素）
-vec[-1]       # 排除第1个元素</code></pre>
-<pre><code>[1] 20 30 40 50</code></pre>
-<pre class="r"><code>vec[-c(1, 2)] # 排除第1和第2个元素</code></pre>
-<pre><code>[1] 30 40 50</code></pre>
-<pre class="r"><code># 逻辑索引
-vec[vec &gt; 25]</code></pre>
-<pre><code>[1] 30 40 50</code></pre>
-<pre class="r"><code># 名称索引
-names(vec) &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;)
-vec[&quot;a&quot;]</code></pre>
-<pre><code> a 
-10 </code></pre>
-<pre class="r"><code>vec[c(&quot;a&quot;, &quot;c&quot;)]</code></pre>
-<pre><code> a  c 
-10 30 </code></pre>
-<p><strong><code>[]</code> 与 <code>[[]]</code> 的区别：</strong></p>
-<pre class="r"><code>vec &lt;- c(a = 1, b = 2, c = 3)
-
-# [] 返回向量（可能包含多个元素）
-vec[1]       # 返回命名向量</code></pre>
-<pre><code>a 
-1 </code></pre>
-<pre class="r"><code>vec[1:2]     # 可以返回多个元素</code></pre>
-<pre><code>a b 
-1 2 </code></pre>
-<pre class="r"><code># [[]] 返回单个元素值
-vec[[1]]     # 返回元素值本身</code></pre>
-<pre><code>[1] 1</code></pre>
-<pre class="r"><code># vec[[1:2]] # 错误：只能提取单个元素</code></pre>
+# 向量加法：对应元素相加
+a + b</code></pre>
+<pre><code>## [1] 11 22 33 44 55</code></pre>
+<pre class="r"><code># 向量与标量运算：每个元素都乘以2
+a * 2</code></pre>
+<pre><code>## [1]  2  4  6  8 10</code></pre>
+<pre class="r"><code># 向量乘法：对应元素相乘
+a * b</code></pre>
+<pre><code>## [1]  10  40  90 160 250</code></pre>
+<pre class="r"><code># 函数也支持向量化：对每个元素求平方根
+sqrt(a)</code></pre>
+<pre><code>## [1] 1.000000 1.414214 1.732051 2.000000 2.236068</code></pre>
+<p><strong>循环补齐</strong>：当两个向量长度不同时，R会自动循环较短的向量：</p>
+<pre class="r"><code># 长度3的向量 + 长度6的向量
+# 短向量会循环：c(1,2,3,1,2,3) + c(10,20,30,40,50,60)
+c(1, 2, 3) + c(10, 20, 30, 40, 50, 60)</code></pre>
+<pre><code>## [1] 11 22 33 41 52 63</code></pre>
+<pre class="r"><code># 长度2的向量 * 长度4的向量
+# c(1,2,1,2) * c(10,20,30,40)
+c(1, 2) * c(10, 20, 30, 40)</code></pre>
+<pre><code>## [1] 10 40 30 80</code></pre>
+<hr />
 </div>
-<div id="向量排序" class="section level3">
-<h3>向量排序</h3>
-<pre class="r"><code>vec &lt;- c(30, 10, 50, 20, 40)
+</div>
+<div id="矩阵matrix" class="section level2">
+<h2>3.3 矩阵（Matrix）</h2>
+<div id="什么是矩阵" class="section level3">
+<h3>什么是矩阵？</h3>
+<p>矩阵是一个<strong>二维</strong>的数据结构，所有元素必须是<strong>相同类型</strong>。可以把它想象成一个表格，有行和列。</p>
+</div>
+<div id="矩阵的创建" class="section level3">
+<h3>3.3.1 矩阵的创建</h3>
+<p>使用 <code>matrix()</code> 函数：</p>
+<pre class="r"><code># matrix(data, nrow, ncol)：创建矩阵
+# data：数据，nrow：行数，ncol：列数
+# 默认按列填充数据
+m &lt;- matrix(1:12, nrow = 3, ncol = 4)
+m</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    4    7   10
+## [2,]    2    5    8   11
+## [3,]    3    6    9   12</code></pre>
+<pre class="r"><code># byrow = TRUE：按行填充数据
+m2 &lt;- matrix(1:12, nrow = 3, ncol = 4, byrow = TRUE)
+m2</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    2    3    4
+## [2,]    5    6    7    8
+## [3,]    9   10   11   12</code></pre>
+<p>使用 <code>cbind()</code> 按列合并：</p>
+<pre class="r"><code># cbind()：column bind，按列合并向量
+a &lt;- c(1, 2, 3)
+b &lt;- c(4, 5, 6)
+cbind(a, b)</code></pre>
+<pre><code>##      a b
+## [1,] 1 4
+## [2,] 2 5
+## [3,] 3 6</code></pre>
+<p>使用 <code>rbind()</code> 按行合并：</p>
+<pre class="r"><code># rbind()：row bind，按行合并向量
+rbind(a, b)</code></pre>
+<pre><code>##   [,1] [,2] [,3]
+## a    1    2    3
+## b    4    5    6</code></pre>
+</div>
+<div id="矩阵的维度与属性" class="section level3">
+<h3>3.3.2 矩阵的维度与属性</h3>
+<pre class="r"><code>m &lt;- matrix(1:12, nrow = 3, ncol = 4)
 
-# sort()：返回排序后的向量
-sort(vec)           # 升序</code></pre>
-<pre><code>[1] 10 20 30 40 50</code></pre>
-<pre class="r"><code>sort(vec, decreasing = TRUE)  # 降序</code></pre>
-<pre><code>[1] 50 40 30 20 10</code></pre>
+# dim()：查看维度（行数，列数）
+dim(m)</code></pre>
+<pre><code>## [1] 3 4</code></pre>
+<pre class="r"><code># nrow()：查看行数
+nrow(m)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># ncol()：查看列数
+ncol(m)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># 设置行名和列名
+rownames(m) &lt;- c(&quot;行1&quot;, &quot;行2&quot;, &quot;行3&quot;)
+colnames(m) &lt;- c(&quot;列1&quot;, &quot;列2&quot;, &quot;列3&quot;, &quot;列4&quot;)
+m</code></pre>
+<pre><code>##     列1 列2 列3 列4
+## 行1   1   4   7  10
+## 行2   2   5   8  11
+## 行3   3   6   9  12</code></pre>
+</div>
+<div id="矩阵的索引与子集提取" class="section level3">
+<h3>3.3.3 矩阵的索引与子集提取</h3>
+<pre class="r"><code>m &lt;- matrix(1:12, nrow = 3, ncol = 4)
+rownames(m) &lt;- c(&quot;R1&quot;, &quot;R2&quot;, &quot;R3&quot;)
+colnames(m) &lt;- c(&quot;C1&quot;, &quot;C2&quot;, &quot;C3&quot;, &quot;C4&quot;)
+
+# 获取第1行第2列的元素
+m[1, 2]</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># 获取第1行（所有列）
+m[1, ]</code></pre>
+<pre><code>## C1 C2 C3 C4 
+##  1  4  7 10</code></pre>
+<pre class="r"><code># 获取第2列（所有行）
+m[, 2]</code></pre>
+<pre><code>## R1 R2 R3 
+##  4  5  6</code></pre>
+<pre class="r"><code># 获取子矩阵：第1-2行，第2-3列
+m[1:2, 2:3]</code></pre>
+<pre><code>##    C2 C3
+## R1  4  7
+## R2  5  8</code></pre>
+<pre class="r"><code># 通过名称获取元素
+m[&quot;R2&quot;, &quot;C3&quot;]</code></pre>
+<pre><code>## [1] 8</code></pre>
+<pre class="r"><code># 获取指定列
+m[, c(&quot;C1&quot;, &quot;C4&quot;)]</code></pre>
+<pre><code>##    C1 C4
+## R1  1 10
+## R2  2 11
+## R3  3 12</code></pre>
+</div>
+<div id="矩阵的基本运算" class="section level3">
+<h3>3.3.4 矩阵的基本运算</h3>
+<pre class="r"><code>m &lt;- matrix(1:4, nrow = 2)
+m</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    3
+## [2,]    2    4</code></pre>
+<pre class="r"><code># t()：矩阵转置（行列互换）
+t(m)</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    1    2
+## [2,]    3    4</code></pre>
+<pre class="r"><code># diag()：提取对角线元素
+diag(m)</code></pre>
+<pre><code>## [1] 1 4</code></pre>
+<pre class="r"><code># diag()：创建对角矩阵
+diag(c(1, 2, 3))</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    0    0
+## [2,]    0    2    0
+## [3,]    0    0    3</code></pre>
+<pre class="r"><code># 矩阵乘法
+A &lt;- matrix(1:4, nrow = 2)
+B &lt;- matrix(5:8, nrow = 2)
+
+# %*%：矩阵乘法（线性代数中的矩阵乘法）
+A %*% B</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]   23   31
+## [2,]   34   46</code></pre>
+<pre class="r"><code># *：对应元素相乘（不是矩阵乘法）
+A * B</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,]    5   21
+## [2,]   12   32</code></pre>
+<hr />
+</div>
+</div>
+<div id="数组array" class="section level2">
+<h2>3.4 数组（Array）</h2>
+<div id="什么是数组" class="section level3">
+<h3>什么是数组？</h3>
+<p>数组是矩阵的扩展，可以有<strong>多个维度</strong>。矩阵是二维数组，数组可以是三维、四维甚至更高维。</p>
+</div>
+<div id="数组的创建" class="section level3">
+<h3>数组的创建</h3>
+<pre class="r"><code># array(data, dim)：创建数组
+# dim = c(3, 4, 2) 表示：3行、4列、2层
+arr &lt;- array(1:24, dim = c(3, 4, 2))
+arr</code></pre>
+<pre><code>## , , 1
+## 
+##      [,1] [,2] [,3] [,4]
+## [1,]    1    4    7   10
+## [2,]    2    5    8   11
+## [3,]    3    6    9   12
+## 
+## , , 2
+## 
+##      [,1] [,2] [,3] [,4]
+## [1,]   13   16   19   22
+## [2,]   14   17   20   23
+## [3,]   15   18   21   24</code></pre>
+</div>
+<div id="数组的索引" class="section level3">
+<h3>数组的索引</h3>
+<pre class="r"><code># 获取第1层、第1行、第2列的元素
+arr[1, 2, 1]</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># 获取第1层的所有数据（3行4列的矩阵）
+arr[, , 1]</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    4    7   10
+## [2,]    2    5    8   11
+## [3,]    3    6    9   12</code></pre>
+<pre class="r"><code># 获取第2层的第1行所有数据
+arr[1, , 2]</code></pre>
+<pre><code>## [1] 13 16 19 22</code></pre>
+<hr />
+</div>
+</div>
+<div id="列表list" class="section level2">
+<h2>3.5 列表（List）</h2>
+<div id="什么是列表" class="section level3">
+<h3>什么是列表？</h3>
+<p>列表是一种<strong>可以存储不同类型元素</strong>的数据结构。向量只能存同类型数据，而列表可以存任意类型，甚至可以嵌套其他列表。</p>
+</div>
+<div id="列表的创建" class="section level3">
+<h3>3.5.1 列表的创建</h3>
+<pre class="r"><code># list()：创建列表
+# 列表可以包含不同类型的数据
+my_list &lt;- list(
+  name = &quot;张三&quot;,           # 字符型
+  age = 25,                # 数值型
+  scores = c(85, 90, 78),  # 向量
+  passed = TRUE            # 逻辑型
+)
+my_list</code></pre>
+<pre><code>## $name
+## [1] &quot;张三&quot;
+## 
+## $age
+## [1] 25
+## 
+## $scores
+## [1] 85 90 78
+## 
+## $passed
+## [1] TRUE</code></pre>
+</div>
+<div id="列表的命名与索引" class="section level3">
+<h3>3.5.2 列表的命名与索引</h3>
+<pre class="r"><code>my_list &lt;- list(
+  name = &quot;张三&quot;,
+  age = 25,
+  scores = c(85, 90, 78)
+)
+
+# 使用 $ 符号通过名称访问元素
+my_list$name</code></pre>
+<pre><code>## [1] &quot;张三&quot;</code></pre>
+<pre class="r"><code># 使用 [[ ]] 通过名称访问元素
+my_list[[&quot;name&quot;]]</code></pre>
+<pre><code>## [1] &quot;张三&quot;</code></pre>
+<pre class="r"><code># 使用 [[ ]] 通过位置访问元素
+my_list[[1]]</code></pre>
+<pre><code>## [1] &quot;张三&quot;</code></pre>
+<pre class="r"><code># 使用 [ ] 返回子列表（仍是列表类型）
+my_list[&quot;name&quot;]</code></pre>
+<pre><code>## $name
+## [1] &quot;张三&quot;</code></pre>
+<pre class="r"><code># 获取前2个元素组成的子列表
+my_list[1:2]</code></pre>
+<pre><code>## $name
+## [1] &quot;张三&quot;
+## 
+## $age
+## [1] 25</code></pre>
+<p><strong>索引方式总结</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>方式</th>
+<th>返回类型</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>$</code></td>
+<td>元素本身</td>
+<td><code>list$name</code></td>
+</tr>
+<tr class="even">
+<td><code>[[]]</code></td>
+<td>元素本身</td>
+<td><code>list[[&quot;name&quot;]]</code> 或 <code>list[[1]]</code></td>
+</tr>
+<tr class="odd">
+<td><code>[]</code></td>
+<td>子列表</td>
+<td><code>list[&quot;name&quot;]</code> 或 <code>list[1:2]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="列表元素的添加删除与修改" class="section level3">
+<h3>3.5.3 列表元素的添加、删除与修改</h3>
+<pre class="r"><code>my_list &lt;- list(name = &quot;张三&quot;, age = 25)
+
+# 添加新元素：直接用 $ 赋值
+my_list$gender &lt;- &quot;男&quot;
+my_list</code></pre>
+<pre><code>## $name
+## [1] &quot;张三&quot;
+## 
+## $age
+## [1] 25
+## 
+## $gender
+## [1] &quot;男&quot;</code></pre>
+<pre class="r"><code># 修改元素：重新赋值
+my_list$age &lt;- 26
+my_list$age</code></pre>
+<pre><code>## [1] 26</code></pre>
+<pre class="r"><code># 删除元素：赋值为 NULL
+my_list$age &lt;- NULL
+my_list</code></pre>
+<pre><code>## $name
+## [1] &quot;张三&quot;
+## 
+## $gender
+## [1] &quot;男&quot;</code></pre>
+</div>
+<div id="列表的递归结构" class="section level3">
+<h3>3.5.4 列表的递归结构</h3>
+<p>列表可以嵌套列表，形成层级结构：</p>
+<pre class="r"><code># 创建嵌套列表
+student &lt;- list(
+  info = list(
+    name = &quot;张三&quot;,
+    age = 25
+  ),
+  grades = list(
+    math = 90,
+    english = 85
+  )
+)
+
+# 访问嵌套元素：逐层访问
+student$info$name</code></pre>
+<pre><code>## [1] &quot;张三&quot;</code></pre>
+<pre class="r"><code>student$grades$math</code></pre>
+<pre><code>## [1] 90</code></pre>
+<hr />
+</div>
+</div>
+<div id="数据框data-frame" class="section level2">
+<h2>3.6 数据框（Data Frame）</h2>
+<div id="什么是数据框" class="section level3">
+<h3>什么是数据框？</h3>
+<p>数据框是R中<strong>最常用的数据结构</strong>，类似于Excel表格。每一列可以是不同类型的数据，但同一列必须是相同类型。</p>
+</div>
+<div id="数据框的创建" class="section level3">
+<h3>3.6.1 数据框的创建</h3>
+<pre class="r"><code># data.frame()：创建数据框
+# 每个参数是一列，列名就是参数名
+df &lt;- data.frame(
+  name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;),      # 字符型列
+  age = c(25, 30, 28),                  # 数值型列
+  score = c(85.5, 90.0, 78.5),          # 数值型列
+  passed = c(TRUE, TRUE, FALSE)         # 逻辑型列
+)
+df</code></pre>
+<pre><code>##   name age score passed
+## 1 张三  25  85.5   TRUE
+## 2 李四  30  90.0   TRUE
+## 3 王五  28  78.5  FALSE</code></pre>
+<pre class="r"><code># str()：查看数据框结构
+str(df)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    3 obs. of  4 variables:
+##  $ name  : chr  &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;
+##  $ age   : num  25 30 28
+##  $ score : num  85.5 90 78.5
+##  $ passed: logi  TRUE TRUE FALSE</code></pre>
+</div>
+<div id="数据框的列名与行名" class="section level3">
+<h3>3.6.2 数据框的列名与行名</h3>
+<pre class="r"><code>df &lt;- data.frame(
+  name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;),
+  age = c(25, 30, 28)
+)
+
+# colnames()：获取列名
+colnames(df)</code></pre>
+<pre><code>## [1] &quot;name&quot; &quot;age&quot;</code></pre>
+<pre class="r"><code># rownames()：获取行名（默认是行号）
+rownames(df)</code></pre>
+<pre><code>## [1] &quot;1&quot; &quot;2&quot; &quot;3&quot;</code></pre>
+<pre class="r"><code># 修改列名和行名
+colnames(df) &lt;- c(&quot;姓名&quot;, &quot;年龄&quot;)
+rownames(df) &lt;- c(&quot;学生A&quot;, &quot;学生B&quot;, &quot;学生C&quot;)
+df</code></pre>
+<pre><code>##       姓名 年龄
+## 学生A 张三   25
+## 学生B 李四   30
+## 学生C 王五   28</code></pre>
+<pre class="r"><code># names() 也可以获取列名
+names(df)</code></pre>
+<pre><code>## [1] &quot;姓名&quot; &quot;年龄&quot;</code></pre>
+</div>
+<div id="数据框的索引" class="section level3">
+<h3>3.6.3 数据框的索引</h3>
+<pre class="r"><code>df &lt;- data.frame(
+  name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;),
+  age = c(25, 30, 28),
+  score = c(85, 90, 78)
+)
+
+# 使用 $ 获取列（返回向量）
+df$name</code></pre>
+<pre><code>## [1] &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;</code></pre>
+<pre class="r"><code># 使用 [行, 列] 获取列
+df[, &quot;age&quot;]</code></pre>
+<pre><code>## [1] 25 30 28</code></pre>
+<pre class="r"><code># 获取第1行（所有列）
+df[1, ]</code></pre>
+<pre><code>##   name age score
+## 1 张三  25    85</code></pre>
+<pre class="r"><code># 获取第1行第2列的元素
+df[1, 2]</code></pre>
+<pre><code>## [1] 25</code></pre>
+<pre class="r"><code># 条件筛选：分数大于80的学生
+df[df$score &gt; 80, ]</code></pre>
+<pre><code>##   name age score
+## 1 张三  25    85
+## 2 李四  30    90</code></pre>
+<pre class="r"><code># subset()：更简洁的筛选方式
+subset(df, score &gt; 80)</code></pre>
+<pre><code>##   name age score
+## 1 张三  25    85
+## 2 李四  30    90</code></pre>
+<pre class="r"><code># 多条件筛选
+subset(df, age &gt; 26 &amp; score &gt; 80)</code></pre>
+<pre><code>##   name age score
+## 2 李四  30    90</code></pre>
+</div>
+<div id="数据框的基本信息查看" class="section level3">
+<h3>3.6.4 数据框的基本信息查看</h3>
+<pre class="r"><code>df &lt;- data.frame(
+  name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;, &quot;赵六&quot;),
+  age = c(25, 30, 28, 35),
+  score = c(85, 90, 78, 88)
+)
+
+# head()：查看前几行（默认6行）
+head(df, 2)</code></pre>
+<pre><code>##   name age score
+## 1 张三  25    85
+## 2 李四  30    90</code></pre>
+<pre class="r"><code># tail()：查看后几行
+tail(df, 2)</code></pre>
+<pre><code>##   name age score
+## 3 王五  28    78
+## 4 赵六  35    88</code></pre>
+<pre class="r"><code># summary()：查看统计摘要
+summary(df)</code></pre>
+<pre><code>##      name                age            score      
+##  Length:4           Min.   :25.00   Min.   :78.00  
+##  Class :character   1st Qu.:27.25   1st Qu.:83.25  
+##  Mode  :character   Median :29.00   Median :86.50  
+##                     Mean   :29.50   Mean   :85.25  
+##                     3rd Qu.:31.25   3rd Qu.:88.50  
+##                     Max.   :35.00   Max.   :90.00</code></pre>
+<pre class="r"><code># dim()：查看维度（行数，列数）
+dim(df)</code></pre>
+<pre><code>## [1] 4 3</code></pre>
+<pre class="r"><code># nrow()：查看行数
+nrow(df)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># ncol()：查看列数
+ncol(df)</code></pre>
+<pre><code>## [1] 3</code></pre>
+</div>
+<div id="数据框与列表的转换" class="section level3">
+<h3>3.6.5 数据框与列表的转换</h3>
+<pre class="r"><code>df &lt;- data.frame(
+  name = c(&quot;张三&quot;, &quot;李四&quot;),
+  age = c(25, 30)
+)
+
+# as.list()：将数据框转换为列表
+# 每列变成列表的一个元素
+as.list(df)</code></pre>
+<pre><code>## $name
+## [1] &quot;张三&quot; &quot;李四&quot;
+## 
+## $age
+## [1] 25 30</code></pre>
+<pre class="r"><code>split(df$name, df$age)</code></pre>
+<pre><code>## $`25`
+## [1] &quot;张三&quot;
+## 
+## $`30`
+## [1] &quot;李四&quot;</code></pre>
+<hr />
+</div>
+</div>
+<div id="特殊值" class="section level2">
+<h2>3.7 特殊值</h2>
+<div id="na缺失值" class="section level3">
+<h3>3.7.1 NA（缺失值）</h3>
+<p>NA表示”缺失值”或”数据不可用”：</p>
+<pre class="r"><code># 创建包含缺失值的向量
+x &lt;- c(1, 2, NA, 4, 5)
+
+# is.na()：检测是否为NA，返回逻辑向量
+is.na(x)</code></pre>
+<pre><code>## [1] FALSE FALSE  TRUE FALSE FALSE</code></pre>
+<pre class="r"><code># 统计缺失值的数量
+sum(is.na(x))</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># 含NA的运算结果也是NA
+mean(x)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code># na.rm = TRUE：计算时忽略NA
+mean(x, na.rm = TRUE)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># 将NA替换为0
+x[is.na(x)] &lt;- 0
+x</code></pre>
+<pre><code>## [1] 1 2 0 4 5</code></pre>
+<pre class="r"><code># na.omit()：删除包含NA的行
+na.omit(c(1, 2, NA, 4))</code></pre>
+<pre><code>## [1] 1 2 4
+## attr(,&quot;na.action&quot;)
+## [1] 3
+## attr(,&quot;class&quot;)
+## [1] &quot;omit&quot;</code></pre>
+</div>
+<div id="null空对象" class="section level3">
+<h3>3.7.2 NULL（空对象）</h3>
+<p>NULL表示”空”或”不存在”：</p>
+<pre class="r"><code># NULL 是空对象
+x &lt;- NULL
+
+# is.null()：检测是否为NULL
+is.null(x)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># NULL 的长度为0
+length(NULL)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code># NA 的长度为1
+length(NA)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code># NULL 在向量中会被忽略
+c(1, 2, NULL, 4)</code></pre>
+<pre><code>## [1] 1 2 4</code></pre>
+<pre class="r"><code># NA 在向量中会保留
+c(1, 2, NA, 4)</code></pre>
+<pre><code>## [1]  1  2 NA  4</code></pre>
+</div>
+<div id="nan与inf" class="section level3">
+<h3>3.7.3 NaN与Inf</h3>
+<pre class="r"><code># NaN：Not a Number，非数值
+# 0除以0的结果
+0 / 0</code></pre>
+<pre><code>## [1] NaN</code></pre>
+<pre class="r"><code># is.nan()：检测是否为NaN
+is.nan(0/0)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># Inf：正无穷
+# 1除以0的结果
+1 / 0</code></pre>
+<pre><code>## [1] Inf</code></pre>
+<pre class="r"><code># -Inf：负无穷
+-1 / 0</code></pre>
+<pre><code>## [1] -Inf</code></pre>
+<pre class="r"><code># is.infinite()：检测是否为无穷
+is.infinite(1/0)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.finite()：检测是否为有限数
+is.finite(1)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p><strong>特殊值总结</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>特殊值</th>
+<th>含义</th>
+<th>检测函数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>NA</code></td>
+<td>缺失值</td>
+<td><code>is.na()</code></td>
+</tr>
+<tr class="even">
+<td><code>NULL</code></td>
+<td>空对象</td>
+<td><code>is.null()</code></td>
+</tr>
+<tr class="odd">
+<td><code>NaN</code></td>
+<td>非数值</td>
+<td><code>is.nan()</code></td>
+</tr>
+<tr class="even">
+<td><code>Inf</code></td>
+<td>正无穷</td>
+<td><code>is.infinite()</code></td>
+</tr>
+<tr class="odd">
+<td><code>-Inf</code></td>
+<td>负无穷</td>
+<td><code>is.infinite()</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+</div>
+</div>
+<div id="第四章基本运算与函数" class="section level1">
+<h1>第四章：基本运算与函数</h1>
+<div id="常用统计函数" class="section level2">
+<h2>4.1 常用统计函数</h2>
+<pre class="r"><code># 创建分数向量
+scores &lt;- c(85, 90, 78, 92, 88, 76, 95, 82)
+
+# sum()：求和
+sum(scores)</code></pre>
+<pre><code>## [1] 686</code></pre>
+<pre class="r"><code># mean()：计算平均值
+mean(scores)</code></pre>
+<pre><code>## [1] 85.75</code></pre>
+<pre class="r"><code># median()：计算中位数
+median(scores)</code></pre>
+<pre><code>## [1] 86.5</code></pre>
+<pre class="r"><code># sd()：计算标准差
+sd(scores)</code></pre>
+<pre><code>## [1] 6.734771</code></pre>
+<pre class="r"><code># var()：计算方差
+var(scores)</code></pre>
+<pre><code>## [1] 45.35714</code></pre>
+<pre class="r"><code># min()：最小值
+min(scores)</code></pre>
+<pre><code>## [1] 76</code></pre>
+<pre class="r"><code># max()：最大值
+max(scores)</code></pre>
+<pre><code>## [1] 95</code></pre>
+<pre class="r"><code># range()：范围（最小值和最大值）
+range(scores)</code></pre>
+<pre><code>## [1] 76 95</code></pre>
+<pre class="r"><code># quantile()：计算分位数（默认四分位数）
+quantile(scores)</code></pre>
+<pre><code>##   0%  25%  50%  75% 100% 
+## 76.0 81.0 86.5 90.5 95.0</code></pre>
+<pre class="r"><code># 计算指定的分位数
+quantile(scores, probs = c(0.1, 0.9))</code></pre>
+<pre><code>##  10%  90% 
+## 77.4 92.9</code></pre>
+<div id="统计函数总结" class="section level3">
+<h3>统计函数总结</h3>
+<table>
+<thead>
+<tr class="header">
+<th>函数</th>
+<th>功能</th>
+<th>示例结果</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>sum()</code></td>
+<td>求和</td>
+<td>686</td>
+</tr>
+<tr class="even">
+<td><code>mean()</code></td>
+<td>平均值</td>
+<td>85.75</td>
+</tr>
+<tr class="odd">
+<td><code>median()</code></td>
+<td>中位数</td>
+<td>86.5</td>
+</tr>
+<tr class="even">
+<td><code>sd()</code></td>
+<td>标准差</td>
+<td>6.69</td>
+</tr>
+<tr class="odd">
+<td><code>var()</code></td>
+<td>方差</td>
+<td>44.79</td>
+</tr>
+<tr class="even">
+<td><code>min()</code></td>
+<td>最小值</td>
+<td>76</td>
+</tr>
+<tr class="odd">
+<td><code>max()</code></td>
+<td>最大值</td>
+<td>95</td>
+</tr>
+<tr class="even">
+<td><code>range()</code></td>
+<td>范围</td>
+<td>76, 95</td>
+</tr>
+<tr class="odd">
+<td><code>quantile()</code></td>
+<td>分位数</td>
+<td>多个百分位点</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+</div>
+<div id="排序与排名" class="section level2">
+<h2>4.2 排序与排名</h2>
+<pre class="r"><code>x &lt;- c(3, 1, 4, 1, 5, 9, 2, 6)
+
+# sort()：直接返回排序后的向量
+sort(x)</code></pre>
+<pre><code>## [1] 1 1 2 3 4 5 6 9</code></pre>
+<pre class="r"><code># decreasing = TRUE：降序排列
+sort(x, decreasing = TRUE)</code></pre>
+<pre><code>## [1] 9 6 5 4 3 2 1 1</code></pre>
 <pre class="r"><code># order()：返回排序后的索引位置
-order(vec)          # 升序索引</code></pre>
-<pre><code>[1] 2 4 1 5 3</code></pre>
-<pre class="r"><code>vec[order(vec)]     # 等价于 sort(vec)</code></pre>
-<pre><code>[1] 10 20 30 40 50</code></pre>
-<pre class="r"><code># rank()：返回元素的排名
-rank(vec)           # 升序排名</code></pre>
-<pre><code>[1] 3 1 5 2 4</code></pre>
-<pre class="r"><code># rev()：反转向量
-rev(vec)</code></pre>
-<pre><code>[1] 40 20 50 10 30</code></pre>
-<p><strong>排序函数对比：</strong></p>
+# 结果表示：第2个元素最小，第4个元素第二小...
+order(x)</code></pre>
+<pre><code>## [1] 2 4 7 1 3 5 8 6</code></pre>
+<pre class="r"><code># 使用order()对向量排序
+x[order(x)]</code></pre>
+<pre><code>## [1] 1 1 2 3 4 5 6 9</code></pre>
+<pre class="r"><code># rank()：返回每个元素的排名
+rank(x)</code></pre>
+<pre><code>## [1] 4.0 1.5 5.0 1.5 6.0 8.0 3.0 7.0</code></pre>
+<pre class="r"><code># ties.method：处理相同值的方式
+# &quot;min&quot;：相同值取最小排名
+rank(x, ties.method = &quot;min&quot;)</code></pre>
+<pre><code>## [1] 4 1 5 1 6 8 3 7</code></pre>
+<div id="排序函数的区别" class="section level3">
+<h3>排序函数的区别</h3>
 <table>
 <thead>
 <tr class="header">
@@ -1148,835 +2348,1315 @@ rev(vec)</code></pre>
 </tr>
 <tr class="even">
 <td><code>order()</code></td>
-<td>排序索引</td>
+<td>排序后的索引位置</td>
 <td>用于对其他相关向量排序</td>
 </tr>
 <tr class="odd">
 <td><code>rank()</code></td>
-<td>元素排名</td>
-<td>获取各元素的排名值</td>
-</tr>
-<tr class="even">
-<td><code>rev()</code></td>
-<td>反转向量</td>
-<td>逆序排列</td>
+<td>每个元素的排名</td>
+<td>获取排名信息</td>
 </tr>
 </tbody>
 </table>
-<hr />
-</div>
-</div>
-<div id="矩阵matrix" class="section level2">
-<h2>3.2 矩阵（Matrix）</h2>
-<p>矩阵是二维的、存储同一类型元素的数据结构。</p>
-<div id="创建矩阵" class="section level3">
-<h3>创建矩阵</h3>
-<pre class="r"><code># 使用 matrix() 创建矩阵
-mat &lt;- matrix(1:12, nrow = 3, ncol = 4)
-mat</code></pre>
-<pre><code>     [,1] [,2] [,3] [,4]
-[1,]    1    4    7   10
-[2,]    2    5    8   11
-[3,]    3    6    9   12</code></pre>
-<pre class="r"><code># 按行填充
-mat_byrow &lt;- matrix(1:12, nrow = 3, ncol = 4, byrow = TRUE)
-mat_byrow</code></pre>
-<pre><code>     [,1] [,2] [,3] [,4]
-[1,]    1    2    3    4
-[2,]    5    6    7    8
-[3,]    9   10   11   12</code></pre>
-<pre class="r"><code># 带行列名
-mat_named &lt;- matrix(1:9, nrow = 3, 
-                    dimnames = list(c(&quot;R1&quot;, &quot;R2&quot;, &quot;R3&quot;), 
-                                   c(&quot;C1&quot;, &quot;C2&quot;, &quot;C3&quot;)))
-mat_named</code></pre>
-<pre><code>   C1 C2 C3
-R1  1  4  7
-R2  2  5  8
-R3  3  6  9</code></pre>
-<pre class="r"><code># 查看矩阵属性
-dim(mat)      # 维度</code></pre>
-<pre><code>[1] 3 4</code></pre>
-<pre class="r"><code>nrow(mat)     # 行数</code></pre>
-<pre><code>[1] 3</code></pre>
-<pre class="r"><code>ncol(mat)     # 列数</code></pre>
-<pre><code>[1] 4</code></pre>
-<pre class="r"><code>rownames(mat_named)</code></pre>
-<pre><code>[1] &quot;R1&quot; &quot;R2&quot; &quot;R3&quot;</code></pre>
-<pre class="r"><code>colnames(mat_named)</code></pre>
-<pre><code>[1] &quot;C1&quot; &quot;C2&quot; &quot;C3&quot;</code></pre>
-</div>
-<div id="矩阵运算" class="section level3">
-<h3>矩阵运算</h3>
-<pre class="r"><code>A &lt;- matrix(1:4, nrow = 2)
-B &lt;- matrix(5:8, nrow = 2)
-
-A</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    1    3
-[2,]    2    4</code></pre>
-<pre class="r"><code>B</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    5    7
-[2,]    6    8</code></pre>
-<pre class="r"><code># 矩阵加减（对应元素）
-A + B</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    6   10
-[2,]    8   12</code></pre>
-<pre class="r"><code>A - B</code></pre>
-<pre><code>     [,1] [,2]
-[1,]   -4   -4
-[2,]   -4   -4</code></pre>
-<pre class="r"><code># 矩阵与标量运算
-A * 2</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    2    6
-[2,]    4    8</code></pre>
-<pre class="r"><code>A / 2</code></pre>
-<pre><code>     [,1] [,2]
-[1,]  0.5  1.5
-[2,]  1.0  2.0</code></pre>
-<pre class="r"><code># 矩阵对应元素相乘
-A * B</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    5   21
-[2,]   12   32</code></pre>
-<pre class="r"><code># 矩阵乘法
-A %*% B</code></pre>
-<pre><code>     [,1] [,2]
-[1,]   23   31
-[2,]   34   46</code></pre>
-<pre class="r"><code># 转置
-t(A)</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    1    2
-[2,]    3    4</code></pre>
-<pre class="r"><code># 逆矩阵（需要确保矩阵可逆）
-C &lt;- matrix(c(1, 2, 3, 4), nrow = 2)
-solve(C)</code></pre>
-<pre><code>     [,1] [,2]
-[1,]   -2  1.5
-[2,]    1 -0.5</code></pre>
-<pre class="r"><code># 行列式
-det(C)</code></pre>
-<pre><code>[1] -2</code></pre>
-<pre class="r"><code># 对角矩阵
-diag(c(1, 2, 3))</code></pre>
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    0    0
-[2,]    0    2    0
-[3,]    0    0    3</code></pre>
-<pre class="r"><code># 单位矩阵
-diag(3)</code></pre>
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    0    0
-[2,]    0    1    0
-[3,]    0    0    1</code></pre>
-</div>
-<div id="矩阵索引与子集" class="section level3">
-<h3>矩阵索引与子集</h3>
-<pre class="r"><code>mat &lt;- matrix(1:12, nrow = 3, ncol = 4)
-mat</code></pre>
-<pre><code>     [,1] [,2] [,3] [,4]
-[1,]    1    4    7   10
-[2,]    2    5    8   11
-[3,]    3    6    9   12</code></pre>
-<pre class="r"><code># 单个元素：mat[行索引, 列索引]
-mat[1, 2]    # 第1行第2列</code></pre>
-<pre><code>[1] 4</code></pre>
-<pre class="r"><code># 整行
-mat[1, ]     # 第1行</code></pre>
-<pre><code>[1]  1  4  7 10</code></pre>
-<pre class="r"><code># 整列
-mat[, 2]     # 第2列</code></pre>
-<pre><code>[1] 4 5 6</code></pre>
-<pre class="r"><code># 子矩阵
-mat[1:2, 2:3]</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    4    7
-[2,]    5    8</code></pre>
-<pre class="r"><code># 使用逻辑条件
-mat[mat &gt; 5]</code></pre>
-<pre><code>[1]  6  7  8  9 10 11 12</code></pre>
-<pre class="r"><code># 按名称索引（如果有命名）
-mat_named &lt;- matrix(1:9, nrow = 3, 
-                    dimnames = list(c(&quot;R1&quot;, &quot;R2&quot;, &quot;R3&quot;), 
-                                   c(&quot;C1&quot;, &quot;C2&quot;, &quot;C3&quot;)))
-mat_named[&quot;R1&quot;, &quot;C2&quot;]</code></pre>
-<pre><code>[1] 4</code></pre>
-<hr />
-</div>
-</div>
-<div id="数组array" class="section level2">
-<h2>3.3 数组（Array）</h2>
-<p>数组是多维的、存储同一类型元素的数据结构，可以看作是矩阵的扩展。</p>
-<div id="创建多维数组" class="section level3">
-<h3>创建多维数组</h3>
-<pre class="r"><code># 创建三维数组
-arr &lt;- array(1:24, dim = c(3, 4, 2))
-arr</code></pre>
-<pre><code>, , 1
-
-     [,1] [,2] [,3] [,4]
-[1,]    1    4    7   10
-[2,]    2    5    8   11
-[3,]    3    6    9   12
-
-, , 2
-
-     [,1] [,2] [,3] [,4]
-[1,]   13   16   19   22
-[2,]   14   17   20   23
-[3,]   15   18   21   24</code></pre>
-<pre class="r"><code># 带维度名称
-arr_named &lt;- array(1:24, dim = c(3, 4, 2),
-                   dimnames = list(
-                     c(&quot;R1&quot;, &quot;R2&quot;, &quot;R3&quot;),
-                     c(&quot;C1&quot;, &quot;C2&quot;, &quot;C3&quot;, &quot;C4&quot;),
-                     c(&quot;Layer1&quot;, &quot;Layer2&quot;)
-                   ))
-arr_named</code></pre>
-<pre><code>, , Layer1
-
-   C1 C2 C3 C4
-R1  1  4  7 10
-R2  2  5  8 11
-R3  3  6  9 12
-
-, , Layer2
-
-   C1 C2 C3 C4
-R1 13 16 19 22
-R2 14 17 20 23
-R3 15 18 21 24</code></pre>
-<pre class="r"><code># 查看维度
-dim(arr)</code></pre>
-<pre><code>[1] 3 4 2</code></pre>
-<pre class="r"><code>length(dim(arr))  # 维度数量</code></pre>
-<pre><code>[1] 3</code></pre>
-</div>
-<div id="数组维度与索引" class="section level3">
-<h3>数组维度与索引</h3>
-<pre class="r"><code>arr &lt;- array(1:24, dim = c(3, 4, 2))
-
-# 访问单个元素
-arr[1, 2, 1]   # 第1维第1个，第2维第2个，第3维第1个</code></pre>
-<pre><code>[1] 4</code></pre>
-<pre class="r"><code># 访问切片
-arr[1, , ]     # 第1维第1个的所有元素</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    1   13
-[2,]    4   16
-[3,]    7   19
-[4,]   10   22</code></pre>
-<pre class="r"><code>arr[, 2, ]     # 第2维第2个的所有元素</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    4   16
-[2,]    5   17
-[3,]    6   18</code></pre>
-<pre class="r"><code>arr[, , 1]     # 第3维第1个的所有元素（矩阵）</code></pre>
-<pre><code>     [,1] [,2] [,3] [,4]
-[1,]    1    4    7   10
-[2,]    2    5    8   11
-[3,]    3    6    9   12</code></pre>
-<pre class="r"><code># 访问子数组
-arr[1:2, 1:2, 1]</code></pre>
-<pre><code>     [,1] [,2]
-[1,]    1    4
-[2,]    2    5</code></pre>
-<pre class="r"><code># 查看数组各维度
-dimnames(arr_named)</code></pre>
-<pre><code>[[1]]
-[1] &quot;R1&quot; &quot;R2&quot; &quot;R3&quot;
-
-[[2]]
-[1] &quot;C1&quot; &quot;C2&quot; &quot;C3&quot; &quot;C4&quot;
-
-[[3]]
-[1] &quot;Layer1&quot; &quot;Layer2&quot;</code></pre>
-<hr />
-</div>
-</div>
-<div id="列表list" class="section level2">
-<h2>3.4 列表（List）</h2>
-<p>列表是 R 中最灵活的数据结构，可以存储不同类型的元素。</p>
-<div id="创建列表" class="section level3">
-<h3>创建列表</h3>
-<pre class="r"><code># 创建列表
-my_list &lt;- list(
-  name = &quot;张三&quot;,
-  age = 25,
-  scores = c(85, 90, 78),
-  passed = TRUE
-)
-my_list</code></pre>
-<pre><code>$name
-[1] &quot;张三&quot;
-
-$age
-[1] 25
-
-$scores
-[1] 85 90 78
-
-$passed
-[1] TRUE</code></pre>
-<pre class="r"><code># 无名称列表
-unnamed_list &lt;- list(1, &quot;two&quot;, TRUE, c(1, 2, 3))
-unnamed_list</code></pre>
-<pre><code>[[1]]
-[1] 1
-
-[[2]]
-[1] &quot;two&quot;
-
-[[3]]
-[1] TRUE
-
-[[4]]
-[1] 1 2 3</code></pre>
-<pre class="r"><code># 查看列表结构
-str(my_list)</code></pre>
-<pre><code>List of 4
- $ name  : chr &quot;张三&quot;
- $ age   : num 25
- $ scores: num [1:3] 85 90 78
- $ passed: logi TRUE</code></pre>
-<pre class="r"><code># 列表长度
-length(my_list)</code></pre>
-<pre><code>[1] 4</code></pre>
-</div>
-<div id="列表索引与操作" class="section level3">
-<h3>列表索引与操作</h3>
-<pre class="r"><code>my_list &lt;- list(
-  name = &quot;张三&quot;,
-  age = 25,
-  scores = c(85, 90, 78),
-  passed = TRUE
-)
-
-# [] 返回子列表
-my_list[1]       # 返回列表</code></pre>
-<pre><code>$name
-[1] &quot;张三&quot;</code></pre>
-<pre class="r"><code>class(my_list[1])</code></pre>
-<pre><code>[1] &quot;list&quot;</code></pre>
-<pre class="r"><code>my_list[c(1, 2)] # 返回多个元素的子列表</code></pre>
-<pre><code>$name
-[1] &quot;张三&quot;
-
-$age
-[1] 25</code></pre>
-<pre class="r"><code># [[]] 返回元素本身
-my_list[[1]]     # 返回元素值</code></pre>
-<pre><code>[1] &quot;张三&quot;</code></pre>
-<pre class="r"><code>class(my_list[[1]])</code></pre>
-<pre><code>[1] &quot;character&quot;</code></pre>
-<pre class="r"><code># $ 按名称访问
-my_list$name</code></pre>
-<pre><code>[1] &quot;张三&quot;</code></pre>
-<pre class="r"><code>my_list$scores</code></pre>
-<pre><code>[1] 85 90 78</code></pre>
-<pre class="r"><code># 修改元素
-my_list$age &lt;- 26
-my_list[[&quot;name&quot;]] &lt;- &quot;李四&quot;
-
-# 添加新元素
-my_list$gender &lt;- &quot;男&quot;
-my_list[[5]] &lt;- &quot;新元素&quot;
-
-# 删除元素
-my_list$passed &lt;- NULL</code></pre>
-<p><strong>列表索引方式对比：</strong></p>
-<table>
-<thead>
-<tr class="header">
-<th>方式</th>
-<th>返回类型</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>list[i]</code></td>
-<td>列表</td>
-<td>获取子列表</td>
-</tr>
-<tr class="even">
-<td><code>list[[i]]</code></td>
-<td>元素本身</td>
-<td>获取单个元素</td>
-</tr>
-<tr class="odd">
-<td><code>list$name</code></td>
-<td>元素本身</td>
-<td>按名称获取元素</td>
-</tr>
-</tbody>
-</table>
-<hr />
-</div>
-</div>
-<div id="数据框data-frame" class="section level2">
-<h2>3.5 数据框（Data Frame）</h2>
-<p>数据框是 R 中最常用的数据结构，类似于 Excel
-表格，每列可以是不同类型。</p>
-<div id="创建数据框" class="section level3">
-<h3>创建数据框</h3>
 <pre class="r"><code># 创建数据框
 df &lt;- data.frame(
   name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;),
-  age = c(25, 30, 28),
-  score = c(85.5, 90.0, 78.5),
-  passed = c(TRUE, TRUE, FALSE)
-)
-df</code></pre>
-<pre><code>  name age score passed
-1 张三  25  85.5   TRUE
-2 李四  30  90.0   TRUE
-3 王五  28  78.5  FALSE</code></pre>
-<pre class="r"><code># 查看数据框结构
-str(df)</code></pre>
-<pre><code>&#39;data.frame&#39;:   3 obs. of  4 variables:
- $ name  : chr  &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;
- $ age   : num  25 30 28
- $ score : num  85.5 90 78.5
- $ passed: logi  TRUE TRUE FALSE</code></pre>
-<pre class="r"><code># 查看维度
-dim(df)</code></pre>
-<pre><code>[1] 3 4</code></pre>
-<pre class="r"><code>nrow(df)</code></pre>
-<pre><code>[1] 3</code></pre>
-<pre class="r"><code>ncol(df)</code></pre>
-<pre><code>[1] 4</code></pre>
-<pre class="r"><code># 查看列名和行名
-names(df)</code></pre>
-<pre><code>[1] &quot;name&quot;   &quot;age&quot;    &quot;score&quot;  &quot;passed&quot;</code></pre>
-<pre class="r"><code>colnames(df)</code></pre>
-<pre><code>[1] &quot;name&quot;   &quot;age&quot;    &quot;score&quot;  &quot;passed&quot;</code></pre>
-<pre class="r"><code>rownames(df)</code></pre>
-<pre><code>[1] &quot;1&quot; &quot;2&quot; &quot;3&quot;</code></pre>
-<pre class="r"><code># 查看前几行和后几行
-head(df, 2)</code></pre>
-<pre><code>  name age score passed
-1 张三  25  85.5   TRUE
-2 李四  30  90.0   TRUE</code></pre>
-<pre class="r"><code>tail(df, 1)</code></pre>
-<pre><code>  name age score passed
-3 王五  28  78.5  FALSE</code></pre>
-</div>
-<div id="数据框的基本操作" class="section level3">
-<h3>数据框的基本操作</h3>
-<pre class="r"><code>df &lt;- data.frame(
-  name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;),
-  age = c(25, 30, 28),
-  score = c(85.5, 90.0, 78.5)
+  score = c(85, 92, 78)
 )
 
-# 列索引
-df$name          # 使用 $</code></pre>
-<pre><code>[1] &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;</code></pre>
-<pre class="r"><code>df[, &quot;name&quot;]     # 使用列名</code></pre>
-<pre><code>[1] &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;</code></pre>
-<pre class="r"><code>df[, 1]          # 使用列索引</code></pre>
-<pre><code>[1] &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;</code></pre>
-<pre class="r"><code>df[[&quot;name&quot;]]     # 使用 [[]]</code></pre>
-<pre><code>[1] &quot;张三&quot; &quot;李四&quot; &quot;王五&quot;</code></pre>
-<pre class="r"><code># 行索引
-df[1, ]          # 第1行</code></pre>
-<pre><code>  name age score
-1 张三  25  85.5</code></pre>
-<pre class="r"><code>df[1:2, ]        # 第1-2行</code></pre>
-<pre><code>  name age score
-1 张三  25  85.5
-2 李四  30  90.0</code></pre>
-<pre class="r"><code># 单元格索引
-df[1, 2]         # 第1行第2列</code></pre>
-<pre><code>[1] 25</code></pre>
-<pre class="r"><code>df[1, &quot;age&quot;]     # 使用行列名</code></pre>
-<pre><code>[1] 25</code></pre>
-<pre class="r"><code># 条件筛选
-df[df$age &gt; 26, ]</code></pre>
-<pre><code>  name age score
-2 李四  30  90.0
-3 王五  28  78.5</code></pre>
-<pre class="r"><code>df[df$score &gt; 80, c(&quot;name&quot;, &quot;score&quot;)]</code></pre>
-<pre><code>  name score
-1 张三  85.5
-2 李四  90.0</code></pre>
-<pre class="r"><code># 添加列
-df$gender &lt;- c(&quot;男&quot;, &quot;男&quot;, &quot;女&quot;)
-df[, &quot;grade&quot;] &lt;- c(&quot;A&quot;, &quot;A&quot;, &quot;B&quot;)
-df</code></pre>
-<pre><code>  name age score gender grade
-1 张三  25  85.5     男     A
-2 李四  30  90.0     男     A
-3 王五  28  78.5     女     B</code></pre>
-<pre class="r"><code># 添加行
-new_row &lt;- data.frame(name = &quot;赵六&quot;, age = 22, score = 88, gender = &quot;男&quot;, grade = &quot;A&quot;)
-df &lt;- rbind(df, new_row)
-df</code></pre>
-<pre><code>  name age score gender grade
-1 张三  25  85.5     男     A
-2 李四  30  90.0     男     A
-3 王五  28  78.5     女     B
-4 赵六  22  88.0     男     A</code></pre>
-<pre class="r"><code># 删除列
-df$grade &lt;- NULL
-
-# 删除行
-df &lt;- df[-4, ]</code></pre>
+# 按分数降序排列数据框
+# order(df$score, decreasing = TRUE) 返回排序后的行号
+df[order(df$score, decreasing = TRUE), ]</code></pre>
+<pre><code>##   name score
+## 2 李四    92
+## 1 张三    85
+## 3 王五    78</code></pre>
+<hr />
 </div>
-<div id="数据框合并" class="section level3">
-<h3>数据框合并</h3>
-<pre class="r"><code>df1 &lt;- data.frame(id = 1:3, name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;))
-df2 &lt;- data.frame(id = 2:4, score = c(85, 90, 78))
-
-# 按列合并（列数增加）
-cbind(df1, extra = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))</code></pre>
-<pre><code>  id name extra
-1  1 张三     A
-2  2 李四     B
-3  3 王五     C</code></pre>
-<pre class="r"><code># 按行合并（行数增加）
-df3 &lt;- data.frame(id = 4:5, name = c(&quot;赵六&quot;, &quot;钱七&quot;))
-rbind(df1, df3)</code></pre>
-<pre><code>  id name
-1  1 张三
-2  2 李四
-3  3 王五
-4  4 赵六
-5  5 钱七</code></pre>
-<pre class="r"><code># merge 合并（类似 SQL join）
-merge(df1, df2, by = &quot;id&quot;, all = TRUE)      # 全连接</code></pre>
-<pre><code>  id name score
-1  1 张三    NA
-2  2 李四    85
-3  3 王五    90
-4  4 &lt;NA&gt;    78</code></pre>
-<pre class="r"><code>merge(df1, df2, by = &quot;id&quot;, all.x = TRUE)    # 左连接</code></pre>
-<pre><code>  id name score
-1  1 张三    NA
-2  2 李四    85
-3  3 王五    90</code></pre>
-<pre class="r"><code>merge(df1, df2, by = &quot;id&quot;, all.y = TRUE)    # 右连接</code></pre>
-<pre><code>  id name score
-1  2 李四    85
-2  3 王五    90
-3  4 &lt;NA&gt;    78</code></pre>
-<pre class="r"><code>merge(df1, df2, by = &quot;id&quot;)                  # 内连接</code></pre>
-<pre><code>  id name score
-1  2 李四    85
-2  3 王五    90</code></pre>
 </div>
-<div id="数据框与-tibble-的区别" class="section level3">
-<h3>数据框与 tibble 的区别</h3>
-<pre class="r"><code># 安装并加载 tibble 包（如果未安装）
-# install.packages(&quot;tibble&quot;)
-library(tibble)
+<div id="唯一值与去重" class="section level2">
+<h2>4.3 唯一值与去重</h2>
+<pre class="r"><code># 创建有重复值的向量
+x &lt;- c(1, 2, 2, 3, 3, 3, 4, 4, 4, 4)
 
-# 创建 tibble
-tbl &lt;- tibble(
-  name = c(&quot;张三&quot;, &quot;李四&quot;, &quot;王五&quot;),
-  age = c(25, 30, 28),
-  score = c(85.5, 90.0, 78.5)
-)
-tbl</code></pre>
-<pre><code># A tibble: 3 × 3
-  name    age score
-  &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
-1 张三     25  85.5
-2 李四     30  90  
-3 王五     28  78.5</code></pre>
-<p><strong>数据框与 tibble 的主要区别：</strong></p>
+# unique()：返回唯一值（去重后的向量）
+unique(x)</code></pre>
+<pre><code>## [1] 1 2 3 4</code></pre>
+<pre class="r"><code># duplicated()：返回逻辑向量，标记是否为重复值
+# 第一次出现为FALSE，后续重复为TRUE
+duplicated(x)</code></pre>
+<pre><code>##  [1] FALSE FALSE  TRUE FALSE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE</code></pre>
+<pre class="r"><code># 使用逻辑取反获取唯一值
+x[!duplicated(x)]</code></pre>
+<pre><code>## [1] 1 2 3 4</code></pre>
+<pre class="r"><code># 统计唯一值的个数
+length(unique(x))</code></pre>
+<pre><code>## [1] 4</code></pre>
+<hr />
+</div>
+<div id="集合运算" class="section level2">
+<h2>4.4 集合运算</h2>
+<pre class="r"><code># 定义两个集合
+A &lt;- c(1, 2, 3, 4, 5)
+B &lt;- c(4, 5, 6, 7, 8)
+
+# union()：并集（A和B的所有元素，去重）
+union(A, B)</code></pre>
+<pre><code>## [1] 1 2 3 4 5 6 7 8</code></pre>
+<pre class="r"><code># intersect()：交集（A和B的共同元素）
+intersect(A, B)</code></pre>
+<pre><code>## [1] 4 5</code></pre>
+<pre class="r"><code># setdiff()：差集（A有但B没有的元素）
+setdiff(A, B)</code></pre>
+<pre><code>## [1] 1 2 3</code></pre>
+<pre class="r"><code># setdiff(B, A)：B有但A没有的元素
+setdiff(B, A)</code></pre>
+<pre><code>## [1] 6 7 8</code></pre>
+<pre class="r"><code># %in%：判断元素是否在集合中
+3 %in% A</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>10 %in% A</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># 可以判断多个元素
+c(1, 3, 10) %in% A</code></pre>
+<pre><code>## [1]  TRUE  TRUE FALSE</code></pre>
+<pre class="r"><code># setequal()：判断两个集合是否相等（不考虑顺序）
+setequal(c(1, 2, 3), c(3, 2, 1))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<div id="集合运算总结" class="section level3">
+<h3>集合运算总结</h3>
 <table>
 <thead>
 <tr class="header">
-<th>特性</th>
-<th>data.frame</th>
-<th>tibble</th>
+<th>函数/运算符</th>
+<th>功能</th>
+<th>示例</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>打印显示</td>
-<td>显示全部内容</td>
-<td>显示前10行，列类型</td>
+<td><code>union()</code></td>
+<td>并集</td>
+<td>A和B的所有元素</td>
 </tr>
 <tr class="even">
-<td>列名处理</td>
-<td>自动简化</td>
-<td>保留原始名称</td>
+<td><code>intersect()</code></td>
+<td>交集</td>
+<td>A和B的共同元素</td>
 </tr>
 <tr class="odd">
-<td>字符串处理</td>
-<td>自动转为因子</td>
-<td>保持字符型</td>
+<td><code>setdiff()</code></td>
+<td>差集</td>
+<td>A有但B没有的元素</td>
 </tr>
 <tr class="even">
-<td>子集提取</td>
-<td>简化返回</td>
-<td>不简化，保持类型</td>
+<td><code>%in%</code></td>
+<td>成员判断</td>
+<td>元素是否在集合中</td>
 </tr>
 <tr class="odd">
-<td>兼容性</td>
-<td>基础 R</td>
-<td>tidyverse 生态</td>
-</tr>
-</tbody>
-</table>
-<pre class="r"><code># tibble 的特点展示
-# 创建包含特殊列名的 tibble
-tbl_special &lt;- tibble(
-  `column name` = 1:3,    # 列名包含空格
-  `2024` = c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)  # 列名以数字开头
-)
-tbl_special</code></pre>
-<pre><code># A tibble: 3 × 2
-  `column name` `2024`
-          &lt;int&gt; &lt;chr&gt; 
-1             1 a     
-2             2 b     
-3             3 c     </code></pre>
-<pre class="r"><code># tibble 不会简化子集
-df_test &lt;- data.frame(a = 1:3)
-tbl_test &lt;- tibble(a = 1:3)
-
-class(df_test[, &quot;a&quot;])   # data.frame 会简化为向量</code></pre>
-<pre><code>[1] &quot;integer&quot;</code></pre>
-<pre class="r"><code>class(tbl_test[, &quot;a&quot;])  # tibble 保持为 tibble</code></pre>
-<pre><code>[1] &quot;tbl_df&quot;     &quot;tbl&quot;        &quot;data.frame&quot;</code></pre>
-<hr />
-</div>
-</div>
-<div id="因子factor" class="section level2">
-<h2>3.6 因子（Factor）</h2>
-<p>因子用于存储分类数据，是 R 中处理分类变量的重要数据结构。</p>
-<div id="创建因子" class="section level3">
-<h3>创建因子</h3>
-<pre class="r"><code># 创建因子
-gender &lt;- factor(c(&quot;男&quot;, &quot;女&quot;, &quot;男&quot;, &quot;男&quot;, &quot;女&quot;))
-gender</code></pre>
-<pre><code>[1] 男 女 男 男 女
-Levels: 男 女</code></pre>
-<pre class="r"><code># 查看因子属性
-class(gender)</code></pre>
-<pre><code>[1] &quot;factor&quot;</code></pre>
-<pre class="r"><code>levels(gender)    # 因子水平</code></pre>
-<pre><code>[1] &quot;男&quot; &quot;女&quot;</code></pre>
-<pre class="r"><code>nlevels(gender)   # 水平数量</code></pre>
-<pre><code>[1] 2</code></pre>
-<pre class="r"><code># 指定水平顺序
-size &lt;- factor(c(&quot;S&quot;, &quot;M&quot;, &quot;L&quot;, &quot;M&quot;, &quot;S&quot;), 
-               levels = c(&quot;S&quot;, &quot;M&quot;, &quot;L&quot;))
-size</code></pre>
-<pre><code>[1] S M L M S
-Levels: S M L</code></pre>
-<pre class="r"><code>levels(size)</code></pre>
-<pre><code>[1] &quot;S&quot; &quot;M&quot; &quot;L&quot;</code></pre>
-</div>
-<div id="有序因子与无序因子" class="section level3">
-<h3>有序因子与无序因子</h3>
-<pre class="r"><code># 无序因子（默认）
-color &lt;- factor(c(&quot;红&quot;, &quot;绿&quot;, &quot;蓝&quot;, &quot;红&quot;))
-color</code></pre>
-<pre><code>[1] 红 绿 蓝 红
-Levels: 红 蓝 绿</code></pre>
-<pre class="r"><code># 有序因子
-quality &lt;- factor(c(&quot;差&quot;, &quot;中&quot;, &quot;好&quot;, &quot;优&quot;), 
-                  levels = c(&quot;差&quot;, &quot;中&quot;, &quot;好&quot;, &quot;优&quot;),
-                  ordered = TRUE)
-quality</code></pre>
-<pre><code>[1] 差 中 好 优
-Levels: 差 &lt; 中 &lt; 好 &lt; 优</code></pre>
-<pre class="r"><code># 有序因子可以比较
-quality[1] &lt; quality[3]</code></pre>
-<pre><code>[1] TRUE</code></pre>
-<pre class="r"><code># 无序因子不能比较（会报错）
-# color[1] &lt; color[2]</code></pre>
-</div>
-<div id="因子水平操作" class="section level3">
-<h3>因子水平操作</h3>
-<pre class="r"><code># 创建因子
-fruit &lt;- factor(c(&quot;苹果&quot;, &quot;香蕉&quot;, &quot;苹果&quot;, &quot;橙子&quot;))
-fruit</code></pre>
-<pre><code>[1] 苹果 香蕉 苹果 橙子
-Levels: 橙子 苹果 香蕉</code></pre>
-<pre class="r"><code># 查看水平
-levels(fruit)</code></pre>
-<pre><code>[1] &quot;橙子&quot; &quot;苹果&quot; &quot;香蕉&quot;</code></pre>
-<pre class="r"><code># 添加新水平
-levels(fruit) &lt;- c(levels(fruit), &quot;葡萄&quot;)
-levels(fruit)</code></pre>
-<pre><code>[1] &quot;橙子&quot; &quot;苹果&quot; &quot;香蕉&quot; &quot;葡萄&quot;</code></pre>
-<pre class="r"><code># 重新排列水平
-fruit &lt;- factor(fruit, levels = c(&quot;香蕉&quot;, &quot;苹果&quot;, &quot;橙子&quot;, &quot;葡萄&quot;))
-levels(fruit)</code></pre>
-<pre><code>[1] &quot;香蕉&quot; &quot;苹果&quot; &quot;橙子&quot; &quot;葡萄&quot;</code></pre>
-<pre class="r"><code># 合并水平
-fruit &lt;- factor(fruit, levels = c(&quot;苹果&quot;, &quot;香蕉&quot;, &quot;橙子&quot;, &quot;葡萄&quot;),
-                labels = c(&quot;苹果类&quot;, &quot;香蕉类&quot;, &quot;柑橘类&quot;, &quot;葡萄类&quot;))
-fruit</code></pre>
-<pre><code>[1] 苹果类 香蕉类 苹果类 柑橘类
-Levels: 苹果类 香蕉类 柑橘类 葡萄类</code></pre>
-<pre class="r"><code># 删除未使用的水平
-fruit &lt;- droplevels(fruit)
-levels(fruit)</code></pre>
-<pre><code>[1] &quot;苹果类&quot; &quot;香蕉类&quot; &quot;柑橘类&quot;</code></pre>
-<pre class="r"><code># 因子与数值转换
-num_factor &lt;- factor(c(1, 2, 1, 3))
-as.numeric(num_factor)           # 返回水平编码</code></pre>
-<pre><code>[1] 1 2 1 3</code></pre>
-<pre class="r"><code>as.numeric(as.character(num_factor))  # 返回实际数值</code></pre>
-<pre><code>[1] 1 2 1 3</code></pre>
-<pre class="r"><code># 统计各水平频数
-table(fruit)</code></pre>
-<pre><code>fruit
-苹果类 香蕉类 柑橘类 
-     2      1      1 </code></pre>
-<hr />
-</div>
-</div>
-<div id="时间序列ts" class="section level2">
-<h2>3.7 时间序列（ts）</h2>
-<p>时间序列对象用于存储和操作时间序列数据。</p>
-<div id="创建时间序列对象" class="section level3">
-<h3>创建时间序列对象</h3>
-<pre class="r"><code># 创建简单时间序列
-sales &lt;- c(100, 120, 115, 130, 125, 140, 135, 150, 145, 160, 155, 170)
-ts_sales &lt;- ts(sales, start = c(2023, 1), frequency = 12)
-ts_sales</code></pre>
-<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
-2023 100 120 115 130 125 140 135 150 145 160 155 170</code></pre>
-<pre class="r"><code># 查看时间序列属性
-start(ts_sales)</code></pre>
-<pre><code>[1] 2023    1</code></pre>
-<pre class="r"><code>end(ts_sales)</code></pre>
-<pre><code>[1] 2023   12</code></pre>
-<pre class="r"><code>frequency(ts_sales)</code></pre>
-<pre><code>[1] 12</code></pre>
-<pre class="r"><code>time(ts_sales)</code></pre>
-<pre><code>          Jan      Feb      Mar      Apr      May      Jun      Jul      Aug
-2023 2023.000 2023.083 2023.167 2023.250 2023.333 2023.417 2023.500 2023.583
-          Sep      Oct      Nov      Dec
-2023 2023.667 2023.750 2023.833 2023.917</code></pre>
-<pre class="r"><code># 创建季度数据
-quarterly_data &lt;- c(100, 120, 130, 110, 115, 135, 145, 125)
-ts_quarterly &lt;- ts(quarterly_data, start = 2022, frequency = 4)
-ts_quarterly</code></pre>
-<pre><code>     Qtr1 Qtr2 Qtr3 Qtr4
-2022  100  120  130  110
-2023  115  135  145  125</code></pre>
-<pre class="r"><code># 创建年度数据
-yearly_data &lt;- c(1000, 1200, 1150, 1300, 1250)
-ts_yearly &lt;- ts(yearly_data, start = 2019)
-ts_yearly</code></pre>
-<pre><code>Time Series:
-Start = 2019 
-End = 2023 
-Frequency = 1 
-[1] 1000 1200 1150 1300 1250</code></pre>
-</div>
-<div id="时间序列基本操作" class="section level3">
-<h3>时间序列基本操作</h3>
-<pre class="r"><code>ts_sales &lt;- ts(c(100, 120, 115, 130, 125, 140), 
-               start = c(2023, 1), frequency = 12)
-
-# 索引
-ts_sales[1]      # 第一个值</code></pre>
-<pre><code>[1] 100</code></pre>
-<pre class="r"><code>ts_sales[1:3]    # 前三个值</code></pre>
-<pre><code>[1] 100 120 115</code></pre>
-<pre class="r"><code># 窗口函数：提取子序列
-window(ts_sales, start = c(2023, 2), end = c(2023, 4))</code></pre>
-<pre><code>     Feb Mar Apr
-2023 120 115 130</code></pre>
-<pre class="r"><code># 时间序列聚合
-aggregate(ts_sales, nfrequency = 4, FUN = mean)  # 转为季度数据</code></pre>
-<pre><code>         Qtr1     Qtr2
-2023 111.6667 131.6667</code></pre>
-<pre class="r"><code># 差分
-diff(ts_sales)</code></pre>
-<pre><code>     Feb Mar Apr May Jun
-2023  20  -5  15  -5  15</code></pre>
-<pre class="r"><code># 滞后
-lag(ts_sales, k = 1)</code></pre>
-<pre><code>     Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
-2022                                             100
-2023 120 115 130 125 140                            </code></pre>
-</div>
-<div id="时间序列扩展包" class="section level3">
-<h3>时间序列扩展包</h3>
-<p>R 有多个强大的时间序列扩展包：</p>
-<pre class="r"><code># tsibble 包（tidyverse 风格的时间序列）
-# install.packages(&quot;tsibble&quot;)
-library(tsibble)
-
-# 创建 tsibble
-tsibble_data &lt;- tibble(
-  date = seq(as.Date(&quot;2023-01-01&quot;), by = &quot;month&quot;, length.out = 12),
-  value = c(100, 120, 115, 130, 125, 140, 135, 150, 145, 160, 155, 170)
-) %&gt;%
-  as_tsibble(index = date)
-
-# xts 包（扩展时间序列）
-# install.packages(&quot;xts&quot;)
-library(xts)
-
-dates &lt;- seq(as.Date(&quot;2023-01-01&quot;), by = &quot;day&quot;, length.out = 10)
-values &lt;- 1:10
-xts_obj &lt;- xts(values, order.by = dates)
-
-# zoo 包（不规则时间序列）
-# install.packages(&quot;zoo&quot;)
-library(zoo)
-
-zoo_obj &lt;- zoo(values, dates)</code></pre>
-<p><strong>时间序列包对比：</strong></p>
-<table>
-<thead>
-<tr class="header">
-<th>包名</th>
-<th>特点</th>
-<th>适用场景</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>ts</code> (基础)</td>
-<td>R 内置，功能基础</td>
-<td>规则时间序列</td>
-</tr>
-<tr class="even">
-<td><code>tsibble</code></td>
-<td>tidyverse 风格</td>
-<td>数据分析流程</td>
-</tr>
-<tr class="odd">
-<td><code>xts</code></td>
-<td>高性能，功能丰富</td>
-<td>金融数据分析</td>
-</tr>
-<tr class="even">
-<td><code>zoo</code></td>
-<td>支持不规则时间</td>
-<td>复杂时间索引</td>
+<td><code>setequal()</code></td>
+<td>集合相等判断</td>
+<td>两个集合是否相同</td>
 </tr>
 </tbody>
 </table>
 <hr />
 </div>
+</div>
+<div id="字符处理函数" class="section level2">
+<h2>4.5 字符处理函数</h2>
+<pre class="r"><code>name &lt;- &quot;张三&quot;
+
+# paste()：连接字符串，默认用空格分隔
+paste(&quot;姓名:&quot;, name)</code></pre>
+<pre><code>## [1] &quot;姓名: 张三&quot;</code></pre>
+<pre class="r"><code># paste()：使用自定义分隔符
+paste(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;, sep = &quot;-&quot;)</code></pre>
+<pre><code>## [1] &quot;A-B-C&quot;</code></pre>
+<pre class="r"><code># paste0()：连接字符串，无分隔符
+paste0(&quot;Hello&quot;, &quot;World&quot;)</code></pre>
+<pre><code>## [1] &quot;HelloWorld&quot;</code></pre>
+<pre class="r"><code># paste()：将向量元素连接成一个字符串
+paste(c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;), collapse = &quot;, &quot;)</code></pre>
+<pre><code>## [1] &quot;A, B, C&quot;</code></pre>
+<pre class="r"><code># strsplit()：按指定分隔符拆分字符串
+sentence &lt;- &quot;苹果,香蕉,橙子&quot;
+strsplit(sentence, &quot;,&quot;)</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;苹果&quot; &quot;香蕉&quot; &quot;橙子&quot;</code></pre>
+<pre class="r"><code># sub()：替换第一个匹配项
+text &lt;- &quot;Hello World&quot;
+sub(&quot;World&quot;, &quot;R&quot;, text)</code></pre>
+<pre><code>## [1] &quot;Hello R&quot;</code></pre>
+<pre class="r"><code># gsub()：替换所有匹配项
+text2 &lt;- &quot;apple apple apple&quot;
+gsub(&quot;apple&quot;, &quot;orange&quot;, text2)</code></pre>
+<pre><code>## [1] &quot;orange orange orange&quot;</code></pre>
+<pre class="r"><code># toupper()：转大写
+toupper(&quot;hello&quot;)</code></pre>
+<pre><code>## [1] &quot;HELLO&quot;</code></pre>
+<pre class="r"><code># tolower()：转小写
+tolower(&quot;HELLO&quot;)</code></pre>
+<pre><code>## [1] &quot;hello&quot;</code></pre>
+<pre class="r"><code># nchar()：统计字符数
+nchar(&quot;你好世界&quot;)</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code># substr()：提取子字符串（从第1个到第5个字符）
+substr(&quot;Hello World&quot;, 1, 5)</code></pre>
+<pre><code>## [1] &quot;Hello&quot;</code></pre>
+<pre class="r"><code># trimws()：去除首尾空格
+trimws(&quot;  Hello World  &quot;)</code></pre>
+<pre><code>## [1] &quot;Hello World&quot;</code></pre>
+<div id="字符函数总结" class="section level3">
+<h3>字符函数总结</h3>
+<table>
+<thead>
+<tr class="header">
+<th>函数</th>
+<th>功能</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>paste()</code></td>
+<td>连接字符串（可指定分隔符）</td>
+<td><code>paste(&quot;A&quot;, &quot;B&quot;)</code> → “A B”</td>
+</tr>
+<tr class="even">
+<td><code>paste0()</code></td>
+<td>连接字符串（无分隔符）</td>
+<td><code>paste0(&quot;A&quot;, &quot;B&quot;)</code> → “AB”</td>
+</tr>
+<tr class="odd">
+<td><code>strsplit()</code></td>
+<td>分割字符串</td>
+<td>按指定字符拆分</td>
+</tr>
+<tr class="even">
+<td><code>sub()</code></td>
+<td>替换第一个匹配</td>
+<td>只替换第一个</td>
+</tr>
+<tr class="odd">
+<td><code>gsub()</code></td>
+<td>替换所有匹配</td>
+<td>替换所有匹配项</td>
+</tr>
+<tr class="even">
+<td><code>toupper()</code></td>
+<td>转大写</td>
+<td>“hello” → “HELLO”</td>
+</tr>
+<tr class="odd">
+<td><code>tolower()</code></td>
+<td>转小写</td>
+<td>“HELLO” → “hello”</td>
+</tr>
+<tr class="even">
+<td><code>nchar()</code></td>
+<td>字符数</td>
+<td>统计字符个数</td>
+</tr>
+<tr class="odd">
+<td><code>substr()</code></td>
+<td>提取子串</td>
+<td>按位置截取</td>
+</tr>
+<tr class="even">
+<td><code>trimws()</code></td>
+<td>去除首尾空格</td>
+<td>清理空白字符</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+</div>
+<div id="类型转换函数" class="section level2">
+<h2>4.6 类型转换函数</h2>
+<pre class="r"><code># as.numeric()：转换为数值型
+as.numeric(&quot;123&quot;)</code></pre>
+<pre><code>## [1] 123</code></pre>
+<pre class="r"><code># as.character()：转换为字符型
+as.character(123)</code></pre>
+<pre><code>## [1] &quot;123&quot;</code></pre>
+<pre class="r"><code># as.logical()：转换为逻辑型
+# 非零为TRUE，零为FALSE
+as.logical(1)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>as.logical(0)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<pre class="r"><code># as.factor()：转换为因子
+as.factor(c(&quot;A&quot;, &quot;B&quot;, &quot;A&quot;))</code></pre>
+<pre><code>## [1] A B A
+## Levels: A B</code></pre>
+<pre class="r"><code># as.Date()：转换为日期
+as.Date(&quot;2024-01-15&quot;)</code></pre>
+<pre><code>## [1] &quot;2024-01-15&quot;</code></pre>
+<pre class="r"><code># as.vector()：转换为向量
+as.vector(matrix(1:4, nrow = 2))</code></pre>
+<pre><code>## [1] 1 2 3 4</code></pre>
+<pre class="r"><code># as.data.frame()：转换为数据框
+as.data.frame(matrix(1:6, nrow = 2))</code></pre>
+<pre><code>##   V1 V2 V3
+## 1  1  3  5
+## 2  2  4  6</code></pre>
+<pre class="r"><code># as.list()：转换为列表
+as.list(c(1, 2, 3))</code></pre>
+<pre><code>## [[1]]
+## [1] 1
+## 
+## [[2]]
+## [1] 2
+## 
+## [[3]]
+## [1] 3</code></pre>
+<div id="类型判断函数" class="section level3">
+<h3>类型判断函数</h3>
+<pre class="r"><code># is.numeric()：判断是否为数值型
+is.numeric(123)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.character()：判断是否为字符型
+is.character(&quot;hello&quot;)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.logical()：判断是否为逻辑型
+is.logical(TRUE)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.factor()：判断是否为因子
+is.factor(factor(c(&quot;A&quot;, &quot;B&quot;)))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.vector()：判断是否为向量
+is.vector(c(1, 2, 3))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.data.frame()：判断是否为数据框
+is.data.frame(data.frame(x = 1))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code># is.list()：判断是否为列表
+is.list(list(a = 1))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<hr />
+</div>
+</div>
+</div>
+<div id="第五章向量化操作与apply族" class="section level1">
+<h1>第五章：向量化操作与apply族</h1>
+<div id="向量化运算的本质" class="section level2">
+<h2>5.1 向量化运算的本质</h2>
+<p>向量化运算是R语言的核心特性之一。它的意思是：<strong>对整个向量进行操作，而不需要写循环</strong>。</p>
+<div id="传统循环方式-vs-向量化方式" class="section level3">
+<h3>传统循环方式 vs 向量化方式</h3>
+<p>假设要计算向量中每个元素的平方：</p>
+<pre class="r"><code># 创建向量
+x &lt;- 1:5
+
+# 向量化方式：直接对向量进行运算
+# R会自动对每个元素求平方
+x^2</code></pre>
+<pre><code>## [1]  1  4  9 16 25</code></pre>
+<pre class="r"><code># 传统循环方式：需要显式写循环
+# 先创建一个空向量存储结果
+result &lt;- numeric(5)
+# 循环计算每个元素的平方
+for (i in 1:5) {
+  result[i] &lt;- x[i]^2
+}
+result</code></pre>
+<pre><code>## [1]  1  4  9 16 25</code></pre>
+<p>向量化运算的优势： 1. <strong>代码简洁</strong>：一行代码完成 2.
+<strong>执行效率高</strong>：R内部用C语言优化 3.
+<strong>易于阅读</strong>：意图清晰明了</p>
+<hr />
+</div>
+</div>
+<div id="ifelse条件向量化" class="section level2">
+<h2>5.2 ifelse()条件向量化</h2>
+<p><code>ifelse()</code> 是向量化版的 if-else：</p>
+<pre class="r"><code># 创建分数向量
+scores &lt;- c(85, 60, 72, 45, 90)
+
+# ifelse(条件, 条件为TRUE时的值, 条件为FALSE时的值)
+# 对每个元素判断：&gt;=60为&quot;及格&quot;，否则为&quot;不及格&quot;
+ifelse(scores &gt;= 60, &quot;及格&quot;, &quot;不及格&quot;)</code></pre>
+<pre><code>## [1] &quot;及格&quot;   &quot;及格&quot;   &quot;及格&quot;   &quot;不及格&quot; &quot;及格&quot;</code></pre>
+<pre class="r"><code># 嵌套ifelse实现多条件判断
+# &gt;=90为&quot;优秀&quot;，&gt;=60为&quot;及格&quot;，否则为&quot;不及格&quot;
+ifelse(scores &gt;= 90, &quot;优秀&quot;,
+       ifelse(scores &gt;= 60, &quot;及格&quot;, &quot;不及格&quot;))</code></pre>
+<pre><code>## [1] &quot;及格&quot;   &quot;及格&quot;   &quot;及格&quot;   &quot;不及格&quot; &quot;优秀&quot;</code></pre>
+<hr />
+</div>
+<div id="apply系列函数" class="section level2">
+<h2>5.3 apply系列函数</h2>
+<p>apply系列函数用于替代循环，对数据的行、列或列表元素进行操作。</p>
+<div id="apply" class="section level3">
+<h3>5.3.1 apply()</h3>
+<p><code>apply()</code> 用于矩阵或数据框，按行或列应用函数：</p>
+<pre class="r"><code># 创建矩阵
+m &lt;- matrix(1:12, nrow = 3)
+m</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    1    4    7   10
+## [2,]    2    5    8   11
+## [3,]    3    6    9   12</code></pre>
+<pre class="r"><code># apply(数据, 维度, 函数)
+# 维度：1=按行，2=按列
+
+# 按行求和（对每一行应用sum函数）
+apply(m, 1, sum)</code></pre>
+<pre><code>## [1] 22 26 30</code></pre>
+<pre class="r"><code># 按列求和（对每一列应用sum函数）
+apply(m, 2, sum)</code></pre>
+<pre><code>## [1]  6 15 24 33</code></pre>
+<pre class="r"><code># 按行计算平均值
+apply(m, 1, mean)</code></pre>
+<pre><code>## [1] 5.5 6.5 7.5</code></pre>
+<pre class="r"><code># 使用匿名函数：将每列元素乘以2
+apply(m, 2, function(x) x * 2)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    2    8   14   20
+## [2,]    4   10   16   22
+## [3,]    6   12   18   24</code></pre>
+<p><strong>参数说明</strong>： - 第1个参数：数据（矩阵或数据框） -
+第2个参数：维度（1=行，2=列） - 第3个参数：要应用的函数</p>
+</div>
+<div id="lapply" class="section level3">
+<h3>5.3.2 lapply()</h3>
+<p><code>lapply()</code> 用于列表或向量，返回<strong>列表</strong>：</p>
+<pre class="r"><code># 创建列表
+my_list &lt;- list(
+  a = c(1, 2, 3),
+  b = c(10, 20, 30, 40),
+  c = c(100, 200)
+)
+
+# lapply(列表, 函数)：对每个元素应用函数
+# 计算每个元素的平均值
+lapply(my_list, mean)</code></pre>
+<pre><code>## $a
+## [1] 2
+## 
+## $b
+## [1] 25
+## 
+## $c
+## [1] 150</code></pre>
+<pre class="r"><code># 计算每个元素的和
+lapply(my_list, sum)</code></pre>
+<pre><code>## $a
+## [1] 6
+## 
+## $b
+## [1] 100
+## 
+## $c
+## [1] 300</code></pre>
+</div>
+<div id="sapply" class="section level3">
+<h3>5.3.3 sapply()</h3>
+<p><code>sapply()</code> 是 <code>lapply()</code>
+的简化版，返回<strong>向量或矩阵</strong>：</p>
+<pre class="r"><code>my_list &lt;- list(
+  a = c(1, 2, 3),
+  b = c(10, 20, 30, 40),
+  c = c(100, 200)
+)
+
+# sapply() 返回向量（比lapply更简洁）
+sapply(my_list, mean)</code></pre>
+<pre><code>##   a   b   c 
+##   2  25 150</code></pre>
+<pre class="r"><code># 计算每个元素的长度
+sapply(my_list, length)</code></pre>
+<pre><code>## a b c 
+## 3 4 2</code></pre>
+</div>
+<div id="vapply" class="section level3">
+<h3>5.3.4 vapply()</h3>
+<p><code>vapply()</code> 类似
+<code>sapply()</code>，但需要指定返回值类型，更安全：</p>
+<pre class="r"><code>my_list &lt;- list(a = 1:3, b = 4:6)
+
+# vapply(列表, 函数, 返回值类型模板)
+# numeric(1) 表示返回单个数值
+vapply(my_list, mean, numeric(1))</code></pre>
+<pre><code>## a b 
+## 2 5</code></pre>
+</div>
+<div id="tapply" class="section level3">
+<h3>5.3.5 tapply()</h3>
+<p><code>tapply()</code> 按<strong>分组</strong>应用函数：</p>
+<pre class="r"><code># 创建分数和对应的班级
+scores &lt;- c(85, 90, 78, 92, 88, 76)
+classes &lt;- c(&quot;A&quot;, &quot;A&quot;, &quot;B&quot;, &quot;B&quot;, &quot;A&quot;, &quot;B&quot;)
+
+# tapply(数据, 分组变量, 函数)
+# 按班级计算平均分
+tapply(scores, classes, mean)</code></pre>
+<pre><code>##        A        B 
+## 87.66667 82.00000</code></pre>
+</div>
+<div id="mapply" class="section level3">
+<h3>5.3.6 mapply()</h3>
+<p><code>mapply()</code> 是多变量版本的 <code>sapply()</code>：</p>
+<pre class="r"><code># mapply(函数, 向量1, 向量2, ...)
+# 将两个向量的对应元素相加
+mapply(function(x, y) x + y, 
+       c(1, 2, 3), 
+       c(10, 20, 30))</code></pre>
+<pre><code>## [1] 11 22 33</code></pre>
+<pre class="r"><code># 重复字符：A重复1次，B重复2次，C重复3次
+mapply(rep, times = 1:3, x = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))</code></pre>
+<pre><code>## [[1]]
+## [1] &quot;A&quot;
+## 
+## [[2]]
+## [1] &quot;B&quot; &quot;B&quot;
+## 
+## [[3]]
+## [1] &quot;C&quot; &quot;C&quot; &quot;C&quot;</code></pre>
+<hr />
+</div>
+</div>
+<div id="replicate重复计算" class="section level2">
+<h2>5.4 replicate()重复计算</h2>
+<p><code>replicate()</code> 用于重复执行某个操作：</p>
+<pre class="r"><code># 重复3次计算1:10的平均值
+replicate(3, mean(1:10))</code></pre>
+<pre><code>## [1] 5.5 5.5 5.5</code></pre>
+<pre class="r"><code># 设置随机种子，保证结果可重复
+set.seed(123)
+# 重复5次：生成10个正态随机数并计算平均值
+replicate(5, mean(rnorm(10)))</code></pre>
+<pre><code>## [1]  0.074625644  0.208621961 -0.424558873  0.322044550 -0.008715537</code></pre>
+<hr />
+</div>
+</div>
+<div id="第六章控制流" class="section level1">
+<h1>第六章：控制流</h1>
+<div id="条件判断if-else" class="section level2">
+<h2>6.1 条件判断：if-else</h2>
+<div id="基本if语句" class="section level3">
+<h3>基本if语句</h3>
+<pre class="r"><code>x &lt;- 10
+
+# if (条件) { 执行代码 }
+# 条件为TRUE时执行花括号内的代码
+if (x &gt; 5) {
+  print(&quot;x大于5&quot;)
+}</code></pre>
+<pre><code>## [1] &quot;x大于5&quot;</code></pre>
+</div>
+<div id="if-else语句" class="section level3">
+<h3>if-else语句</h3>
+<pre class="r"><code>score &lt;- 75
+
+# if-else：二选一
+# 条件为TRUE执行if块，否则执行else块
+if (score &gt;= 60) {
+  print(&quot;及格&quot;)
+} else {
+  print(&quot;不及格&quot;)
+}</code></pre>
+<pre><code>## [1] &quot;及格&quot;</code></pre>
+</div>
+<div id="if-else-if-else语句" class="section level3">
+<h3>if-else if-else语句</h3>
+<pre class="r"><code>score &lt;- 85
+
+# if-else if-else：多条件判断
+# 从上到下依次判断，遇到第一个TRUE的条件就执行对应代码块
+if (score &gt;= 90) {
+  print(&quot;优秀&quot;)
+} else if (score &gt;= 80) {
+  print(&quot;良好&quot;)
+} else if (score &gt;= 60) {
+  print(&quot;及格&quot;)
+} else {
+  print(&quot;不及格&quot;)
+}</code></pre>
+<pre><code>## [1] &quot;良好&quot;</code></pre>
+<hr />
+</div>
+</div>
+<div id="多分支switch函数" class="section level2">
+<h2>6.2 多分支：switch()函数</h2>
+<pre class="r"><code>day &lt;- &quot;周一&quot;
+
+# switch(判断值, 情况1=结果1, 情况2=结果2, ..., 默认结果)
+# 根据day的值返回对应的活动
+activity &lt;- switch(day,
+  &quot;周一&quot; = &quot;开会&quot;,
+  &quot;周二&quot; = &quot;培训&quot;,
+  &quot;周三&quot; = &quot;调研&quot;,
+  &quot;周四&quot; = &quot;写作&quot;,
+  &quot;周五&quot; = &quot;总结&quot;,
+  &quot;周末&quot;  # 默认值（没有匹配时返回）
+)
+
+activity</code></pre>
+<pre><code>## [1] &quot;开会&quot;</code></pre>
+<pre class="r"><code># switch也可以使用数字索引
+num &lt;- 2
+# 返回第2个值：&quot;第二&quot;
+switch(num, &quot;第一&quot;, &quot;第二&quot;, &quot;第三&quot;)</code></pre>
+<pre><code>## [1] &quot;第二&quot;</code></pre>
+<hr />
+</div>
+<div id="循环结构" class="section level2">
+<h2>6.3 循环结构</h2>
+<div id="for循环" class="section level3">
+<h3>6.3.1 for循环</h3>
+<p><strong>遍历向量</strong>：</p>
+<pre class="r"><code># for (变量 in 序列) { 执行代码 }
+# 变量依次取序列中的每个值
+for (i in 1:5) {
+  print(i)
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</code></pre>
+<p><strong>遍历字符向量</strong>：</p>
+<pre class="r"><code>fruits &lt;- c(&quot;苹果&quot;, &quot;香蕉&quot;, &quot;橙子&quot;)
+# fruit依次取向量中的每个元素
+for (fruit in fruits) {
+  print(paste(&quot;我喜欢&quot;, fruit))
+}</code></pre>
+<pre><code>## [1] &quot;我喜欢 苹果&quot;
+## [1] &quot;我喜欢 香蕉&quot;
+## [1] &quot;我喜欢 橙子&quot;</code></pre>
+<p><strong>遍历列表</strong>：</p>
+<pre class="r"><code>my_list &lt;- list(a = 1:3, b = 4:6)
+# names()获取列表的元素名称
+for (name in names(my_list)) {
+  print(paste(name, &quot;的均值是&quot;, mean(my_list[[name]])))
+}</code></pre>
+<pre><code>## [1] &quot;a 的均值是 2&quot;
+## [1] &quot;b 的均值是 5&quot;</code></pre>
+<p><strong>遍历数据框</strong>：</p>
+<pre class="r"><code>df &lt;- data.frame(name = c(&quot;张三&quot;, &quot;李四&quot;), score = c(85, 90))
+# nrow()获取行数，逐行遍历
+for (i in 1:nrow(df)) {
+  print(paste(df$name[i], &quot;的分数是&quot;, df$score[i]))
+}</code></pre>
+<pre><code>## [1] &quot;张三 的分数是 85&quot;
+## [1] &quot;李四 的分数是 90&quot;</code></pre>
+</div>
+<div id="while循环" class="section level3">
+<h3>6.3.2 while循环</h3>
+<pre class="r"><code># while (条件) { 执行代码 }
+# 条件为TRUE时重复执行，直到条件为FALSE
+count &lt;- 1
+while (count &lt;= 5) {
+  print(count)
+  count &lt;- count + 1  # 更新计数器，否则会无限循环
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</code></pre>
+</div>
+<div id="repeat循环与breaknext" class="section level3">
+<h3>6.3.3 repeat循环与break、next</h3>
+<p><strong>repeat循环</strong>（无限循环，必须用break退出）：</p>
+<pre class="r"><code>count &lt;- 1
+# repeat会无限循环，直到遇到break
+repeat {
+  print(count)
+  count &lt;- count + 1
+  # 当count &gt; 5时退出循环
+  if (count &gt; 5) {
+    break
+  }
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4
+## [1] 5</code></pre>
+<p><strong>break</strong>：跳出整个循环</p>
+<pre class="r"><code># 当i等于5时，跳出循环
+for (i in 1:10) {
+  if (i == 5) {
+    break  # 跳出循环，不再继续
+  }
+  print(i)
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 3
+## [1] 4</code></pre>
+<p><strong>next</strong>：跳过当前迭代，继续下一次</p>
+<pre class="r"><code># 当i等于3时，跳过本次循环，继续下一次
+for (i in 1:5) {
+  if (i == 3) {
+    next  # 跳过本次，继续i=4
+  }
+  print(i)
+}</code></pre>
+<pre><code>## [1] 1
+## [1] 2
+## [1] 4
+## [1] 5</code></pre>
+<hr />
+</div>
+</div>
+<div id="循环的向量化替代思想" class="section level2">
+<h2>6.4 循环的向量化替代思想</h2>
+<p>在R中，很多循环可以用向量化操作替代，效率更高：</p>
+<pre class="r"><code>x &lt;- 1:1000000
+
+# 向量化方式：直接对向量运算（推荐）
+# 简洁且高效
+y &lt;- x^2
+
+# 循环方式：需要显式写循环（不推荐）
+# 代码冗长且效率低
+y &lt;- numeric(length(x))
+for (i in seq_along(x)) {
+  y[i] &lt;- x[i]^2
+}</code></pre>
+<p><strong>原则</strong>：能用向量化就用向量化，必要时用apply系列函数，最后才考虑显式循环。</p>
+<hr />
+</div>
+</div>
+<div id="第七章函数定义与作用域" class="section level1">
+<h1>第七章：函数定义与作用域</h1>
+<div id="函数的定义" class="section level2">
+<h2>7.1 函数的定义</h2>
+<p>使用 <code>function()</code> 创建函数：</p>
+<pre class="r"><code># 定义函数：function(参数) { 函数体 }
+# greet 是函数名，name 是参数
+greet &lt;- function(name) {
+  result &lt;- paste(&quot;你好,&quot;, name)
+  return(result)  # return() 返回结果
+}
+
+# 调用函数
+greet(&quot;张三&quot;)</code></pre>
+<pre><code>## [1] &quot;你好, 张三&quot;</code></pre>
+<hr />
+</div>
+<div id="形式参数与实际参数" class="section level2">
+<h2>7.2 形式参数与实际参数</h2>
+<pre class="r"><code># 定义函数：a和b是形式参数（形参）
+add &lt;- function(a, b) {
+  return(a + b)
+}
+
+# 调用函数：3和5是实际参数（实参）
+# 按位置传递参数
+add(3, 5)</code></pre>
+<pre><code>## [1] 8</code></pre>
+<pre class="r"><code># 按名称传递参数
+add(a = 3, b = 5)</code></pre>
+<pre><code>## [1] 8</code></pre>
+<pre class="r"><code># 按名称传递时，顺序可以改变
+add(b = 5, a = 3)</code></pre>
+<pre><code>## [1] 8</code></pre>
+<hr />
+</div>
+<div id="参数的默认值" class="section level2">
+<h2>7.3 参数的默认值</h2>
+<pre class="r"><code># greeting = &quot;你好&quot; 设置默认值
+# 调用时不传该参数，就使用默认值
+greet &lt;- function(name, greeting = &quot;你好&quot;) {
+  paste(greeting, name)
+}
+
+# 使用默认值
+greet(&quot;张三&quot;)</code></pre>
+<pre><code>## [1] &quot;你好 张三&quot;</code></pre>
+<pre class="r"><code># 覆盖默认值
+greet(&quot;张三&quot;, &quot;早上好&quot;)</code></pre>
+<pre><code>## [1] &quot;早上好 张三&quot;</code></pre>
+<hr />
+</div>
+<div id="返回值" class="section level2">
+<h2>7.4 返回值</h2>
+<pre class="r"><code># 使用 return() 显式返回
+add &lt;- function(a, b) {
+  return(a + b)
+}
+add(1, 2)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># 隐式返回：最后一行表达式的值就是返回值
+add2 &lt;- function(a, b) {
+  a + b  # 没有return，最后一行自动返回
+}
+add2(1, 2)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># 返回多个值：使用列表
+multi_return &lt;- function(x) {
+  list(
+    original = x,   # 原始值
+    squared = x^2,  # 平方
+    cubed = x^3     # 立方
+  )
+}
+multi_return(3)</code></pre>
+<pre><code>## $original
+## [1] 3
+## 
+## $squared
+## [1] 9
+## 
+## $cubed
+## [1] 27</code></pre>
+<hr />
+</div>
+<div id="作用域规则" class="section level2">
+<h2>7.5 作用域规则</h2>
+<pre class="r"><code># 全局变量
+x &lt;- 10
+
+my_func &lt;- function() {
+  # 局部变量：只在函数内部有效
+  x &lt;- 20
+  print(paste(&quot;函数内 x =&quot;, x))
+}
+
+my_func()</code></pre>
+<pre><code>## [1] &quot;函数内 x = 20&quot;</code></pre>
+<pre class="r"><code># 函数外部的x不受影响
+print(paste(&quot;函数外 x =&quot;, x))</code></pre>
+<pre><code>## [1] &quot;函数外 x = 10&quot;</code></pre>
+<pre class="r"><code># 函数可以读取全局变量
+y &lt;- 10
+my_func2 &lt;- function() {
+  # 函数内没有定义y，所以使用全局变量y
+  print(paste(&quot;y =&quot;, y))
+}
+my_func2()</code></pre>
+<pre><code>## [1] &quot;y = 10&quot;</code></pre>
+<p><strong>作用域规则</strong>： 1.
+函数内部创建的变量是<strong>局部变量</strong>，只在函数内有效 2.
+函数可以访问外部（全局）变量，但不能直接修改 3.
+如需在函数内修改全局变量，使用 <code>&lt;&lt;-</code> 运算符</p>
+<pre class="r"><code>x &lt;- 10
+modify_global &lt;- function() {
+  # &lt;&lt;- 超赋值运算符：修改全局变量
+  x &lt;&lt;- 20
+}
+modify_global()
+# x已被修改为20
+x</code></pre>
+<pre><code>## [1] 20</code></pre>
+<hr />
+</div>
+<div id="函数作为对象传递" class="section level2">
+<h2>7.6 函数作为对象传递</h2>
+<p>在R中，函数也是对象，可以作为参数传递：</p>
+<pre class="r"><code># 定义一个接受函数作为参数的函数
+apply_function &lt;- function(x, func) {
+  func(x)  # 调用传入的函数
+}
+
+# 传入mean函数
+apply_function(c(1, 2, 3, 4, 5), mean)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<pre class="r"><code># 传入sum函数
+apply_function(c(1, 2, 3, 4, 5), sum)</code></pre>
+<pre><code>## [1] 15</code></pre>
+<hr />
+</div>
+<div id="匿名函数与闭包" class="section level2">
+<h2>7.7 匿名函数与闭包</h2>
+<div id="匿名函数" class="section level3">
+<h3>匿名函数</h3>
+<p>没有名字的函数，通常用于一次性操作：</p>
+<pre class="r"><code># 匿名函数：没有函数名，直接定义在调用处
+# function(x) x^2 就是匿名函数
+sapply(1:5, function(x) x^2)</code></pre>
+<pre><code>## [1]  1  4  9 16 25</code></pre>
+<pre class="r"><code># 另一个例子：将字符转为大写并添加感叹号
+sapply(c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;), function(x) paste(toupper(x), &quot;!&quot;))</code></pre>
+<pre><code>##     a     b     c 
+## &quot;A !&quot; &quot;B !&quot; &quot;C !&quot;</code></pre>
+</div>
+<div id="闭包" class="section level3">
+<h3>闭包</h3>
+<p>函数可以”记住”创建时的环境：</p>
+<pre class="r"><code># 闭包：函数返回另一个函数
+# 内部函数可以访问外部函数的变量
+counter &lt;- function() {
+  count &lt;- 0  # 这个变量会被内部函数&quot;记住&quot;
+  function() {
+    count &lt;&lt;- count + 1  # 使用 &lt;&lt;- 修改外部函数的变量
+    count
+  }
+}
+
+# 创建一个计数器
+my_counter &lt;- counter()
+# 每次调用计数器，count都会增加
+my_counter()  # 1</code></pre>
+<pre><code>## [1] 1</code></pre>
+<pre class="r"><code>my_counter()  # 2</code></pre>
+<pre><code>## [1] 2</code></pre>
+<pre class="r"><code>my_counter()  # 3</code></pre>
+<pre><code>## [1] 3</code></pre>
+<hr />
+</div>
+</div>
+<div id="参数可变参数" class="section level2">
+<h2>7.8 …参数（可变参数）</h2>
+<p><code>...</code> 允许函数接受任意数量的参数：</p>
+<pre class="r"><code># ... 表示可以接受任意数量的参数
+my_sum &lt;- function(...) {
+  # list(...) 将所有参数转换为列表
+  args &lt;- list(...)
+  # unlist() 将列表展开为向量，然后求和
+  sum(unlist(args))
+}
+
+# 可以传入任意数量的参数
+my_sum(1, 2, 3, 4, 5)</code></pre>
+<pre><code>## [1] 15</code></pre>
+<pre class="r"><code># 另一个例子：拼接字符串
+my_cat &lt;- function(prefix, ...) {
+  args &lt;- list(...)
+  paste(prefix, paste(args, collapse = &quot; &quot;))
+}
+
+my_cat(&quot;结果:&quot;, &quot;A&quot;, &quot;B&quot;, &quot;C&quot;)</code></pre>
+<pre><code>## [1] &quot;结果: A B C&quot;</code></pre>
+<hr />
+</div>
+</div>
+<div id="第八章数据输入与输出" class="section level1">
+<h1>第八章：数据输入与输出</h1>
+<div id="从文本文件读取" class="section level2">
+<h2>8.1 从文本文件读取</h2>
+<div id="read.table" class="section level3">
+<h3>read.table()</h3>
+<pre class="r"><code># read.table()：读取通用文本文件
+# file：文件路径
+# header：第一行是否为列名
+# sep：分隔符（\t表示制表符）
+df &lt;- read.table(&quot;data.txt&quot;, header = TRUE, sep = &quot;\t&quot;)</code></pre>
+</div>
+<div id="read.csv" class="section level3">
+<h3>read.csv()</h3>
+<pre class="r"><code># read.csv()：读取CSV文件（逗号分隔）
+# 默认header=TRUE
+df &lt;- read.csv(&quot;data.csv&quot;)
+
+# stringsAsFactors = FALSE：不将字符转为因子
+df &lt;- read.csv(&quot;data.csv&quot;, header = TRUE, stringsAsFactors = FALSE)</code></pre>
+</div>
+<div id="read.delim" class="section level3">
+<h3>read.delim()</h3>
+<pre class="r"><code># read.delim()：读取制表符分隔的文件
+# 默认sep=&quot;\t&quot;
+df &lt;- read.delim(&quot;data.txt&quot;)</code></pre>
+<hr />
+</div>
+</div>
+<div id="从剪贴板读取" class="section level2">
+<h2>8.2 从剪贴板读取</h2>
+<pre class="r"><code># 从剪贴板读取数据（先复制Excel中的数据）
+# &quot;clipboard&quot; 表示从剪贴板读取
+df &lt;- read.table(&quot;clipboard&quot;, header = TRUE)</code></pre>
+<hr />
+</div>
+<div id="读取excel文件" class="section level2">
+<h2>8.3 读取Excel文件</h2>
+<p>使用 <code>readxl</code> 包：</p>
+<pre class="r"><code># 需要先安装并加载readxl包
+library(readxl)
+
+# 读取Excel文件
+df &lt;- read_excel(&quot;data.xlsx&quot;)
+
+# 指定工作表名称
+df &lt;- read_excel(&quot;data.xlsx&quot;, sheet = &quot;Sheet1&quot;)
+
+# 指定工作表序号
+df &lt;- read_excel(&quot;data.xlsx&quot;, sheet = 2)</code></pre>
+<hr />
+</div>
+<div id="保存数据到文件" class="section level2">
+<h2>8.4 保存数据到文件</h2>
+<div id="write.table" class="section level3">
+<h3>write.table()</h3>
+<pre class="r"><code># write.table()：写入文本文件
+# sep：分隔符
+# row.names = FALSE：不写入行名
+write.table(df, &quot;output.txt&quot;, sep = &quot;\t&quot;, row.names = FALSE)</code></pre>
+</div>
+<div id="write.csv" class="section level3">
+<h3>write.csv()</h3>
+<pre class="r"><code># write.csv()：写入CSV文件
+write.csv(df, &quot;output.csv&quot;, row.names = FALSE)</code></pre>
+<hr />
+</div>
+</div>
+<div id="save与load" class="section level2">
+<h2>8.5 save()与load()</h2>
+<p>保存和加载R对象：</p>
+<pre class="r"><code>x &lt;- 1:10
+y &lt;- c(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;)
+
+# save()：保存多个R对象到.RData文件
+save(x, y, file = &quot;my_data.RData&quot;)
+
+# load()：加载.RData文件
+load(&quot;my_data.RData&quot;)
+
+# save.image()：保存整个工作空间
+save.image(&quot;workspace.RData&quot;)
+
+# 加载工作空间
+load(&quot;workspace.RData&quot;)</code></pre>
+<hr />
+</div>
+<div id="saverds与readrds" class="section level2">
+<h2>8.6 saveRDS()与readRDS()</h2>
+<p>保存和加载单个R对象：</p>
+<pre class="r"><code>my_data &lt;- data.frame(x = 1:10, y = letters[1:10])
+
+# saveRDS()：保存单个对象到.rds文件
+# 与save()的区别：加载时可以赋值给任意变量名
+saveRDS(my_data, &quot;my_data.rds&quot;)
+
+# readRDS()：读取.rds文件
+loaded_data &lt;- readRDS(&quot;my_data.rds&quot;)</code></pre>
+<hr />
+</div>
+<div id="键盘输入" class="section level2">
+<h2>8.7 键盘输入</h2>
+<div id="scan" class="section level3">
+<h3>scan()</h3>
+<pre class="r"><code># scan()：从键盘读取数据
+# 默认读取数值，按Enter结束
+numbers &lt;- scan()
+
+# what = &quot;character&quot;：读取字符
+words &lt;- scan(what = &quot;character&quot;)</code></pre>
+</div>
+<div id="readline" class="section level3">
+<h3>readline()</h3>
+<pre class="r"><code># readline()：读取一行文本
+# prompt：提示信息
+name &lt;- readline(prompt = &quot;请输入你的名字: &quot;)</code></pre>
+<hr />
+</div>
+</div>
+<div id="输出打印" class="section level2">
+<h2>8.8 输出打印</h2>
+<pre class="r"><code>x &lt;- 10
+
+# print()：打印对象
+print(x)</code></pre>
+<pre><code>## [1] 10</code></pre>
+<pre class="r"><code># cat()：连接并输出
+# &quot;\n&quot; 表示换行
+cat(&quot;数值是:&quot;, x, &quot;\n&quot;)</code></pre>
+<pre><code>## 数值是: 10</code></pre>
+<pre class="r"><code># message()：输出消息（用于提示信息）
+message(&quot;这是一条消息&quot;)</code></pre>
+<pre><code>## 这是一条消息</code></pre>
+<pre class="r"><code># warning()：输出警告
+warning(&quot;这是一个警告&quot;)</code></pre>
+<pre><code>## Warning: 这是一个警告</code></pre>
+<hr />
+</div>
+</div>
+<div id="第九章r包管理" class="section level1">
+<h1>第九章：R包管理</h1>
+<div id="r包的概念与来源" class="section level2">
+<h2>9.1 R包的概念与来源</h2>
+<div id="什么是r包" class="section level3">
+<h3>什么是R包？</h3>
+<p>R包是R函数、数据和文档的集合。可以把R包理解为”扩展模块”，安装后可以获得额外的功能。</p>
+</div>
+<div id="r包的来源" class="section level3">
+<h3>R包的来源</h3>
+<ol style="list-style-type: decimal">
+<li><strong>CRAN</strong>：官方仓库，最稳定可靠</li>
+<li><strong>Bioconductor</strong>：生物信息学专用</li>
+<li><strong>GitHub</strong>：开发者个人发布，最新但可能不稳定</li>
+</ol>
+<hr />
+</div>
+</div>
+<div id="安装包" class="section level2">
+<h2>9.2 安装包</h2>
+<div id="从cran安装" class="section level3">
+<h3>从CRAN安装</h3>
+<pre class="r"><code># install.packages()：从CRAN安装包
+install.packages(&quot;ggplot2&quot;)
+
+# 同时安装多个包
+install.packages(c(&quot;dplyr&quot;, &quot;tidyr&quot;, &quot;ggplot2&quot;))</code></pre>
+</div>
+<div id="从bioconductor安装" class="section level3">
+<h3>从Bioconductor安装</h3>
+<pre class="r"><code># Bioconductor是生物信息学专用仓库
+# 需要先安装BiocManager
+if (!require(&quot;BiocManager&quot;)) {
+  install.packages(&quot;BiocManager&quot;)
+}
+# 使用BiocManager安装Bioconductor包
+BiocManager::install(&quot;DESeq2&quot;)</code></pre>
+</div>
+<div id="从github安装" class="section level3">
+<h3>从GitHub安装</h3>
+<pre class="r"><code># 需要先安装devtools包
+install.packages(&quot;devtools&quot;)
+# 从GitHub安装
+devtools::install_github(&quot;用户名/包名&quot;)</code></pre>
+<hr />
+</div>
+</div>
+<div id="加载包" class="section level2">
+<h2>9.3 加载包</h2>
+<pre class="r"><code># library()：加载包（推荐）
+library(ggplot2)
+library(dplyr)
+
+# require()：加载包，返回TRUE/FALSE
+require(tidyr)
+
+# 智能加载：如果包不存在则先安装
+if (!require(some_package)) {
+  install.packages(&quot;some_package&quot;)
+  library(some_package)
+}</code></pre>
+<hr />
+</div>
+<div id="查看已安装包" class="section level2">
+<h2>9.4 查看已安装包</h2>
+<pre class="r"><code># installed.packages()：查看所有已安装包的详细信息
+installed.packages()
+
+# library()：不带参数，打开包列表窗口
+library()
+
+# search()：查看当前已加载的包
+search()</code></pre>
+<hr />
+</div>
+<div id="更新与卸载包" class="section level2">
+<h2>9.5 更新与卸载包</h2>
+<pre class="r"><code># update.packages()：更新所有包
+update.packages()
+
+# 更新指定包
+update.packages(&quot;ggplot2&quot;)
+
+# remove.packages()：卸载包
+remove.packages(&quot;old_package&quot;)</code></pre>
+<hr />
+</div>
+<div id="包文档与帮助" class="section level2">
+<h2>9.6 包文档与帮助</h2>
+<pre class="r"><code># library(help = 包名)：查看包的帮助文档
+library(help = ggplot2)
+
+# vignette()：查看包的教程文档
+vignette(&quot;ggplot2&quot;)
+
+# 查看所有可用的vignette
+vignette()
+
+# 在浏览器中打开vignette
+browseVignettes(&quot;ggplot2&quot;)</code></pre>
+<hr />
+</div>
+</div>
+<div id="第十章实用技巧与帮助系统" class="section level1">
+<h1>第十章：实用技巧与帮助系统</h1>
+<div id="查看函数帮助" class="section level2">
+<h2>10.1 查看函数帮助</h2>
+<pre class="r"><code># ?函数名：查看函数帮助
+?mean
+
+# help(函数名)：等价于 ?函数名
+help(mean)
+
+# 查看运算符帮助（需要用反引号包裹）
+?`+`
+help(&quot;+&quot;)</code></pre>
+<hr />
+</div>
+<div id="搜索帮助" class="section level2">
+<h2>10.2 搜索帮助</h2>
+<pre class="r"><code># help.search()：搜索帮助文档
+help.search(&quot;regression&quot;)
+
+# ??关键词：等价于 help.search()
+??regression
+
+# apropos()：搜索包含指定字符串的函数名
+apropos(&quot;mean&quot;)</code></pre>
+<hr />
+</div>
+<div id="示例运行" class="section level2">
+<h2>10.3 示例运行</h2>
+<pre class="r"><code># example()：运行函数的示例代码
+example(mean)
+
+# 运行ggplot包的示例
+example(ggplot)</code></pre>
+<hr />
+</div>
+<div id="工作空间管理" class="section level2">
+<h2>10.4 工作空间管理</h2>
+<pre class="r"><code># save.image()：保存整个工作空间到文件
+save.image(&quot;my_workspace.RData&quot;)
+
+# load()：加载工作空间
+load(&quot;my_workspace.RData&quot;)
+
+# save()：保存指定的变量
+save(list = c(&quot;x&quot;, &quot;y&quot;), file = &quot;selected.RData&quot;)</code></pre>
+<hr />
+</div>
+<div id="历史命令" class="section level2">
+<h2>10.5 历史命令</h2>
+<pre class="r"><code># history()：查看命令历史
+history()
+
+# 查看最近50条命令
+history(50)
+
+# savehistory()：保存命令历史
+savehistory(&quot;my_history.Rhistory&quot;)
+
+# loadhistory()：加载命令历史
+loadhistory(&quot;my_history.Rhistory&quot;)</code></pre>
+<hr />
+</div>
+<div id="代码调试基础" class="section level2">
+<h2>10.6 代码调试基础</h2>
+<div id="traceback" class="section level3">
+<h3>traceback()</h3>
+<pre class="r"><code># 定义嵌套函数
+f &lt;- function(x) g(x)
+g &lt;- function(x) h(x)
+h &lt;- function(x) stop(&quot;出错了!&quot;)
+# 调用函数会报错
+f(1)
+# traceback()：显示错误发生时的调用栈
+traceback()</code></pre>
+</div>
+<div id="debug" class="section level3">
+<h3>debug()</h3>
+<pre class="r"><code># debug()：进入函数调试模式
+debug(mean)
+mean(1:10)
+# undebug()：退出调试模式
+undebug(mean)</code></pre>
+</div>
+<div id="browser" class="section level3">
+<h3>browser()</h3>
+<pre class="r"><code># browser()：在代码中设置断点
+my_func &lt;- function(x) {
+  y &lt;- x + 1
+  browser()  # 程序会在这里暂停，可以检查变量
+  z &lt;- y * 2
+  return(z)
+}
+my_func(5)</code></pre>
+<hr />
+</div>
+</div>
+<div id="常用快捷键" class="section level2">
+<h2>10.7 常用快捷键</h2>
+<table>
+<thead>
+<tr class="header">
+<th>快捷键</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Ctrl + Enter</code></td>
+<td>运行当前行或选中代码</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl + Shift + Enter</code></td>
+<td>运行整个脚本</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl + L</code></td>
+<td>清空控制台</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl + S</code></td>
+<td>保存文件</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl + Shift + C</code></td>
+<td>注释/取消注释</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl + D</code></td>
+<td>删除整行</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl + Shift + K</code></td>
+<td>编译R Markdown</td>
+</tr>
+<tr class="even">
+<td><code>Tab</code></td>
+<td>代码自动补全</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl + Space</code></td>
+<td>触发自动补全</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl + 1</code></td>
+<td>切换到脚本编辑器</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl + 2</code></td>
+<td>切换到控制台</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl + Shift + N</code></td>
+<td>新建R脚本</td>
+</tr>
+<tr class="odd">
+<td><code>Ctrl + O</code></td>
+<td>打开文件</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl + W</code></td>
+<td>关闭当前文件</td>
+</tr>
+</tbody>
+</table>
+<hr />
 </div>
 </div>
 <div id="总结" class="section level1">
 <h1>总结</h1>
-<p>本教程涵盖了 R 语言的基础知识，包括： 1. <strong>基础入门</strong>：R
-语言简介、安装配置、第一个程序、基本语法 2.
-<strong>核心语法</strong>：变量赋值、数据类型、运算符 3.
-<strong>数据结构</strong>：向量、矩阵、数组、列表、数据框、因子、时间序列</p>
-<p>记得在R
-studio中使用<code>?function``help(function)</code>查看帮助文档</p>
+<p>恭喜你完成了R语言基础教程的学习！本教程涵盖了以下核心内容：</p>
+<ol style="list-style-type: decimal">
+<li><strong>环境搭建</strong>：R和RStudio的安装与配置</li>
+<li><strong>基础语法</strong>：变量、运算符、表达式</li>
+<li><strong>数据类型</strong>：数值、字符、逻辑、因子、日期</li>
+<li><strong>数据结构</strong>：向量、矩阵、数组、列表、数据框</li>
+<li><strong>函数应用</strong>：统计函数、字符处理、类型转换</li>
+<li><strong>向量化操作</strong>：apply系列函数</li>
+<li><strong>控制流</strong>：条件判断和循环</li>
+<li><strong>函数编写</strong>：自定义函数和作用域</li>
+<li><strong>数据I/O</strong>：文件读写操作</li>
+<li><strong>包管理</strong>：安装、加载、更新R包</li>
+</ol>
+<p>继续学习的建议： - 多动手实践，边学边练 -
+遇到问题善用帮助系统（<code>?函数名</code>） - 学习数据可视化（ggplot2）
+- 学习数据处理（dplyr、tidyr） - 参与R社区交流</p>
+<p>祝你学习愉快！</p>
 </div>
 
 

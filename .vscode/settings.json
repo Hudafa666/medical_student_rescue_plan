@@ -6,5 +6,6 @@
         "other": true,
         "comments": false,
         "strings": true
-    }
+    },
+    "r.lsp.promptToInstall": false
 }
