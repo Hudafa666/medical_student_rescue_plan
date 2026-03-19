@@ -1,6 +1,6 @@
----
+﻿---
 title: "R语言基础教程"
-author: "医学研究生救星计划"
+author: "小天使格礼"
 output: html_document
 ---
 
