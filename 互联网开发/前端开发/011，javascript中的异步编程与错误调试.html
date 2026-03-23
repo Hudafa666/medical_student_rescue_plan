@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript异步编程与错误调试</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.8;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #f39c12;
+            padding-bottom: 15px;
+        }
+        h2 {
+            color: #34495e;
+            border-left: 4px solid #f39c12;
+            padding-left: 15px;
+            margin-top: 40px;
+        }
+        h3 { color: #7f8c8d; margin-top: 30px; }
+        h4 { color: #555; margin-top: 20px; }
+        .demo-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Consolas", "Courier New", monospace;
+            overflow-x: auto;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+        .code-keyword { color: #f92672; }
+        .code-string { color: #e6db74; }
+        .code-number { color: #ae81ff; }
+        .code-comment { color: #75715e; }
+        .code-function { color: #66d9ef; }
+        .code-variable { color: #fd971f; }
+        .code-class { color: #a6e22e; }
+        table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f39c12; color: white; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .tip { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 15px 0; }
+        .knowledge-box {
+            background: linear-gradient(135deg, #e8f4f8 0%, #f0f7ff 100%);
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin: 25px 0;
+            box-shadow: 0 3px 15px rgba(52, 152, 219, 0.15);
+        }
+        .knowledge-box h4 {
+            color: #2980b9;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            border-bottom: 1px dashed #3498db;
+            padding-bottom: 10px;
+        }
+        .warning { background: #f8d7da; border-left: 4px solid #dc3545; padding: 15px; margin: 15px 0; }
+        hr { border: none; border-top: 1px solid #ddd; margin: 40px 0; }
+        button {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+        button:hover { background-color: #e67e22; }
+        .output-box {
+            background: #1e1e1e;
+            color: #4ec9b0;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: "Consolas", monospace;
+            margin: 10px 0;
+            min-height: 20px;
+            white-space: pre-wrap;
+        }
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .flow-step {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .flow-arrow {
+            font-size: 24px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+<h1>JavaScript异步编程与错误调试</h1>
+
+<p>异步编程是JavaScript的核心特性之一，理解异步机制对于构建高性能的Web应用至关重要。本章将深入讲解异步编程的各种模式和错误处理技巧。</p>
+
+<hr>
+
+<h2>五、异步编程</h2>
+
+<h3>5.1 回调函数</h3>
+
+<div class="knowledge-box">
+<h4>核心概念：回调函数</h4>
+<p><strong>什么是回调函数？</strong></p>
+<p>回调函数是作为参数传递给另一个函数的函数，在特定事件或条件发生时被调用。它是JavaScript异步编程的基础模式。</p>
+</div>
+
+<div class="demo-box">
+<p><strong>回调函数的基本用法：</strong></p>
+<div class="code">
+<span class="code-comment">// 同步回调</span>
+<span class="code-keyword">const</span> <span class="code-variable">arr</span> = [<span class="code-number">1</span>, <span class="code-number">2</span>, <span class="code-number">3</span>];
+<span class="code-variable">arr</span>.<span class="code-function">forEach</span>(<span class="code-keyword">function</span>(<span class="code-variable">item</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">item</span>);  <span class="code-comment">// 同步执行</span>
+});
+
+<span class="code-comment">// 异步回调 - 定时器</span>
+<span class="code-function">setTimeout</span>(<span class="code-keyword">function</span>() {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"1秒后执行"</span>);
+}, <span class="code-number">1000</span>);
+
+<span class="code-comment">// 异步回调 - 事件监听</span>
+<span class="code-variable">document</span>.<span class="code-function">getElementById</span>(<span class="code-string">"btn"</span>).<span class="code-function">addEventListener</span>(<span class="code-string">"click"</span>, <span class="code-keyword">function</span>() {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"按钮被点击"</span>);
+});
+
+<span class="code-comment">// 医疗系统示例：获取患者数据</span>
+<span class="code-keyword">function</span> <span class="code-function">getPatientData</span>(<span class="code-variable">patientId</span>, <span class="code-variable">callback</span>) {
+    <span class="code-comment">// 模拟异步请求</span>
+    <span class="code-function">setTimeout</span>(() => {
+        <span class="code-keyword">const</span> <span class="code-variable">data</span> = {
+            <span class="code-variable">id</span>: <span class="code-variable">patientId</span>,
+            <span class="code-variable">name</span>: <span class="code-string">"张三"</span>,
+            <span class="code-variable">age</span>: <span class="code-number">45</span>,
+            <span class="code-variable">diagnosis</span>: <span class="code-string">"高血压"</span>
+        };
+        <span class="code-function">callback</span>(<span class="code-variable">data</span>);  <span class="code-comment">// 数据获取完成后调用回调</span>
+    }, <span class="code-number">1000</span>);
+}
+
+<span class="code-function">getPatientData</span>(<span class="code-string">"P001"</span>, <span class="code-keyword">function</span>(<span class="code-variable">patient</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"患者信息："</span>, <span class="code-variable">patient</span>);
+});
+</div>
+</div>
+
+<h3>5.2 回调地狱</h3>
+
+<div class="knowledge-box">
+<h4>核心概念：回调地狱</h4>
+<p><strong>什么是回调地狱？</strong></p>
+<p>当多个异步操作需要按顺序执行时，回调函数会层层嵌套，形成"金字塔"结构，这种代码难以阅读和维护，被称为"回调地狱"（Callback Hell）。</p>
+</div>
+
+<div class="demo-box">
+<p><strong>回调地狱示例：</strong></p>
+<div class="code">
+<span class="code-comment">// 医疗系统：依次获取患者信息、病历、处方</span>
+<span class="code-function">getPatient</span>(<span class="code-string">"P001"</span>, <span class="code-keyword">function</span>(<span class="code-variable">patient</span>) {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"获取患者："</span>, <span class="code-variable">patient</span>.<span class="code-variable">name</span>);
+    
+    <span class="code-function">getMedicalRecord</span>(<span class="code-variable">patient</span>.<span class="code-variable">id</span>, <span class="code-keyword">function</span>(<span class="code-variable">record</span>) {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"获取病历："</span>, <span class="code-variable">record</span>);
+        
+        <span class="code-function">getPrescription</span>(<span class="code-variable">record</span>.<span class="code-variable">id</span>, <span class="code-keyword">function</span>(<span class="code-variable">prescription</span>) {
+            <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"获取处方："</span>, <span class="code-variable">prescription</span>);
+            
+            <span class="code-function">getMedicineList</span>(<span class="code-variable">prescription</span>.<span class="code-variable">id</span>, <span class="code-keyword">function</span>(<span class="code-variable">medicines</span>) {
+                <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"获取药品列表："</span>, <span class="code-variable">medicines</span>);
+                <span class="code-comment">// 嵌套越来越深...</span>
+            });
+        });
+    });
+});
+</div>
+
+<div class="warning">
+<strong>回调地狱的问题：</strong>
+<p>
+    代码可读性差，难以理解<br>
+    错误处理复杂，每层都需要单独处理<br>
+    难以维护和扩展<br>
+    代码缩进过深
+</p>
+</div>
+</div>
+
+<hr>
+
+<h3>5.3 Promise 进阶</h3>
+
+<h4>链式调用</h4>
+
+<div class="knowledge-box">
+<h4>核心概念：Promise 链式调用</h4>
+<p><strong>链式调用的原理：</strong></p>
+<p>Promise的then方法返回一个新的Promise，这使得我们可以将多个异步操作串联起来，避免回调地狱。每个then接收上一个Promise的返回值作为参数。</p>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// Promise 链式调用解决回调地狱</span>
+<span class="code-keyword">function</span> <span class="code-function">getPatient</span>(<span class="code-variable">id</span>) {
+    <span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-class">Promise</span>(<span class="code-variable">resolve</span> => {
+        <span class="code-function">setTimeout</span>(() => <span class="code-function">resolve</span>({ <span class="code-variable">id</span>, <span class="code-variable">name</span>: <span class="code-string">"张三"</span> }), <span class="code-number">500</span>);
+    });
+}
+
+<span class="code-keyword">function</span> <span class="code-function">getMedicalRecord</span>(<span class="code-variable">patientId</span>) {
+    <span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-class">Promise</span>(<span class="code-variable">resolve</span> => {
+        <span class="code-function">setTimeout</span>(() => <span class="code-function">resolve</span>({ <span class="code-variable">patientId</span>, <span class="code-variable">diagnosis</span>: <span class="code-string">"高血压"</span> }), <span class="code-number">500</span>);
+    });
+}
+
+<span class="code-keyword">function</span> <span class="code-function">getPrescription</span>(<span class="code-variable">recordId</span>) {
+    <span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-class">Promise</span>(<span class="code-variable">resolve</span> => {
+        <span class="code-function">setTimeout</span>(() => <span class="code-function">resolve</span>({ <span class="code-variable">recordId</span>, <span class="code-variable">medicines</span>: [<span class="code-string">"降压药A"</span>, <span class="code-string">"降压药B"</span>] }), <span class="code-number">500</span>);
+    });
+}
+
+<span class="code-comment">// 链式调用 - 代码清晰多了</span>
+<span class="code-function">getPatient</span>(<span class="code-string">"P001"</span>)
+    .<span class="code-function">then</span>(<span class="code-variable">patient</span> => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"患者："</span>, <span class="code-variable">patient</span>);
+        <span class="code-keyword">return</span> <span class="code-function">getMedicalRecord</span>(<span class="code-variable">patient</span>.<span class="code-variable">id</span>);
+    })
+    .<span class="code-function">then</span>(<span class="code-variable">record</span> => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"病历："</span>, <span class="code-variable">record</span>);
+        <span class="code-keyword">return</span> <span class="code-function">getPrescription</span>(<span class="code-variable">record</span>.<span class="code-variable">patientId</span>);
+    })
+    .<span class="code-function">then</span>(<span class="code-variable">prescription</span> => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"处方："</span>, <span class="code-variable">prescription</span>);
+    })
+    .<span class="code-function">catch</span>(<span class="code-variable">error</span> => {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"出错了："</span>, <span class="code-variable">error</span>);
+    });
+</div>
+</div>
+
+<h4>Promise.all / Promise.race / Promise.allSettled / Promise.any</h4>
+
+<div class="demo-box">
+<p><strong>Promise 静态方法对比：</strong></p>
+<table>
+<tr><th>方法</th><th>说明</th><th>返回时机</th><th>返回结果</th></tr>
+<tr><td>Promise.all</td><td>所有Promise都成功</td><td>全部完成或有一个失败</td><td>成功结果数组或第一个错误</td></tr>
+<tr><td>Promise.race</td><td>第一个完成的Promise</td><td>任一Promise完成</td><td>第一个完成的结果</td></tr>
+<tr><td>Promise.allSettled</td><td>所有Promise完成</td><td>全部完成（无论成功失败）</td><td>每个Promise的状态和结果</td></tr>
+<tr><td>Promise.any</td><td>第一个成功的Promise</td><td>任一成功或全部失败</td><td>第一个成功结果或AggregateError</td></tr>
+</table>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// Promise.all - 并行请求，全部成功才继续</span>
+<span class="code-keyword">const</span> <span class="code-variable">patientPromise</span> = <span class="code-function">fetch</span>(<span class="code-string">"/api/patient/001"</span>);
+<span class="code-keyword">const</span> <span class="code-variable">doctorPromise</span> = <span class="code-function">fetch</span>(<span class="code-string">"/api/doctor/D001"</span>);
+<span class="code-keyword">const</span> <span class="code-variable">roomPromise</span> = <span class="code-function">fetch</span>(<span class="code-string">"/api/room/R001"</span>);
+
+<span class="code-class">Promise</span>.<span class="code-function">all</span>([<span class="code-variable">patientPromise</span>, <span class="code-variable">doctorPromise</span>, <span class="code-variable">roomPromise</span>])
+    .<span class="code-function">then</span>([<span class="code-variable">patient</span>, <span class="code-variable">doctor</span>, <span class="code-variable">room</span>] => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"所有数据加载完成"</span>);
+    })
+    .<span class="code-function">catch</span>(<span class="code-variable">error</span> => {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"有一个请求失败："</span>, <span class="code-variable">error</span>);
+    });
+
+<span class="code-comment">// Promise.race - 谁快用谁</span>
+<span class="code-keyword">const</span> <span class="code-variable">fastServer</span> = <span class="code-class">Promise</span>.<span class="code-function">race</span>([
+    <span class="code-function">fetch</span>(<span class="code-string">"https://server1.api/data"</span>),
+    <span class="code-function">fetch</span>(<span class="code-string">"https://server2.api/data"</span>)
+]);
+
+<span class="code-comment">// Promise.allSettled - 获取所有结果</span>
+<span class="code-class">Promise</span>.<span class="code-function">allSettled</span>([
+    <span class="code-function">fetch</span>(<span class="code-string">"/api/service1"</span>),
+    <span class="code-function">fetch</span>(<span class="code-string">"/api/service2"</span>)
+]).<span class="code-function">then</span>(<span class="code-variable">results</span> => {
+    <span class="code-variable">results</span>.<span class="code-function">forEach</span>(<span class="code-variable">result</span> => {
+        <span class="code-keyword">if</span> (<span class="code-variable">result</span>.<span class="code-variable">status</span> === <span class="code-string">"fulfilled"</span>) {
+            <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"成功："</span>, <span class="code-variable">result</span>.<span class="code-variable">value</span>);
+        }
+    });
+});
+
+<span class="code-comment">// Promise.any - 只要有一个成功就行</span>
+<span class="code-class">Promise</span>.<span class="code-function">any</span>([
+    <span class="code-function">fetch</span>(<span class="code-string">"/api/backup1"</span>),
+    <span class="code-function">fetch</span>(<span class="code-string">"/api/main"</span>)
+]).<span class="code-function">then</span>(<span class="code-variable">result</span> => {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"至少有一个成功了"</span>);
+});
+</div>
+</div>
+
+<div class="render" id="promise-demo">
+    <button onclick="demoPromiseAll()">演示 Promise.all</button>
+    <button onclick="demoPromiseRace()">演示 Promise.race</button>
+    <button onclick="demoPromiseAllSettled()">演示 Promise.allSettled</button>
+    <div id="promise-output" class="output-box"></div>
+</div>
+
+<h4>自定义 Promise</h4>
+
+<div class="demo-box">
+<p><strong>实现一个简易版 Promise：</strong></p>
+<div class="code">
+<span class="code-keyword">class</span> <span class="code-class">MyPromise</span> {
+    <span class="code-function">constructor</span>(<span class="code-variable">executor</span>) {
+        <span class="code-keyword">this</span>.<span class="code-variable">state</span> = <span class="code-string">"pending"</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">value</span> = <span class="code-keyword">undefined</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">callbacks</span> = [];
+        
+        <span class="code-keyword">const</span> <span class="code-variable">resolve</span> = (<span class="code-variable">value</span>) => {
+            <span class="code-keyword">if</span> (<span class="code-keyword">this</span>.<span class="code-variable">state</span> !== <span class="code-string">"pending"</span>) <span class="code-keyword">return</span>;
+            <span class="code-keyword">this</span>.<span class="code-variable">state</span> = <span class="code-string">"fulfilled"</span>;
+            <span class="code-keyword">this</span>.<span class="code-variable">value</span> = <span class="code-variable">value</span>;
+            <span class="code-keyword">this</span>.<span class="code-variable">callbacks</span>.<span class="code-function">forEach</span>(<span class="code-variable">cb</span> => <span class="code-variable">cb</span>.<span class="code-function">onFulfilled</span>(<span class="code-variable">value</span>));
+        };
+        
+        <span class="code-keyword">const</span> <span class="code-variable">reject</span> = (<span class="code-variable">reason</span>) => {
+            <span class="code-keyword">if</span> (<span class="code-keyword">this</span>.<span class="code-variable">state</span> !== <span class="code-string">"pending"</span>) <span class="code-keyword">return</span>;
+            <span class="code-keyword">this</span>.<span class="code-variable">state</span> = <span class="code-string">"rejected"</span>;
+            <span class="code-keyword">this</span>.<span class="code-variable">value</span> = <span class="code-variable">reason</span>;
+            <span class="code-keyword">this</span>.<span class="code-variable">callbacks</span>.<span class="code-function">forEach</span>(<span class="code-variable">cb</span> => <span class="code-variable">cb</span>.<span class="code-function">onRejected</span>(<span class="code-variable">reason</span>));
+        };
+        
+        <span class="code-keyword">try</span> {
+            <span class="code-function">executor</span>(<span class="code-variable">resolve</span>, <span class="code-variable">reject</span>);
+        } <span class="code-keyword">catch</span> (<span class="code-variable">error</span>) {
+            <span class="code-function">reject</span>(<span class="code-variable">error</span>);
+        }
+    }
+    
+    <span class="code-function">then</span>(<span class="code-variable">onFulfilled</span>, <span class="code-variable">onRejected</span>) {
+        <span class="code-keyword">if</span> (<span class="code-keyword">this</span>.<span class="code-variable">state</span> === <span class="code-string">"fulfilled"</span>) {
+            <span class="code-function">onFulfilled</span>(<span class="code-keyword">this</span>.<span class="code-variable">value</span>);
+        } <span class="code-keyword">else if</span> (<span class="code-keyword">this</span>.<span class="code-variable">state</span> === <span class="code-string">"rejected"</span>) {
+            <span class="code-function">onRejected</span>(<span class="code-keyword">this</span>.<span class="code-variable">value</span>);
+        } <span class="code-keyword">else</span> {
+            <span class="code-keyword">this</span>.<span class="code-variable">callbacks</span>.<span class="code-function">push</span>({ <span class="code-variable">onFulfilled</span>, <span class="code-variable">onRejected</span> });
+        }
+    }
+}
+
+<span class="code-comment">// 使用自定义 Promise</span>
+<span class="code-keyword">const</span> <span class="code-variable">p</span> = <span class="code-keyword">new</span> <span class="code-class">MyPromise</span>((<span class="code-variable">resolve</span>, <span class="code-variable">reject</span>) => {
+    <span class="code-function">setTimeout</span>(() => <span class="code-function">resolve</span>(<span class="code-string">"成功！"</span>), <span class="code-number">1000</span>);
+});
+
+<span class="code-variable">p</span>.<span class="code-function">then</span>(<span class="code-variable">value</span> => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">value</span>));
+</div>
+</div>
+
+<hr>
+
+<h3>5.4 async/await</h3>
+
+<h4>语法与使用</h4>
+
+<div class="knowledge-box">
+<h4>核心概念：async/await</h4>
+<p><strong>async/await 是什么？</strong></p>
+<p>async/await 是 ES2017 引入的异步编程语法糖，它让异步代码看起来像同步代码，大大提高了代码的可读性。async 函数返回一个 Promise，await 用于等待 Promise 完成。</p>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// async 函数基本语法</span>
+<span class="code-keyword">async function</span> <span class="code-function">getData</span>() {
+    <span class="code-keyword">return</span> <span class="code-string">"Hello"</span>;  <span class="code-comment">// 自动包装成 Promise</span>
+}
+
+<span class="code-function">getData</span>().<span class="code-function">then</span>(<span class="code-variable">value</span> => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">value</span>));  <span class="code-comment">// "Hello"</span>
+
+<span class="code-comment">// await 等待 Promise 完成</span>
+<span class="code-keyword">async function</span> <span class="code-function">fetchPatient</span>() {
+    <span class="code-keyword">const</span> <span class="code-variable">response</span> = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">"/api/patient/001"</span>);
+    <span class="code-keyword">const</span> <span class="code-variable">patient</span> = <span class="code-keyword">await</span> <span class="code-variable">response</span>.<span class="code-function">json</span>();
+    <span class="code-keyword">return</span> <span class="code-variable">patient</span>;
+}
+
+<span class="code-comment">// 对比：Promise 链式调用 vs async/await</span>
+<span class="code-comment">// Promise 方式</span>
+<span class="code-function">getPatient</span>(<span class="code-string">"P001"</span>)
+    .<span class="code-function">then</span>(<span class="code-variable">patient</span> => <span class="code-function">getMedicalRecord</span>(<span class="code-variable">patient</span>.<span class="code-variable">id</span>))
+    .<span class="code-function">then</span>(<span class="code-variable">record</span> => <span class="code-function">getPrescription</span>(<span class="code-variable">record</span>.<span class="code-variable">id</span>))
+    .<span class="code-function">then</span>(<span class="code-variable">prescription</span> => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">prescription</span>));
+
+<span class="code-comment">// async/await 方式 - 更像同步代码</span>
+<span class="code-keyword">async function</span> <span class="code-function">getPatientPrescription</span>() {
+    <span class="code-keyword">const</span> <span class="code-variable">patient</span> = <span class="code-keyword">await</span> <span class="code-function">getPatient</span>(<span class="code-string">"P001"</span>);
+    <span class="code-keyword">const</span> <span class="code-variable">record</span> = <span class="code-keyword">await</span> <span class="code-function">getMedicalRecord</span>(<span class="code-variable">patient</span>.<span class="code-variable">id</span>);
+    <span class="code-keyword">const</span> <span class="code-variable">prescription</span> = <span class="code-keyword">await</span> <span class="code-function">getPrescription</span>(<span class="code-variable">record</span>.<span class="code-variable">id</span>);
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-variable">prescription</span>);
+}
+</div>
+</div>
+
+<h4>错误处理（try...catch）</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-keyword">async function</span> <span class="code-function">fetchPatientSafely</span>() {
+    <span class="code-keyword">try</span> {
+        <span class="code-keyword">const</span> <span class="code-variable">response</span> = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">"/api/patient/001"</span>);
+        
+        <span class="code-keyword">if</span> (!<span class="code-variable">response</span>.<span class="code-variable">ok</span>) {
+            <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-class">Error</span>(<span class="code-string">"HTTP错误: "</span> + <span class="code-variable">response</span>.<span class="code-variable">status</span>);
+        }
+        
+        <span class="code-keyword">const</span> <span class="code-variable">patient</span> = <span class="code-keyword">await</span> <span class="code-variable">response</span>.<span class="code-function">json</span>();
+        <span class="code-keyword">return</span> <span class="code-variable">patient</span>;
+        
+    } <span class="code-keyword">catch</span> (<span class="code-variable">error</span>) {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"获取患者信息失败："</span>, <span class="code-variable">error</span>);
+        <span class="code-keyword">return</span> <span class="code-keyword">null</span>;
+    }
+}
+
+<span class="code-comment">// 并行请求的错误处理</span>
+<span class="code-keyword">async function</span> <span class="code-function">fetchAllData</span>() {
+    <span class="code-keyword">try</span> {
+        <span class="code-keyword">const</span> [<span class="code-variable">patients</span>, <span class="code-variable">doctors</span>, <span class="code-variable">rooms</span>] = <span class="code-keyword">await</span> <span class="code-class">Promise</span>.<span class="code-function">all</span>([
+            <span class="code-function">fetch</span>(<span class="code-string">"/api/patients"</span>).<span class="code-function">then</span>(<span class="code-variable">r</span> => <span class="code-variable">r</span>.<span class="code-function">json</span>()),
+            <span class="code-function">fetch</span>(<span class="code-string">"/api/doctors"</span>).<span class="code-function">then</span>(<span class="code-variable">r</span> => <span class="code-variable">r</span>.<span class="code-function">json</span>()),
+            <span class="code-function">fetch</span>(<span class="code-string">"/api/rooms"</span>).<span class="code-function">then</span>(<span class="code-variable">r</span> => <span class="code-variable">r</span>.<span class="code-function">json</span>())
+        ]);
+        <span class="code-keyword">return</span> { <span class="code-variable">patients</span>, <span class="code-variable">doctors</span>, <span class="code-variable">rooms</span> };
+    } <span class="code-keyword">catch</span> (<span class="code-variable">error</span>) {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"获取数据失败："</span>, <span class="code-variable">error</span>);
+        <span class="code-keyword">throw</span> <span class="code-variable">error</span>;
+    }
+}
+</div>
+</div>
+
+<h4>结合 Promise</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// async/await 与 Promise.all 结合</span>
+<span class="code-keyword">async function</span> <span class="code-function">loadDashboard</span>() {
+    <span class="code-keyword">const</span> [<span class="code-variable">userInfo</span>, <span class="code-variable">notifications</span>, <span class="code-variable">messages</span>] = <span class="code-keyword">await</span> <span class="code-class">Promise</span>.<span class="code-function">all</span>([
+        <span class="code-function">fetch</span>(<span class="code-string">"/api/user"</span>).<span class="code-function">then</span>(<span class="code-variable">r</span> => <span class="code-variable">r</span>.<span class="code-function">json</span>()),
+        <span class="code-function">fetch</span>(<span class="code-string">"/api/notifications"</span>).<span class="code-function">then</span>(<span class="code-variable">r</span> => <span class="code-variable">r</span>.<span class="code-function">json</span>()),
+        <span class="code-function">fetch</span>(<span class="code-string">"/api/messages"</span>).<span class="code-function">then</span>(<span class="code-variable">r</span> => <span class="code-variable">r</span>.<span class="code-function">json</span>())
+    ]);
+    
+    <span class="code-keyword">return</span> { <span class="code-variable">userInfo</span>, <span class="code-variable">notifications</span>, <span class="code-variable">messages</span> };
+}
+
+<span class="code-comment">// 带超时的请求</span>
+<span class="code-keyword">async function</span> <span class="code-function">fetchWithTimeout</span>(<span class="code-variable">url</span>, <span class="code-variable">timeout</span> = <span class="code-number">5000</span>) {
+    <span class="code-keyword">const</span> <span class="code-variable">controller</span> = <span class="code-keyword">new</span> <span class="code-class">AbortController</span>();
+    <span class="code-keyword">const</span> <span class="code-variable">timeoutId</span> = <span class="code-function">setTimeout</span>(() => <span class="code-variable">controller</span>.<span class="code-function">abort</span>(), <span class="code-variable">timeout</span>);
+    
+    <span class="code-keyword">try</span> {
+        <span class="code-keyword">const</span> <span class="code-variable">response</span> = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-variable">url</span>, { <span class="code-variable">signal</span>: <span class="code-variable">controller</span>.<span class="code-variable">signal</span> });
+        <span class="code-keyword">return</span> <span class="code-keyword">await</span> <span class="code-variable">response</span>.<span class="code-function">json</span>();
+    } <span class="code-keyword">finally</span> {
+        <span class="code-function">clearTimeout</span>(<span class="code-variable">timeoutId</span>);
+    }
+}
+</div>
+</div>
+
+<div class="render" id="async-demo">
+    <button onclick="demoAsyncAwait()">演示 async/await</button>
+    <button onclick="demoParallelRequests()">演示并行请求</button>
+    <div id="async-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h3>5.5 事件循环深入</h3>
+
+<h4>宏任务与微任务队列</h4>
+
+<div class="knowledge-box">
+<h4>核心概念：宏任务与微任务</h4>
+<p><strong>任务队列的分类：</strong></p>
+<p>JavaScript 事件循环中有两种任务队列：宏任务队列（Macro Task Queue）和微任务队列（Micro Task Queue）。微任务优先级高于宏任务，每次执行完一个宏任务后，会先清空所有微任务。</p>
+</div>
+
+<div class="demo-box">
+<p><strong>宏任务与微任务分类：</strong></p>
+<table>
+<tr><th>类型</th><th>包含</th></tr>
+<tr><td>宏任务</td><td>script（整体代码）、setTimeout、setInterval、setImmediate（Node.js）、I/O、UI渲染</td></tr>
+<tr><td>微任务</td><td>Promise.then/catch/finally、process.nextTick（Node.js）、MutationObserver、queueMicrotask</td></tr>
+</table>
+
+<div class="code">
+<span class="code-comment">// 事件循环执行顺序</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"1. 同步代码开始"</span>);
+
+<span class="code-function">setTimeout</span>(() => {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"4. setTimeout 宏任务"</span>);
+}, <span class="code-number">0</span>);
+
+<span class="code-class">Promise</span>.<span class="code-function">resolve</span>()
+    .<span class="code-function">then</span>(() => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"3. Promise 微任务"</span>);
+    });
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"2. 同步代码结束"</span>);
+
+<span class="code-comment">// 输出顺序：1 -> 2 -> 3 -> 4</span>
+</div>
+</div>
+
+<h4>执行顺序分析</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 复杂的事件循环示例</span>
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"1"</span>);
+
+<span class="code-function">setTimeout</span>(() => {
+    <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"2"</span>);
+    <span class="code-class">Promise</span>.<span class="code-function">resolve</span>().<span class="code-function">then</span>(() => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"3"</span>));
+}, <span class="code-number">0</span>);
+
+<span class="code-class">Promise</span>.<span class="code-function">resolve</span>()
+    .<span class="code-function">then</span>(() => {
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"4"</span>);
+        <span class="code-function">setTimeout</span>(() => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"5"</span>), <span class="code-number">0</span>);
+    })
+    .<span class="code-function">then</span>(() => <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"6"</span>));
+
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"7"</span>);
+
+<span class="code-comment">// 输出顺序：1, 7, 4, 6, 2, 3, 5</span>
+</div>
+
+<div class="flow-container">
+<div class="flow-step">同步代码</div>
+<span class="flow-arrow">-></span>
+<div class="flow-step">微任务队列</div>
+<span class="flow-arrow">-></span>
+<div class="flow-step">UI渲染</div>
+<span class="flow-arrow">-></span>
+<div class="flow-step">宏任务队列</div>
+<span class="flow-arrow">-></span>
+<div class="flow-step">循环...</div>
+</div>
+</div>
+
+<div class="render" id="event-loop-demo">
+    <button onclick="demoEventLoop()">演示事件循环</button>
+    <div id="event-loop-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<h3>5.6 异步迭代</h3>
+
+<h4>for await...of</h4>
+
+<div class="knowledge-box">
+<h4>核心概念：异步迭代</h4>
+<p><strong>for await...of 是什么？</strong></p>
+<p>for await...of 是 ES2018 引入的语法，用于遍历异步可迭代对象。它会等待每个 Promise 完成后再处理下一个，非常适合处理流式数据或分批请求。</p>
+</div>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// 异步生成器函数</span>
+<span class="code-keyword">async function</span>* <span class="code-function">fetchPatientsInBatches</span>(<span class="code-variable">ids</span>, <span class="code-variable">batchSize</span> = <span class="code-number">10</span>) {
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < <span class="code-variable">ids</span>.<span class="code-variable">length</span>; <span class="code-variable">i</span> += <span class="code-variable">batchSize</span>) {
+        <span class="code-keyword">const</span> <span class="code-variable">batch</span> = <span class="code-variable">ids</span>.<span class="code-function">slice</span>(<span class="code-variable">i</span>, <span class="code-variable">i</span> + <span class="code-variable">batchSize</span>);
+        <span class="code-keyword">const</span> <span class="code-variable">patients</span> = <span class="code-keyword">await</span> <span class="code-function">fetchBatch</span>(<span class="code-variable">batch</span>);
+        <span class="code-keyword">yield</span> <span class="code-variable">patients</span>;
+    }
+}
+
+<span class="code-comment">// 使用 for await...of 遍历</span>
+<span class="code-keyword">async function</span> <span class="code-function">processAllPatients</span>(<span class="code-variable">patientIds</span>) {
+    <span class="code-keyword">for await</span> (<span class="code-keyword">const</span> <span class="code-variable">batch</span> <span class="code-keyword">of</span> <span class="code-function">fetchPatientsInBatches</span>(<span class="code-variable">patientIds</span>)) {
+        <span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-variable">patient</span> <span class="code-keyword">of</span> <span class="code-variable">batch</span>) {
+            <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"处理患者："</span>, <span class="code-variable">patient</span>.<span class="code-variable">name</span>);
+        }
+    }
+}
+
+<span class="code-comment">// 模拟异步数据流</span>
+<span class="code-keyword">async function</span>* <span class="code-function">medicalDataStream</span>() {
+    <span class="code-keyword">const</span> <span class="code-variable">data</span> = [
+        { <span class="code-variable">type</span>: <span class="code-string">"vital"</span>, <span class="code-variable">heartRate</span>: <span class="code-number">72</span> },
+        { <span class="code-variable">type</span>: <span class="code-string">"vital"</span>, <span class="code-variable">heartRate</span>: <span class="code-number">75</span> },
+        { <span class="code-variable">type</span>: <span class="code-string">"alert"</span>, <span class="code-variable">message</span>: <span class="code-string">"心率偏高"</span> },
+        { <span class="code-variable">type</span>: <span class="code-string">"vital"</span>, <span class="code-variable">heartRate</span>: <span class="code-number">68</span> }
+    ];
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-variable">item</span> <span class="code-keyword">of</span> <span class="code-variable">data</span>) {
+        <span class="code-keyword">await</span> <span class="code-keyword">new</span> <span class="code-class">Promise</span>(<span class="code-variable">r</span> => <span class="code-function">setTimeout</span>(<span class="code-variable">r</span>, <span class="code-number">500</span>));
+        <span class="code-keyword">yield</span> <span class="code-variable">item</span>;
+    }
+}
+
+<span class="code-keyword">async function</span> <span class="code-function">monitorPatient</span>() {
+    <span class="code-keyword">for await</span> (<span class="code-keyword">const</span> <span class="code-variable">data</span> <span class="code-keyword">of</span> <span class="code-function">medicalDataStream</span>()) {
+        <span class="code-keyword">if</span> (<span class="code-variable">data</span>.<span class="code-variable">type</span> === <span class="code-string">"alert"</span>) {
+            <span class="code-function">console</span>.<span class="code-function">warn</span>(<span class="code-string">"警报："</span>, <span class="code-variable">data</span>.<span class="code-variable">message</span>);
+        } <span class="code-keyword">else</span> {
+            <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"心率："</span>, <span class="code-variable">data</span>.<span class="code-variable">heartRate</span>);
+        }
+    }
+}
+</div>
+</div>
+
+<hr>
+
+<h2>六、错误处理与调试</h2>
+
+<h3>6.1 错误对象</h3>
+
+<div class="knowledge-box">
+<h4>核心概念：JavaScript 错误类型</h4>
+<p><strong>内置错误对象：</strong></p>
+<p>JavaScript 提供了多种内置错误类型，每种类型代表不同类型的错误。了解这些错误类型有助于更精确地定位和处理问题。</p>
+</div>
+
+<div class="demo-box">
+<p><strong>常见错误类型：</strong></p>
+<table>
+<tr><th>错误类型</th><th>说明</th><th>常见场景</th></tr>
+<tr><td>Error</td><td>基础错误类型</td><td>自定义错误</td></tr>
+<tr><td>SyntaxError</td><td>语法错误</td><td>代码解析错误</td></tr>
+<tr><td>TypeError</td><td>类型错误</td><td>对错误类型执行操作</td></tr>
+<tr><td>ReferenceError</td><td>引用错误</td><td>访问未定义的变量</td></tr>
+<tr><td>RangeError</td><td>范围错误</td><td>数值超出有效范围</td></tr>
+<tr><td>URIError</td><td>URI错误</td><td>URI处理函数错误</td></tr>
+<tr><td>AggregateError</td><td>聚合错误</td><td>多个错误集合（ES2021）</td></tr>
+</table>
+
+<div class="code">
+<span class="code-comment">// 各种错误类型示例</span>
+
+<span class="code-comment">// TypeError - 类型错误</span>
+<span class="code-keyword">const</span> <span class="code-variable">num</span> = <span class="code-number">123</span>;
+<span class="code-comment">// num.toUpperCase();  // TypeError: num.toUpperCase is not a function</span>
+
+<span class="code-comment">// ReferenceError - 引用错误</span>
+<span class="code-comment">// console.log(undefinedVar);  // ReferenceError: undefinedVar is not defined</span>
+
+<span class="code-comment">// RangeError - 范围错误</span>
+<span class="code-comment">// const arr = new Array(-1);  // RangeError: Invalid array length</span>
+
+<span class="code-comment">// 自定义错误</span>
+<span class="code-keyword">class</span> <span class="code-class">MedicalError</span> <span class="code-keyword">extends</span> <span class="code-class">Error</span> {
+    <span class="code-function">constructor</span>(<span class="code-variable">message</span>, <span class="code-variable">code</span>) {
+        <span class="code-keyword">super</span>(<span class="code-variable">message</span>);
+        <span class="code-keyword">this</span>.<span class="code-variable">name</span> = <span class="code-string">"MedicalError"</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">code</span> = <span class="code-variable">code</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">timestamp</span> = <span class="code-keyword">new</span> <span class="code-class">Date</span>();
+    }
+}
+
+<span class="code-keyword">function</span> <span class="code-function">validatePatient</span>(<span class="code-variable">patient</span>) {
+    <span class="code-keyword">if</span> (!<span class="code-variable">patient</span>.<span class="code-variable">id</span>) {
+        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-class">MedicalError</span>(<span class="code-string">"患者ID不能为空"</span>, <span class="code-string">"INVALID_PATIENT_ID"</span>);
+    }
+    <span class="code-keyword">if</span> (!<span class="code-variable">patient</span>.<span class="code-variable">name</span>) {
+        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-class">MedicalError</span>(<span class="code-string">"患者姓名不能为空"</span>, <span class="code-string">"INVALID_PATIENT_NAME"</span>);
+    }
+}
+</div>
+</div>
+
+<hr>
+
+<h3>6.2 异常捕获</h3>
+
+<h4>try...catch...finally</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// try...catch 基本用法</span>
+<span class="code-keyword">try</span> {
+    <span class="code-keyword">const</span> <span class="code-variable">data</span> = <span class="code-variable">JSON</span>.<span class="code-function">parse</span>(<span class="code-variable">jsonString</span>);
+    <span class="code-function">processData</span>(<span class="code-variable">data</span>);
+} <span class="code-keyword">catch</span> (<span class="code-variable">error</span>) {
+    <span class="code-keyword">if</span> (<span class="code-variable">error</span> <span class="code-keyword">instanceof</span> <span class="code-class">SyntaxError</span>) {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"JSON格式错误："</span>, <span class="code-variable">error</span>.<span class="code-variable">message</span>);
+    } <span class="code-keyword">else</span> {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"处理数据时出错："</span>, <span class="code-variable">error</span>);
+    }
+}
+
+<span class="code-comment">// try...catch...finally</span>
+<span class="code-keyword">async function</span> <span class="code-function">loadPatientData</span>(<span class="code-variable">patientId</span>) {
+    <span class="code-keyword">let</span> <span class="code-variable">loading</span> = <span class="code-keyword">true</span>;
+    
+    <span class="code-keyword">try</span> {
+        <span class="code-keyword">const</span> <span class="code-variable">response</span> = <span class="code-keyword">await</span> <span class="code-function">fetch</span>(<span class="code-string">`/api/patients/${<span class="code-variable">patientId</span>}`</span>);
+        <span class="code-keyword">const</span> <span class="code-variable">data</span> = <span class="code-keyword">await</span> <span class="code-variable">response</span>.<span class="code-function">json</span>();
+        <span class="code-keyword">return</span> <span class="code-variable">data</span>;
+    } <span class="code-keyword">catch</span> (<span class="code-variable">error</span>) {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"加载患者数据失败："</span>, <span class="code-variable">error</span>);
+        <span class="code-keyword">throw</span> <span class="code-variable">error</span>;
+    } <span class="code-keyword">finally</span> {
+        <span class="code-variable">loading</span> = <span class="code-keyword">false</span>;  <span class="code-comment">// 无论成功失败都执行</span>
+        <span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"加载完成"</span>);
+    }
+}
+
+<span class="code-comment">// 嵌套 try...catch</span>
+<span class="code-keyword">async function</span> <span class="code-function">processMedicalRecord</span>(<span class="code-variable">recordId</span>) {
+    <span class="code-keyword">try</span> {
+        <span class="code-keyword">const</span> <span class="code-variable">record</span> = <span class="code-keyword">await</span> <span class="code-function">fetchRecord</span>(<span class="code-variable">recordId</span>);
+        
+        <span class="code-keyword">try</span> {
+            <span class="code-keyword">const</span> <span class="code-variable">diagnosis</span> = <span class="code-function">analyzeRecord</span>(<span class="code-variable">record</span>);
+            <span class="code-keyword">return</span> <span class="code-variable">diagnosis</span>;
+        } <span class="code-keyword">catch</span> (<span class="code-variable">analyzeError</span>) {
+            <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"分析病历失败："</span>, <span class="code-variable">analyzeError</span>);
+            <span class="code-keyword">return</span> { <span class="code-variable">error</span>: <span class="code-string">"分析失败"</span>, <span class="code-variable">record</span> };
+        }
+    } <span class="code-keyword">catch</span> (<span class="code-variable">fetchError</span>) {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">"获取病历失败："</span>, <span class="code-variable">fetchError</span>);
+        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-class">Error</span>(<span class="code-string">"无法处理病历"</span>);
+    }
+}
+</div>
+</div>
+
+<h4>抛出错误（throw）</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// throw 语句</span>
+<span class="code-keyword">function</span> <span class="code-function">divide</span>(<span class="code-variable">a</span>, <span class="code-variable">b</span>) {
+    <span class="code-keyword">if</span> (<span class="code-variable">b</span> === <span class="code-number">0</span>) {
+        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-class">Error</span>(<span class="code-string">"除数不能为零"</span>);
+    }
+    <span class="code-keyword">return</span> <span class="code-variable">a</span> / <span class="code-variable">b</span>;
+}
+
+<span class="code-comment">// 医疗系统：验证并抛出自定义错误</span>
+<span class="code-keyword">class</span> <span class="code-class">ValidationError</span> <span class="code-keyword">extends</span> <span class="code-class">Error</span> {
+    <span class="code-function">constructor</span>(<span class="code-variable">field</span>, <span class="code-variable">message</span>) {
+        <span class="code-keyword">super</span>(<span class="code-string">`验证失败: ${<span class="code-variable">field</span>} - ${<span class="code-variable">message</span>}`</span>);
+        <span class="code-keyword">this</span>.<span class="code-variable">name</span> = <span class="code-string">"ValidationError"</span>;
+        <span class="code-keyword">this</span>.<span class="code-variable">field</span> = <span class="code-variable">field</span>;
+    }
+}
+
+<span class="code-keyword">function</span> <span class="code-function">validatePrescription</span>(<span class="code-variable">prescription</span>) {
+    <span class="code-keyword">if</span> (!<span class="code-variable">prescription</span>.<span class="code-variable">patientId</span>) {
+        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-class">ValidationError</span>(<span class="code-string">"patientId"</span>, <span class="code-string">"患者ID不能为空"</span>);
+    }
+    <span class="code-keyword">if</span> (!<span class="code-variable">prescription</span>.<span class="code-variable">medicines</span> || <span class="code-variable">prescription</span>.<span class="code-variable">medicines</span>.<span class="code-variable">length</span> === <span class="code-number">0</span>) {
+        <span class="code-keyword">throw</span> <span class="code-keyword">new</span> <span class="code-class">ValidationError</span>(<span class="code-string">"medicines"</span>, <span class="code-string">"药品列表不能为空"</span>);
+    }
+    <span class="code-keyword">return</span> <span class="code-keyword">true</span>;
+}
+
+<span class="code-comment">// 使用示例</span>
+<span class="code-keyword">try</span> {
+    <span class="code-function">validatePrescription</span>({ <span class="code-variable">patientId</span>: <span class="code-string">""</span>, <span class="code-variable">medicines</span>: [] });
+} <span class="code-keyword">catch</span> (<span class="code-variable">error</span>) {
+    <span class="code-keyword">if</span> (<span class="code-variable">error</span> <span class="code-keyword">instanceof</span> <span class="code-class">ValidationError</span>) {
+        <span class="code-function">console</span>.<span class="code-function">error</span>(<span class="code-string">`字段 ${<span class="code-variable">error</span>.<span class="code-variable">field</span>} 验证失败：${<span class="code-variable">error</span>.<span class="code-variable">message</span>}`</span>);
+    }
+}
+</div>
+</div>
+
+<hr>
+
+<h3>6.3 调试技巧</h3>
+
+<h4>console 对象方法</h4>
+
+<div class="demo-box">
+<p><strong>console 常用方法：</strong></p>
+<table>
+<tr><th>方法</th><th>说明</th><th>用途</th></tr>
+<tr><td>console.log()</td><td>普通输出</td><td>一般调试信息</td></tr>
+<tr><td>console.error()</td><td>错误输出</td><td>错误信息（红色显示）</td></tr>
+<tr><td>console.warn()</td><td>警告输出</td><td>警告信息（黄色显示）</td></tr>
+<tr><td>console.table()</td><td>表格输出</td><td>数组或对象以表格形式显示</td></tr>
+<tr><td>console.time()</td><td>计时开始</td><td>测量代码执行时间</td></tr>
+<tr><td>console.timeEnd()</td><td>计时结束</td><td>输出执行时间</td></tr>
+<tr><td>console.trace()</td><td>堆栈跟踪</td><td>显示调用堆栈</td></tr>
+<tr><td>console.group()</td><td>分组开始</td><td>组织相关日志</td></tr>
+<tr><td>console.dir()</td><td>目录显示</td><td>显示对象属性</td></tr>
+</table>
+
+<div class="code">
+<span class="code-comment">// console.table - 表格显示</span>
+<span class="code-keyword">const</span> <span class="code-variable">patients</span> = [
+    { <span class="code-variable">id</span>: <span class="code-string">"P001"</span>, <span class="code-variable">name</span>: <span class="code-string">"张三"</span>, <span class="code-variable">age</span>: <span class="code-number">45</span> },
+    { <span class="code-variable">id</span>: <span class="code-string">"P002"</span>, <span class="code-variable">name</span>: <span class="code-string">"李四"</span>, <span class="code-variable">age</span>: <span class="code-number">32</span> }
+];
+<span class="code-function">console</span>.<span class="code-function">table</span>(<span class="code-variable">patients</span>);
+
+<span class="code-comment">// console.time - 性能测量</span>
+<span class="code-function">console</span>.<span class="code-function">time</span>(<span class="code-string">"数据处理"</span>);
+<span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < <span class="code-number">10000</span>; <span class="code-variable">i</span>++) {
+    <span class="code-comment">// 处理数据</span>
+}
+<span class="code-function">console</span>.<span class="code-function">timeEnd</span>(<span class="code-string">"数据处理"</span>);  <span class="code-comment">// 输出：数据处理: 2.345ms</span>
+
+<span class="code-comment">// console.trace - 堆栈跟踪</span>
+<span class="code-keyword">function</span> <span class="code-function">funcA</span>() {
+    <span class="code-function">funcB</span>();
+}
+<span class="code-keyword">function</span> <span class="code-function">funcB</span>() {
+    <span class="code-function">funcC</span>();
+}
+<span class="code-keyword">function</span> <span class="code-function">funcC</span>() {
+    <span class="code-function">console</span>.<span class="code-function">trace</span>(<span class="code-string">"调用堆栈"</span>);
+}
+
+<span class="code-comment">// console.group - 分组输出</span>
+<span class="code-function">console</span>.<span class="code-function">group</span>(<span class="code-string">"患者信息"</span>);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"姓名：张三"</span>);
+<span class="code-function">console</span>.<span class="code-function">log</span>(<span class="code-string">"年龄：45"</span>);
+<span class="code-function">console</span>.<span class="code-function">groupEnd</span>();
+
+<span class="code-comment">// console.dir - 显示对象结构</span>
+<span class="code-function">console</span>.<span class="code-function">dir</span>(<span class="code-variable">document</span>.<span class="code-variable">body</span>);
+</div>
+</div>
+
+<h4>浏览器开发者工具（Sources 面板断点调试）</h4>
+
+<div class="demo-box">
+<p><strong>断点调试步骤：</strong></p>
+<div class="code">
+<span class="code-comment">/* 
+ * 使用浏览器开发者工具调试：
+ * 
+ * 1. 打开开发者工具：F12 或 Ctrl+Shift+I (Mac: Cmd+Option+I)
+ * 2. 切换到 Sources 面板
+ * 3. 在代码行号处点击设置断点
+ * 4. 刷新页面或触发相关代码
+ * 5. 代码执行到断点处暂停
+ * 
+ * 调试时可用的操作：
+ * - Continue (F8): 继续执行到下一个断点
+ * - Step Over (F10): 执行当前行，不进入函数
+ * - Step Into (F11): 进入函数内部
+ * - Step Out (Shift+F11): 跳出当前函数
+ * 
+ * 调试面板：
+ * - Watch: 监视变量值
+ * - Call Stack: 调用堆栈
+ * - Scope: 当前作用域变量
+ */</span>
+
+<span class="code-comment">// 示例：调试患者数据处理</span>
+<span class="code-keyword">function</span> <span class="code-function">processPatientData</span>(<span class="code-variable">data</span>) {
+    <span class="code-keyword">let</span> <span class="code-variable">result</span> = [];  <span class="code-comment">// 在此处设置断点</span>
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">const</span> <span class="code-variable">patient</span> <span class="code-keyword">of</span> <span class="code-variable">data</span>) {
+        <span class="code-keyword">const</span> <span class="code-variable">processed</span> = {
+            <span class="code-variable">id</span>: <span class="code-variable">patient</span>.<span class="code-variable">id</span>,
+            <span class="code-variable">fullName</span>: <span class="code-variable">patient</span>.<span class="code-variable">firstName</span> + <span class="code-string">" "</span> + <span class="code-variable">patient</span>.<span class="code-variable">lastName</span>,
+            <span class="code-variable">age</span>: <span class="code-function">calculateAge</span>(<span class="code-variable">patient</span>.<span class="code-variable">birthDate</span>)
+        };
+        <span class="code-variable">result</span>.<span class="code-function">push</span>(<span class="code-variable">processed</span>);
+    }
+    
+    <span class="code-keyword">return</span> <span class="code-variable">result</span>;
+}
+</div>
+
+<div class="tip">
+<strong>调试技巧：</strong><br>
+条件断点：右键断点可设置条件，只有满足条件时才暂停<br>
+日志点（Logpoint）：不暂停执行，只输出日志<br>
+异常断点：在 Sources 面板右侧可设置在异常处暂停
+</div>
+</div>
+
+<h4>使用 debugger 语句</h4>
+
+<div class="demo-box">
+<div class="code">
+<span class="code-comment">// debugger 语句 - 代码中的断点</span>
+<span class="code-keyword">function</span> <span class="code-function">complexCalculation</span>(<span class="code-variable">data</span>) {
+    <span class="code-keyword">let</span> <span class="code-variable">result</span> = <span class="code-number">0</span>;
+    
+    <span class="code-keyword">for</span> (<span class="code-keyword">let</span> <span class="code-variable">i</span> = <span class="code-number">0</span>; <span class="code-variable">i</span> < <span class="code-variable">data</span>.<span class="code-variable">length</span>; <span class="code-variable">i</span>++) {
+        <span class="code-keyword">if</span> (<span class="code-variable">i</span> === <span class="code-number">5</span>) {
+            <span class="code-keyword">debugger</span>;  <span class="code-comment">// 开发者工具打开时，执行到这里会暂停</span>
+        }
+        <span class="code-variable">result</span> += <span class="code-variable">data</span>[<span class="code-variable">i</span>];
+    }
+    
+    <span class="code-keyword">return</span> <span class="code-variable">result</span>;
+}
+
+<span class="code-comment">// 结合条件使用 debugger</span>
+<span class="code-keyword">function</span> <span class="code-function">validateInput</span>(<span class="code-variable">value</span>) {
+    <span class="code-keyword">if</span> (<span class="code-variable">value</span> < <span class="code-number">0</span>) {
+        <span class="code-keyword">debugger</span>;  <span class="code-comment">// 只在异常值时暂停</span>
+        <span class="code-function">console</span>.<span class="code-function">warn</span>(<span class="code-string">"检测到负值："</span>, <span class="code-variable">value</span>);
+    }
+    <span class="code-keyword">return</span> <span class="code-variable">value</span>;
+}
+</div>
+
+<div class="warning">
+<strong>注意：</strong> debugger 语句只在开发者工具打开时生效。生产环境应移除所有 debugger 语句。
+</div>
+</div>
+
+<div class="render" id="debug-demo">
+    <button onclick="demoConsoleMethods()">演示 console 方法</button>
+    <button onclick="demoDebugger()">演示 debugger</button>
+    <div id="debug-output" class="output-box"></div>
+</div>
+
+<hr>
+
+<div class="knowledge-box">
+<h4>本章小结</h4>
+<p><strong>异步编程要点：</strong></p>
+<p>
+    回调函数是异步编程的基础，但容易形成回调地狱<br>
+    Promise 提供了更优雅的异步处理方式，支持链式调用<br>
+    Promise.all/race/allSettled/any 提供了不同的并行处理策略<br>
+    async/await 让异步代码写起来像同步代码，可读性更好<br>
+    理解事件循环机制（宏任务、微任务）对调试异步代码很重要<br>
+    for await...of 可以遍历异步数据流
+</p>
+<p><strong>错误处理要点：</strong></p>
+<p>
+    了解不同类型的错误对象有助于精确定位问题<br>
+    try...catch...finally 提供了完整的异常处理机制<br>
+    自定义错误类可以携带更多业务相关信息<br>
+    console 对象提供了丰富的调试方法<br>
+    浏览器开发者工具是调试的利器<br>
+    debugger 语句可以在代码中设置断点
+</p>
+</div>
+
+<script>
+// Promise 演示函数
+function demoPromiseAll() {
+    const output = document.getElementById('promise-output');
+    output.innerHTML = '执行 Promise.all...\n';
+    
+    const p1 = new Promise(resolve => setTimeout(() => resolve('患者数据'), 300));
+    const p2 = new Promise(resolve => setTimeout(() => resolve('医生数据'), 500));
+    const p3 = new Promise(resolve => setTimeout(() => resolve('科室数据'), 200));
+    
+    Promise.all([p1, p2, p3])
+        .then(results => {
+            output.innerHTML += '所有请求完成:\n';
+            results.forEach((r, i) => output.innerHTML += `${i+1}. ${r}\n`);
+        });
+}
+
+function demoPromiseRace() {
+    const output = document.getElementById('promise-output');
+    output.innerHTML = '执行 Promise.race...\n';
+    
+    const fast = new Promise(resolve => setTimeout(() => resolve('快速服务器响应'), 100));
+    const slow = new Promise(resolve => setTimeout(() => resolve('慢速服务器响应'), 300));
+    
+    Promise.race([fast, slow])
+        .then(result => {
+            output.innerHTML += `最快响应: ${result}\n`;
+        });
+}
+
+function demoPromiseAllSettled() {
+    const output = document.getElementById('promise-output');
+    output.innerHTML = '执行 Promise.allSettled...\n';
+    
+    const p1 = Promise.resolve('成功数据');
+    const p2 = Promise.reject('失败原因');
+    const p3 = Promise.resolve('另一成功数据');
+    
+    Promise.allSettled([p1, p2, p3])
+        .then(results => {
+            results.forEach((r, i) => {
+                output.innerHTML += `${i+1}. ${r.status}: ${r.value || r.reason}\n`;
+            });
+        });
+}
+
+// async/await 演示函数
+async function demoAsyncAwait() {
+    const output = document.getElementById('async-output');
+    output.innerHTML = '开始执行 async/await 演示...\n';
+    
+    function getPatient(id) {
+        return new Promise(resolve => {
+            setTimeout(() => resolve({ id, name: '张三', age: 45 }), 500);
+        });
+    }
+    
+    function getRecord(patientId) {
+        return new Promise(resolve => {
+            setTimeout(() => resolve({ patientId, diagnosis: '高血压' }), 500);
+        });
+    }
+    
+    output.innerHTML += '获取患者信息...\n';
+    const patient = await getPatient('P001');
+    output.innerHTML += `患者: ${patient.name}\n`;
+    
+    output.innerHTML += '获取病历信息...\n';
+    const record = await getRecord(patient.id);
+    output.innerHTML += `诊断: ${record.diagnosis}\n`;
+    
+    output.innerHTML += '完成!\n';
+}
+
+async function demoParallelRequests() {
+    const output = document.getElementById('async-output');
+    output.innerHTML = '并行请求演示...\n';
+    
+    const startTime = Date.now();
+    
+    const results = await Promise.all([
+        new Promise(r => setTimeout(() => r('患者列表'), 300)),
+        new Promise(r => setTimeout(() => r('医生列表'), 300)),
+        new Promise(r => setTimeout(() => r('科室列表'), 300))
+    ]);
+    
+    const elapsed = Date.now() - startTime;
+    output.innerHTML += `并行完成，耗时: ${elapsed}ms\n`;
+    output.innerHTML += `结果: ${results.join(', ')}\n`;
+}
+
+// console 方法演示
+function demoConsoleMethods() {
+    const output = document.getElementById('debug-output');
+    output.innerHTML = '演示 console 方法（请查看控制台）:\n\n';
+    
+    // console.table
+    const patients = [
+        { id: 'P001', name: '张三', age: 45 },
+        { id: 'P002', name: '李四', age: 32 }
+    ];
+    console.table(patients);
+    output.innerHTML += '1. console.table 已输出\n';
+    
+    // console.time
+    console.time('测试');
+    for (let i = 0; i < 10000; i++) {}
+    console.timeEnd('测试');
+    output.innerHTML += '2. console.time/timeEnd 已输出\n';
+    
+    // console.trace
+    function innerFunc() {
+        console.trace('调用堆栈跟踪');
+    }
+    function outerFunc() {
+        innerFunc();
+    }
+    outerFunc();
+    output.innerHTML += '3. console.trace 已输出\n';
+    
+    // console.group
+    console.group('患者详情');
+    console.log('姓名: 张三');
+    console.log('年龄: 45');
+    console.groupEnd();
+    output.innerHTML += '4. console.group 已输出\n';
+}
+
+function demoDebugger() {
+    const output = document.getElementById('debug-output');
+    output.innerHTML = 'debugger 演示:\n';
+    output.innerHTML += '如果开发者工具已打开，代码将在 debugger 处暂停\n';
+    output.innerHTML += '请打开开发者工具 (F12) 后再次点击\n';
+    
+    // 注意：debugger 只在开发者工具打开时生效
+    let value = 42;
+    debugger;
+    output.innerHTML += `变量值: ${value}\n`;
+}
+
+// 事件循环演示
+function demoEventLoop() {
+    const output = document.getElementById('event-loop-output');
+    output.innerHTML = '执行顺序:\n';
+    
+    output.innerHTML += '1. 同步代码开始\n';
+    
+    setTimeout(() => {
+        output.innerHTML += '4. setTimeout (宏任务)\n';
+    }, 0);
+    
+    Promise.resolve().then(() => {
+        output.innerHTML += '3. Promise (微任务)\n';
+    });
+    
+    output.innerHTML += '2. 同步代码结束\n';
+}
+</script>
+
+</body>
+</html>
