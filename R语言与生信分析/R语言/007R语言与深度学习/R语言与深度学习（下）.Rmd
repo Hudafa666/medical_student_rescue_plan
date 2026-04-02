@@ -1,0 +1,4597 @@
+---
+title: "R语言与深度学习（下）"
+author: "小天使格礼"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    anchor_sections: true
+---
+
+在Rstudio中安装本节课所有需要的包，运行以下指令：
+
+```{r, eval=FALSE}
+install.packages(c(
+  "keras", "tensorflow", "torch", 
+  "reticulate", "lime", "shap",
+  "ggplot2", "dplyr", "tidyr",
+  "plumber", "jsonlite"
+))
+
+# 安装Python依赖（需要先安装Python）
+reticulate::py_install(c(
+  "transformers", "torch", "dgl", 
+  "torch-geometric", "lime", "shap"
+), pip = TRUE)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(keras)
+library(tensorflow)
+library(torch)
+library(reticulate)
+library(lime)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(plumber)
+library(jsonlite)
+```
+
+# 目录
+
+| 章节 | 主题 | 核心内容 |
+|:----:|:----:|:--------:|
+| [第九章](#第九章注意力机制与transformer) | 注意力机制与Transformer | 自注意力、多头注意力、位置编码 |
+| [第十章](#第十章图神经网络gnn) | 图神经网络（GNN） | GCN、GAT、生物网络应用 |
+| [第十一章](#第十一章深度学习在生物信息学中的应用) | 深度学习在生物信息学中的应用 | RNA-Seq、蛋白质分类、单细胞分析 |
+| [第十二章](#第十二章pytorch-for-rtorch包进阶) | PyTorch for R（torch包）进阶 | 张量操作、自定义模块、训练循环 |
+| [第十三章](#第十三章模型优化与超参数调优) | 模型优化与超参数调优 | 超参数搜索、学习率调优、分布式训练 |
+| [第十四章](#第十四章可解释性与模型调试) | 可解释性与模型调试 | Grad-CAM、SHAP、LIME、TensorBoard |
+| [第十五章](#第十五章生产环境部署) | 生产环境部署 | TensorFlow Serving、Plumber API、Shiny集成 |
+
+---
+
+# 第九章：注意力机制与Transformer {#第九章注意力机制与transformer}
+
+注意力机制是深度学习领域最重要的突破之一，它让模型能够"关注"输入的不同部分，从而更好地捕捉数据中的关键信息。Transformer架构完全基于注意力机制，彻底改变了自然语言处理和生物信息学领域。
+
+## 9.1 注意力机制基本思想 {#91-注意力机制基本思想}
+
+### 核心概念
+
+注意力机制的核心思想来自人类的视觉注意力——我们不会同时关注整个场景，而是将注意力集中在特定的部分。在深度学习中，注意力机制让模型能够动态地、有选择地关注输入的不同部分。
+
+**查询-键-值（Query-Key-Value）框架**：
+
+注意力机制将输入映射为三个向量：
+
+1. **查询（Query, Q）**：当前需要关注的目标
+2. **键（Key, K）**：用于与查询匹配的索引
+3. **值（Value, V）**：实际需要提取的信息
+
+### 数学基础
+
+**注意力得分计算公式**：
+
+$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+
+**参数说明**：
+- $Q$：查询矩阵，维度为 $n \times d_k$
+- $K$：键矩阵，维度为 $m \times d_k$
+- $V$：值矩阵，维度为 $m \times d_v$
+- $d_k$：键向量的维度
+- $\sqrt{d_k}$：缩放因子，防止点积过大导致softmax梯度消失
+
+**计算步骤**：
+
+1. 计算查询与所有键的相似度（点积）
+2. 除以缩放因子 $\sqrt{d_k}$
+3. 通过softmax归一化得到注意力权重
+4. 用注意力权重对值进行加权求和
+
+```{r}
+# 注意力机制的基本实现
+# 定义一个简单的注意力函数
+
+attention_basic <- function(Q, K, V) {
+  # Q: 查询矩阵 [batch_size, seq_len_q, d_k]
+  # K: 键矩阵 [batch_size, seq_len_k, d_k]
+  # V: 值矩阵 [batch_size, seq_len_v, d_v]
+  
+  # 获取键向量维度
+  d_k <- ncol(K)
+  
+  # 计算注意力得分：Q与K的点积
+  scores <- Q %*% t(K) / sqrt(d_k)
+  
+  # 使用softmax归一化
+  attention_weights <- exp(scores) / sum(exp(scores))
+  
+  # 加权求和得到输出
+  output <- attention_weights %*% V
+  
+  return(list(
+    output = output,
+    attention_weights = attention_weights
+  ))
+}
+
+# 示例：简单的注意力计算
+set.seed(42)
+Q <- matrix(rnorm(4), nrow = 2, ncol = 2)  # 2个查询
+K <- matrix(rnorm(12), nrow = 6, ncol = 2)  # 6个键
+V <- matrix(rnorm(18), nrow = 6, ncol = 3)  # 6个值
+
+result <- attention_basic(Q[1, , drop = FALSE], K, V)
+cat("注意力权重（第一个查询）：\n")
+print(round(result$attention_weights, 4))
+cat("\n输出向量：\n")
+print(round(result$output, 4))
+```
+
+### 意义与使用场景
+
+**核心意义**：注意力机制让模型能够动态地、有选择地关注输入的不同部分，解决了传统序列模型（如RNN）难以捕捉长距离依赖的问题。
+
+**举例**：在蛋白质序列分析中，预测某个氨基酸残基的功能重要性
+
+**为什么这种数据适合用注意力机制？**
+
+首先，蛋白质序列中残基之间的相互作用往往跨越较长的序列距离，传统的滑动窗口方法难以捕捉这种长程依赖。其次，不同残基对目标残基的影响程度不同，需要动态权重而非固定权重。这种"序列数据+长程依赖+动态重要性"的特点，正是注意力机制的典型适用场景。
+
+**研究目的是什么？**
+
+1. 识别关键残基：找出对蛋白质功能最重要的氨基酸位置。
+2. 捕捉残基间相互作用：理解哪些残基之间存在功能关联。
+3. 预测功能位点：预测磷酸化位点、结合位点等功能重要位置。
+
+**可能得到什么样的结果？**
+
+注意力权重矩阵可以揭示残基间的相互作用模式。例如，位置10的残基可能高度关注位置45和位置78的残基（权重分别为0.35和0.28），暗示这三个位置在空间上可能形成功能结构域。可视化注意力矩阵可以呈现蛋白质的"相互作用图谱"。
+
+**需要注意什么？**
+
+注意力权重并不总是等同于生物学意义上的相互作用。模型可能学习到的是统计相关性而非因果关系。此外，注意力机制的计算复杂度为 $O(n^2)$，对于超长序列（如全基因组）需要使用稀疏注意力或线性注意力变体。
+
+---
+
+## 9.2 自注意力（Self-Attention）计算 {#92-自注意力self-attention计算}
+
+### 核心概念
+
+自注意力是注意力机制的特殊形式，其中查询、键、值都来自同一个输入序列。这让序列中的每个位置都能直接关注序列中的所有其他位置，从而捕捉序列内部的依赖关系。
+
+### 数学基础
+
+**自注意力计算公式**：
+
+$$\text{SelfAttention}(X) = \text{Attention}(XW_Q, XW_K, XW_V)$$
+
+**参数说明**：
+- $X$：输入序列的嵌入矩阵，维度为 $n \times d_{model}$
+- $W_Q, W_K, W_V$：可学习的投影矩阵
+- $n$：序列长度
+- $d_{model}$：模型维度
+
+```{r}
+# 自注意力层的实现
+self_attention_layer <- function(input_dim, key_dim, value_dim) {
+  # 初始化投影矩阵
+  W_q <- matrix(rnorm(input_dim * key_dim, sd = 0.1), nrow = input_dim)
+  W_k <- matrix(rnorm(input_dim * key_dim, sd = 0.1), nrow = input_dim)
+  W_v <- matrix(rnorm(input_dim * value_dim, sd = 0.1), nrow = input_dim)
+  
+  # 前向传播函数
+  forward <- function(X) {
+    # X: [seq_len, input_dim]
+    
+    # 投影得到Q, K, V
+    Q <- X %*% W_q  # [seq_len, key_dim]
+    K <- X %*% W_k  # [seq_len, key_dim]
+    V <- X %*% W_v  # [seq_len, value_dim]
+    
+    # 计算注意力
+    d_k <- key_dim
+    scores <- Q %*% t(K) / sqrt(d_k)
+    
+    # Softmax（对每行）
+    attention_weights <- t(apply(scores, 1, function(row) {
+      exp_row <- exp(row - max(row))  # 数值稳定性
+      exp_row / sum(exp_row)
+    }))
+    
+    # 加权求和
+    output <- attention_weights %*% V
+    
+    return(list(
+      output = output,
+      attention_weights = attention_weights,
+      Q = Q, K = K, V = V
+    ))
+  }
+  
+  return(list(forward = forward))
+}
+
+# 示例：蛋白质序列的自注意力
+set.seed(42)
+seq_len <- 8   # 序列长度（8个氨基酸）
+input_dim <- 64  # 每个氨基酸的嵌入维度
+
+# 模拟蛋白质序列嵌入
+X <- matrix(rnorm(seq_len * input_dim), nrow = seq_len)
+
+# 创建自注意力层
+self_attn <- self_attention_layer(input_dim, key_dim = 32, value_dim = 64)
+
+# 前向传播
+result <- self_attn$forward(X)
+
+cat("输入序列形状：", dim(X), "\n")
+cat("输出序列形状：", dim(result$output), "\n")
+cat("注意力权重矩阵形状：", dim(result$attention_weights), "\n")
+```
+
+### 可视化注意力权重
+
+```{r}
+# 可视化自注意力权重矩阵
+visualize_attention <- function(attention_weights, labels = NULL) {
+  # 转换为数据框
+  n <- nrow(attention_weights)
+  df <- expand.grid(
+    from = 1:n,
+    to = 1:n
+  )
+  df$weight <- as.vector(t(attention_weights))
+  
+  # 创建热图
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = to, y = from, fill = weight)) +
+    ggplot2::geom_tile() +
+    ggplot2::scale_fill_gradient2(
+      low = "white", 
+      mid = "yellow", 
+      high = "red",
+      midpoint = 0.5
+    ) +
+    ggplot2::scale_x_continuous(breaks = 1:n) +
+    ggplot2::scale_y_continuous(breaks = 1:n) +
+    ggplot2::labs(
+      title = "自注意力权重矩阵",
+      x = "Key位置",
+      y = "Query位置",
+      fill = "权重"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 14),
+      axis.text = ggplot2::element_text(size = 10)
+    )
+  
+  return(p)
+}
+
+# 可视化
+visualize_attention(result$attention_weights)
+```
+
+---
+
+## 9.3 Transformer架构概览 {#93-transformer架构概览}
+
+### 核心概念
+
+Transformer是完全基于注意力机制的序列到序列模型，由编码器（Encoder）和解码器（Decoder）两部分组成。它抛弃了传统的循环结构，通过自注意力机制并行处理序列中的所有位置。
+
+### 架构组成
+
+**编码器（Encoder）**：
+
+编码器由 $N$ 个相同的层堆叠而成，每层包含两个子层：
+
+1. **多头自注意力层（Multi-Head Self-Attention）**：捕捉序列内部的依赖关系
+2. **前馈神经网络（Feed-Forward Network）**：对每个位置独立进行非线性变换
+
+每个子层都使用残差连接（Residual Connection）和层归一化（Layer Normalization）。
+
+**解码器（Decoder）**：
+
+解码器也由 $N$ 个相同的层堆叠而成，每层包含三个子层：
+
+1. **带掩码的多头自注意力层**：防止解码器看到未来的信息
+2. **编码器-解码器注意力层**：让解码器关注编码器的输出
+3. **前馈神经网络**：非线性变换
+
+```{r}
+# Transformer编码器层的简化实现
+transformer_encoder_layer <- function(d_model, num_heads, d_ff, dropout_rate = 0.1) {
+  # d_model: 模型维度
+  # num_heads: 注意力头数
+  # d_ff: 前馈网络隐藏层维度
+  
+  # 初始化参数
+  d_k <- d_model / num_heads  # 每个头的维度
+  
+  # 多头注意力的投影矩阵
+  W_q <- list()
+  W_k <- list()
+  W_v <- list()
+  W_o <- matrix(rnorm(d_model * d_model, sd = 0.1), nrow = d_model)
+  
+  for (i in 1:num_heads) {
+    W_q[[i]] <- matrix(rnorm(d_model * d_k, sd = 0.1), nrow = d_model)
+    W_k[[i]] <- matrix(rnorm(d_model * d_k, sd = 0.1), nrow = d_model)
+    W_v[[i]] <- matrix(rnorm(d_model * d_k, sd = 0.1), nrow = d_model)
+  }
+  
+  # 前馈网络参数
+  W_ff1 <- matrix(rnorm(d_model * d_ff, sd = 0.1), nrow = d_model)
+  W_ff2 <- matrix(rnorm(d_ff * d_model, sd = 0.1), nrow = d_ff)
+  b_ff1 <- rep(0, d_ff)
+  b_ff2 <- rep(0, d_model)
+  
+  # 层归一化参数
+  gamma1 <- rep(1, d_model)
+  beta1 <- rep(0, d_model)
+  gamma2 <- rep(1, d_model)
+  beta2 <- rep(0, d_model)
+  
+  # 前向传播
+  forward <- function(X, mask = NULL) {
+    # X: [seq_len, d_model]
+    seq_len <- nrow(X)
+    
+    # 多头自注意力
+    heads <- list()
+    for (i in 1:num_heads) {
+      Q <- X %*% W_q[[i]]
+      K <- X %*% W_k[[i]]
+      V <- X %*% W_v[[i]]
+      
+      # 计算注意力
+      scores <- Q %*% t(K) / sqrt(d_k)
+      
+      # 应用掩码（如果需要）
+      if (!is.null(mask)) {
+        scores <- scores + mask
+      }
+      
+      # Softmax
+      attn_weights <- t(apply(scores, 1, function(row) {
+        exp_row <- exp(row - max(row))
+        exp_row / sum(exp_row)
+      }))
+      
+      heads[[i]] <- attn_weights %*% V
+    }
+    
+    # 拼接所有头
+    concat_heads <- do.call(cbind, heads)
+    
+    # 输出投影
+    attn_output <- concat_heads %*% W_o
+    
+    # 残差连接 + 层归一化
+    X_norm1 <- layer_norm(X + attn_output, gamma1, beta1)
+    
+    # 前馈网络
+    ff_hidden <- pmax(0, X_norm1 %*% W_ff1 + matrix(b_ff1, nrow = seq_len, ncol = d_ff, byrow = TRUE))
+    ff_output <- ff_hidden %*% W_ff2 + matrix(b_ff2, nrow = seq_len, ncol = d_model, byrow = TRUE)
+    
+    # 残差连接 + 层归一化
+    output <- layer_norm(X_norm1 + ff_output, gamma2, beta2)
+    
+    return(output)
+  }
+  
+  return(list(forward = forward))
+}
+
+# 层归一化函数
+layer_norm <- function(X, gamma, beta, eps = 1e-6) {
+  mean <- rowMeans(X)
+  var <- apply(X, 1, var)
+  X_norm <- (X - mean) / sqrt(var + eps)
+  return(X_norm * gamma + beta)
+}
+
+# 示例
+set.seed(42)
+d_model <- 64
+seq_len <- 10
+
+X <- matrix(rnorm(seq_len * d_model), nrow = seq_len)
+encoder_layer <- transformer_encoder_layer(d_model, num_heads = 4, d_ff = 256)
+
+output <- encoder_layer$forward(X)
+cat("输入形状：", dim(X), "\n")
+cat("输出形状：", dim(output), "\n")
+```
+
+---
+
+## 9.4 多头注意力（Multi-Head Attention） {#94-多头注意力multi-head-attention}
+
+### 核心概念
+
+多头注意力让模型能够同时关注不同位置的不同表示子空间。每个"头"学习不同的注意力模式，然后将它们合并，从而捕捉更丰富的信息。
+
+### 数学基础
+
+**多头注意力计算公式**：
+
+$$\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, ..., \text{head}_h)W^O$$
+
+其中：
+$$\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)$$
+
+**参数说明**：
+- $h$：注意力头的数量
+- $W_i^Q, W_i^K, W_i^V$：第 $i$ 个头的投影矩阵
+- $W^O$：输出投影矩阵
+
+```{r}
+# 多头注意力的完整实现
+multi_head_attention <- function(d_model, num_heads) {
+  # 检查d_model是否能被num_heads整除
+  if (d_model %% num_heads != 0) {
+    stop("d_model必须能被num_heads整除")
+  }
+  
+  d_k <- d_model / num_heads
+  
+  # 初始化投影矩阵
+  W_q <- matrix(rnorm(d_model * d_model, sd = 0.02), nrow = d_model)
+  W_k <- matrix(rnorm(d_model * d_model, sd = 0.02), nrow = d_model)
+  W_v <- matrix(rnorm(d_model * d_model, sd = 0.02), nrow = d_model)
+  W_o <- matrix(rnorm(d_model * d_model, sd = 0.02), nrow = d_model)
+  
+  forward <- function(Q, K, V, mask = NULL) {
+    batch_size <- 1  # 简化实现
+    seq_len_q <- nrow(Q)
+    seq_len_k <- nrow(K)
+    
+    # 线性投影
+    Q_proj <- Q %*% W_q  # [seq_len_q, d_model]
+    K_proj <- K %*% W_k  # [seq_len_k, d_model]
+    V_proj <- V %*% W_v  # [seq_len_k, d_model]
+    
+    # 分割为多头
+    Q_heads <- split_heads(Q_proj, num_heads, d_k)
+    K_heads <- split_heads(K_proj, num_heads, d_k)
+    V_heads <- split_heads(V_proj, num_heads, d_k)
+    
+    # 计算每个头的注意力
+    head_outputs <- list()
+    attention_weights_all <- list()
+    
+    for (i in 1:num_heads) {
+      scores <- Q_heads[[i]] %*% t(K_heads[[i]]) / sqrt(d_k)
+      
+      if (!is.null(mask)) {
+        scores <- scores + mask
+      }
+      
+      attn_weights <- t(apply(scores, 1, function(row) {
+        exp_row <- exp(row - max(row))
+        exp_row / sum(exp_row)
+      }))
+      
+      head_outputs[[i]] <- attn_weights %*% V_heads[[i]]
+      attention_weights_all[[i]] <- attn_weights
+    }
+    
+    # 拼接所有头
+    concat <- do.call(cbind, head_outputs)
+    
+    # 输出投影
+    output <- concat %*% W_o
+    
+    return(list(
+      output = output,
+      attention_weights = attention_weights_all
+    ))
+  }
+  
+  return(list(forward = forward))
+}
+
+# 辅助函数：分割多头
+split_heads <- function(X, num_heads, d_k) {
+  # X: [seq_len, d_model]
+  seq_len <- nrow(X)
+  
+  heads <- list()
+  for (i in 1:num_heads) {
+    start_col <- (i - 1) * d_k + 1
+    end_col <- i * d_k
+    heads[[i]] <- X[, start_col:end_col]
+  }
+  
+  return(heads)
+}
+
+# 示例
+set.seed(42)
+d_model <- 64
+num_heads <- 4
+seq_len <- 8
+
+X <- matrix(rnorm(seq_len * d_model), nrow = seq_len)
+mha <- multi_head_attention(d_model, num_heads)
+
+result <- mha$forward(X, X, X)
+
+cat("输入形状：", dim(X), "\n")
+cat("输出形状：", dim(result$output), "\n")
+cat("注意力头数量：", length(result$attention_weights), "\n")
+cat("每个头的权重矩阵形状：", dim(result$attention_weights[[1]]), "\n")
+```
+
+### 可视化多头注意力
+
+```{r}
+# 可视化多个注意力头
+visualize_multihead_attention <- function(attention_weights_list) {
+  num_heads <- length(attention_weights_list)
+  
+  # 创建多面板图
+  plots <- list()
+  
+  for (i in 1:num_heads) {
+    n <- nrow(attention_weights_list[[i]])
+    df <- expand.grid(from = 1:n, to = 1:n)
+    df$weight <- as.vector(t(attention_weights_list[[i]]))
+    
+    p <- ggplot2::ggplot(df, ggplot2::aes(x = to, y = from, fill = weight)) +
+      ggplot2::geom_tile() +
+      ggplot2::scale_fill_gradient2(
+        low = "white", mid = "yellow", high = "red",
+        midpoint = 0.5
+      ) +
+      ggplot2::labs(title = paste("Head", i)) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(
+        plot.title = ggplot2::element_text(hjust = 0.5),
+        axis.text = ggplot2::element_text(size = 8),
+        legend.position = "none"
+      )
+    
+    plots[[i]] <- p
+  }
+  
+  # 使用patchwork或gridExtra组合
+  # 这里简化为显示第一个头
+  return(plots[[1]])
+}
+
+visualize_multihead_attention(result$attention_weights)
+```
+
+---
+
+## 9.5 位置编码（Positional Encoding） {#95-位置编码positional-encoding}
+
+### 核心概念
+
+由于Transformer没有循环结构，它本身无法感知序列中元素的位置信息。位置编码通过为每个位置添加一个独特的向量来解决这个问题，让模型能够区分不同位置的元素。
+
+### 数学基础
+
+**正弦位置编码公式**：
+
+$$PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+
+$$PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+
+**参数说明**：
+- $pos$：位置索引
+- $i$：维度索引
+- $d_{model}$：模型维度
+
+这种编码方式的优势是模型可以学习到相对位置信息，因为对于任意固定偏移量 $k$，$PE_{pos+k}$ 可以表示为 $PE_{pos}$ 的线性函数。
+
+```{r}
+# 位置编码的实现
+positional_encoding <- function(max_len, d_model) {
+  # max_len: 最大序列长度
+  # d_model: 模型维度
+  
+  # 创建位置索引矩阵
+  position <- 0:(max_len - 1)
+  
+  # 创建维度索引
+  div_term <- exp(log(10000) * (0:(d_model / 2 - 1)) * 2 / d_model)
+  
+  # 初始化位置编码矩阵
+  pe <- matrix(0, nrow = max_len, ncol = d_model)
+  
+  # 计算正弦和余弦值
+  for (pos in 1:max_len) {
+    for (i in 1:(d_model / 2)) {
+      pe[pos, 2 * i - 1] <- sin((pos - 1) / div_term[i])
+      if (2 * i <= d_model) {
+        pe[pos, 2 * i] <- cos((pos - 1) / div_term[i])
+      }
+    }
+  }
+  
+  return(pe)
+}
+
+# 示例
+max_len <- 50
+d_model <- 64
+
+pe <- positional_encoding(max_len, d_model)
+
+cat("位置编码矩阵形状：", dim(pe), "\n")
+cat("前5个位置的前8维编码：\n")
+print(round(pe[1:5, 1:8], 4))
+```
+
+### 可视化位置编码
+
+```{r}
+# 可视化位置编码
+visualize_positional_encoding <- function(pe) {
+  max_len <- nrow(pe)
+  d_model <- ncol(pe)
+  
+  # 选择前16维进行可视化
+  pe_subset <- pe[, 1:min(16, d_model)]
+  
+  df <- as.data.frame(pe_subset)
+  df$position <- 1:max_len
+  
+  # 转换为长格式
+  df_long <- tidyr::pivot_longer(
+    df, 
+    cols = -position, 
+    names_to = "dimension", 
+    values_to = "value"
+  )
+  
+  ggplot2::ggplot(df_long, ggplot2::aes(x = position, y = value, color = dimension)) +
+    ggplot2::geom_line(alpha = 0.7) +
+    ggplot2::labs(
+      title = "位置编码可视化",
+      x = "位置",
+      y = "编码值",
+      color = "维度"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 14),
+      legend.position = "right"
+    )
+}
+
+visualize_positional_encoding(pe)
+```
+
+---
+
+## 9.6 在R中使用Keras实现Transformer层 {#96-在r中使用keras实现transformer层}
+
+### 使用Keras构建Transformer
+
+Keras提供了高级API来构建Transformer模型。我们可以使用内置的层或自定义实现。
+
+```{r, eval=FALSE}
+# 使用Keras构建Transformer编码器
+library(keras)
+
+# 定义Transformer编码器层
+create_transformer_encoder <- function(d_model, num_heads, d_ff, dropout_rate = 0.1) {
+  # 输入层
+  inputs <- layer_input(shape = list(NULL, d_model))
+  
+  # 多头自注意力
+  attention_output <- inputs %>%
+    layer_multi_head_attention(
+      num_heads = num_heads,
+      key_dim = d_model / num_heads,
+      dropout = dropout_rate
+    )
+  
+  # 残差连接 + 层归一化
+  attention_output <- layer_add()(list(inputs, attention_output))
+  attention_output <- layer_layer_normalization()(attention_output)
+  
+  # 前馈网络
+  ffn_output <- attention_output %>%
+    layer_dense(units = d_ff, activation = "relu") %>%
+    layer_dropout(rate = dropout_rate) %>%
+    layer_dense(units = d_model) %>%
+    layer_dropout(rate = dropout_rate)
+  
+  # 残差连接 + 层归一化
+  outputs <- layer_add()(list(attention_output, ffn_output))
+  outputs <- layer_layer_normalization()(outputs)
+  
+  return(keras_model(inputs = inputs, outputs = outputs))
+}
+
+# 创建完整的Transformer模型
+create_transformer_model <- function(
+  vocab_size, 
+  max_len, 
+  d_model = 64, 
+  num_heads = 4, 
+  d_ff = 256,
+  num_layers = 2,
+  num_classes = 2
+) {
+  # 输入层
+  inputs <- layer_input(shape = list(NULL), dtype = "int32")
+  
+  # 词嵌入 + 位置编码
+  embedding <- inputs %>%
+    layer_embedding(input_dim = vocab_size, output_dim = d_model)
+  
+  # 位置编码（使用自定义层）
+  positions <- tf$range(start = 0, limit = tf$shape(inputs)[2], delta = 1)
+  position_embedding <- layer_embedding(
+    input_dim = max_len, 
+    output_dim = d_model
+  )(positions)
+  
+  x <- embedding + position_embedding
+  
+  # 堆叠Transformer编码器层
+  for (i in 1:num_layers) {
+    encoder_layer <- create_transformer_encoder(d_model, num_heads, d_ff)
+    x <- encoder_layer(x)
+  }
+  
+  # 全局平均池化
+  x <- layer_global_average_pooling_1d()(x)
+  
+  # 分类头
+  outputs <- x %>%
+    layer_dense(units = 64, activation = "relu") %>%
+    layer_dropout(rate = 0.1) %>%
+    layer_dense(units = num_classes, activation = "softmax")
+  
+  return(keras_model(inputs = inputs, outputs = outputs))
+}
+
+# 创建模型示例
+model <- create_transformer_model(
+  vocab_size = 10000,
+  max_len = 128,
+  d_model = 64,
+  num_heads = 4,
+  d_ff = 256,
+  num_layers = 2,
+  num_classes = 2
+)
+
+# 查看模型结构
+summary(model)
+```
+
+### 使用torch包实现Transformer
+
+```{r, eval=FALSE}
+# 使用torch包实现Transformer
+library(torch)
+
+# 定义Transformer编码器模块
+TransformerEncoderBlock <- torch::nn_module(
+  "TransformerEncoderBlock",
+  initialize = function(d_model, num_heads, d_ff, dropout = 0.1) {
+    self$attention <- torch::nn_multihead_attention(
+      embed_dim = d_model,
+      num_heads = num_heads,
+      dropout = dropout,
+      batch_first = TRUE
+    )
+    
+    self$norm1 <- torch::nn_layer_norm(d_model)
+    self$norm2 <- torch::nn_layer_norm(d_model)
+    
+    self$ffn <- torch::nn_sequential(
+      torch::nn_linear(d_model, d_ff),
+      torch::nn_relu(),
+      torch::nn_dropout(dropout),
+      torch::nn_linear(d_ff, d_model),
+      torch::nn_dropout(dropout)
+    )
+    
+    self$dropout <- torch::nn_dropout(dropout)
+  },
+  
+  forward = function(x, mask = NULL) {
+    # 自注意力
+    attn_output <- self$attention(x, x, x, attn_mask = mask)
+    attn_output <- attn_output[[1]]
+    
+    # 残差连接 + 层归一化
+    x <- self$norm1(x + self$dropout(attn_output))
+    
+    # 前馈网络
+    ffn_output <- self$ffn(x)
+    
+    # 残差连接 + 层归一化
+    x <- self$norm2(x + ffn_output)
+    
+    return(x)
+  }
+)
+
+# 定义完整的Transformer模型
+TransformerClassifier <- torch::nn_module(
+  "TransformerClassifier",
+  initialize = function(vocab_size, d_model, num_heads, d_ff, num_layers, num_classes, max_len, dropout = 0.1) {
+    self$embedding <- torch::nn_embedding(vocab_size, d_model)
+    self$pos_embedding <- torch::nn_embedding(max_len, d_model)
+    
+    self$layers <- torch::nn_module_list(lapply(
+      1:num_layers,
+      function(i) TransformerEncoderBlock(d_model, num_heads, d_ff, dropout)
+    ))
+    
+    self$norm <- torch::nn_layer_norm(d_model)
+    self$classifier <- torch::nn_linear(d_model, num_classes)
+    self$dropout <- torch::nn_dropout(dropout)
+  },
+  
+  forward = function(x) {
+    batch_size <- x$size(1)
+    seq_len <- x$size(2)
+    
+    # 词嵌入
+    x <- self$embedding(x)
+    
+    # 位置编码
+    positions <- torch::torch_arange(1, seq_len)$unsqueeze(1)$repeat(batch_size, 1, 1)
+    pos_emb <- self$pos_embedding(positions)
+    x <- x + pos_emb
+    
+    # Transformer层
+    for (layer in self$layers) {
+      x <- layer(x)
+    }
+    
+    # 全局平均池化
+    x <- torch::torch_mean(x, dim = 2)
+    x <- self$norm(x)
+    x <- self$dropout(x)
+    
+    # 分类
+    x <- self$classifier(x)
+    
+    return(x)
+  }
+)
+
+# 创建模型
+model <- TransformerClassifier(
+  vocab_size = 10000,
+  d_model = 64,
+  num_heads = 4,
+  d_ff = 256,
+  num_layers = 2,
+  num_classes = 2,
+  max_len = 128
+)
+
+# 打印模型结构
+print(model)
+```
+
+---
+
+## 9.7 预训练Transformer模型的R接口 {#97-预训练transformer模型的r接口}
+
+### 使用Hugging Face Transformers
+
+通过reticulate包，我们可以在R中使用Hugging Face的预训练Transformer模型。
+
+```{r, eval=FALSE}
+# 加载Python模块
+library(reticulate)
+
+# 导入transformers库
+transformers <- import("transformers")
+torch <- import("torch")
+
+# 加载预训练的BERT模型
+load_bert_model <- function(model_name = "bert-base-uncased") {
+  # 加载tokenizer
+  tokenizer <- transformers$BertTokenizer$from_pretrained(model_name)
+  
+  # 加载模型
+  model <- transformers$BertModel$from_pretrained(model_name)
+  
+  return(list(tokenizer = tokenizer, model = model))
+}
+
+# 使用BERT进行文本编码
+bert_encode <- function(texts, tokenizer, model, max_length = 128) {
+  # 编码文本
+  encoded <- tokenizer(
+    texts,
+    padding = TRUE,
+    truncation = TRUE,
+    max_length = max_length,
+    return_tensors = "pt"
+  )
+  
+  # 获取BERT输出
+  with(torch$no_grad(), {
+    outputs <- model(
+      input_ids = encoded$input_ids,
+      attention_mask = encoded$attention_mask
+    )
+  })
+  
+  # 返回最后一层隐藏状态
+  return(outputs$last_hidden_state)
+}
+
+# 示例：使用BERT编码生物医学文本
+bert <- load_bert_model("bert-base-uncased")
+
+texts <- c(
+  "The protein interacts with DNA",
+  "Gene expression is regulated by transcription factors"
+)
+
+embeddings <- bert_encode(texts, bert$tokenizer, bert$model)
+cat("BERT输出形状：", as.array(embeddings$shape), "\n")
+```
+
+### 使用预训练模型进行下游任务
+
+```{r, eval=FALSE}
+# 使用预训练BERT进行序列分类
+create_bert_classifier <- function(model_name = "bert-base-uncased", num_classes = 2) {
+  # 加载预训练模型配置
+  config <- transformers$BertConfig$from_pretrained(model_name)
+  config$num_labels <- num_classes
+  
+  # 加载带分类头的模型
+  model <- transformers$BertForSequenceClassification$from_pretrained(
+    model_name,
+    config = config
+  )
+  
+  tokenizer <- transformers$BertTokenizer$from_pretrained(model_name)
+  
+  return(list(model = model, tokenizer = tokenizer))
+}
+
+# 微调BERT进行蛋白质功能预测
+finetune_bert <- function(train_texts, train_labels, model, tokenizer, epochs = 3) {
+  # 准备数据
+  train_encodings <- tokenizer(
+    train_texts,
+    truncation = TRUE,
+    padding = TRUE,
+    max_length = 128,
+    return_tensors = "pt"
+  )
+  
+  # 创建数据集
+  train_dataset <- torch$utils$data$TensorDataset(
+    train_encodings$input_ids,
+    train_encodings$attention_mask,
+    torch$torch_tensor(train_labels, dtype = torch$long)
+  )
+  
+  train_loader <- torch$utils$data$DataLoader(
+    train_dataset,
+    batch_size = 16,
+    shuffle = TRUE
+  )
+  
+  # 设置优化器
+  optimizer <- transformers$AdamW(model$parameters(), lr = 2e-5)
+  
+  # 训练循环
+  model$train()
+  
+  for (epoch in 1:epochs) {
+    total_loss <- 0
+    
+    for (batch in iterate(train_loader)) {
+      optimizer$zero_grad()
+      
+      outputs <- model(
+        input_ids = batch[[1]],
+        attention_mask = batch[[2]],
+        labels = batch[[3]]
+      )
+      
+      loss <- outputs$loss
+      loss$backward()
+      optimizer$step()
+      
+      total_loss <- total_loss + loss$item()
+    }
+    
+    cat(sprintf("Epoch %d, Loss: %.4f\n", epoch, total_loss / length(train_loader)))
+  }
+  
+  return(model)
+}
+```
+
+---
+
+## 9.8 Transformer在基因序列与蛋白质结构预测中的应用 {#98-transformer在基因序列与蛋白质结构预测中的应用}
+
+### 基因序列分析
+
+Transformer在基因序列分析中的应用包括：
+
+1. **启动子识别**：识别DNA序列中的启动子区域
+2. **剪接位点预测**：预测内含子-外显子边界
+3. **变异效应预测**：预测基因变异的功能影响
+
+```{r, eval=FALSE}
+# 基因序列编码器
+encode_dna_sequence <- function(sequence, k = 3) {
+  # k-mer编码
+  # sequence: DNA序列字符串
+  # k: k-mer大小
+  
+  # 定义k-mer词汇表
+  nucleotides <- c("A", "T", "G", "C")
+  
+  # 生成所有可能的k-mer
+  generate_kmers <- function(k) {
+    if (k == 1) return(nucleotides)
+    
+    prev_kmers <- generate_kmers(k - 1)
+    kmers <- c()
+    for (n in nucleotides) {
+      kmers <- c(kmers, paste0(prev_kmers, n))
+    }
+    return(kmers)
+  }
+  
+  kmers <- generate_kmers(k)
+  kmer_to_id <- setNames(1:length(kmers), kmers)
+  
+  # 提取k-mer
+  sequence <- toupper(sequence)
+  kmer_ids <- c()
+  
+  for (i in 1:(nchar(sequence) - k + 1)) {
+    kmer <- substr(sequence, i, i + k - 1)
+    if (kmer %in% names(kmer_to_id)) {
+      kmer_ids <- c(kmer_ids, kmer_to_id[kmer])
+    }
+  }
+  
+  return(kmer_ids)
+}
+
+# 示例
+dna_seq <- "ATGCGATCGATCGATCGATCG"
+kmer_ids <- encode_dna_sequence(dna_seq, k = 3)
+cat("DNA序列长度：", nchar(dna_seq), "\n")
+cat("k-mer ID数量：", length(kmer_ids), "\n")
+cat("前10个k-mer ID：", kmer_ids[1:10], "\n")
+```
+
+### 蛋白质结构预测
+
+```{r, eval=FALSE}
+# 蛋白质序列嵌入
+encode_protein_sequence <- function(sequence, max_length = 512) {
+  # 20种标准氨基酸
+  amino_acids <- c(
+    "A", "R", "N", "D", "C", "Q", "E", "G", "H", "I",
+    "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V"
+  )
+  
+  aa_to_id <- setNames(1:20, amino_acids)
+  aa_to_id["X"] <- 21  # 未知氨基酸
+  aa_to_id["PAD"] <- 0  # 填充
+  
+  # 编码序列
+  sequence <- toupper(sequence)
+  aa_ids <- c()
+  
+  for (i in 1:nchar(sequence)) {
+    aa <- substr(sequence, i, i)
+    if (aa %in% names(aa_to_id)) {
+      aa_ids <- c(aa_ids, aa_to_id[aa])
+    } else {
+      aa_ids <- c(aa_ids, aa_to_id["X"])
+    }
+  }
+  
+  # 填充或截断
+  if (length(aa_ids) < max_length) {
+    aa_ids <- c(aa_ids, rep(aa_to_id["PAD"], max_length - length(aa_ids)))
+  } else {
+    aa_ids <- aa_ids[1:max_length]
+  }
+  
+  return(aa_ids)
+}
+
+# 蛋白质二级结构预测模型
+create_protein_structure_model <- function(
+  vocab_size = 22,
+  max_length = 512,
+  d_model = 128,
+  num_heads = 8,
+  num_layers = 6,
+  num_classes = 3  # 螺旋、折叠、卷曲
+) {
+  library(keras)
+  
+  inputs <- layer_input(shape = list(max_length), dtype = "int32")
+  
+  # 氨基酸嵌入
+  x <- inputs %>%
+    layer_embedding(input_dim = vocab_size, output_dim = d_model)
+  
+  # 位置编码
+  positions <- tf$range(start = 0, limit = max_length, delta = 1)
+  position_embedding <- layer_embedding(input_dim = max_length, output_dim = d_model)(positions)
+  x <- x + position_embedding
+  
+  # Transformer编码器
+  for (i in 1:num_layers) {
+    # 多头注意力
+    attn_output <- layer_multi_head_attention(
+      num_heads = num_heads,
+      key_dim = d_model / num_heads
+    )(x, x)
+    
+    x <- layer_add()(list(x, attn_output))
+    x <- layer_layer_normalization()(x)
+    
+    # 前馈网络
+    ffn_output <- x %>%
+      layer_dense(units = d_model * 4, activation = "relu") %>%
+      layer_dense(units = d_model)
+    
+    x <- layer_add()(list(x, ffn_output))
+    x <- layer_layer_normalization()(x)
+  }
+  
+  # 每个位置的分类
+  outputs <- x %>%
+    layer_dense(units = num_classes, activation = "softmax")
+  
+  return(keras_model(inputs = inputs, outputs = outputs))
+}
+```
+
+### 意义与使用场景
+
+**核心意义**：Transformer架构通过自注意力机制，能够捕捉序列中任意位置之间的依赖关系，特别适合处理具有长程依赖的生物序列数据。
+
+**举例**：预测蛋白质的功能位点（如磷酸化位点）
+
+**为什么这种数据适合用Transformer？**
+
+首先，蛋白质的功能位点往往由序列中多个位置的残基共同决定，这些残基可能在序列上相距很远，但在三维空间中靠近形成功能结构域。传统方法难以捕捉这种长程依赖。其次，Transformer的并行计算能力使其能够高效处理大规模蛋白质序列数据。这种"长程依赖+大规模数据+并行计算需求"的特点，正是Transformer的优势所在。
+
+**研究目的是什么？**
+
+1. 预测功能位点：识别可能发生磷酸化、乙酰化等修饰的氨基酸位置。
+2. 理解序列-功能关系：揭示哪些序列特征决定功能位点。
+3. 指导实验设计：为湿实验提供候选位点，减少实验成本。
+
+**可能得到什么样的结果？**
+
+模型可以输出每个位置的功能位点概率。例如，序列中位置45的丝氨酸（S）被预测为磷酸化位点的概率为0.87。注意力权重可视化可能显示该位置高度关注位置12的精氨酸（R）和位置78的赖氨酸（K），暗示这三个残基可能形成磷酸化识别基序。
+
+**需要注意什么？**
+
+Transformer模型需要大量标注数据进行训练。对于罕见的功能位点类型，可能需要使用迁移学习或数据增强技术。此外，模型的可解释性仍然是一个挑战，注意力权重只能提供有限的生物学洞察。
+
+---
+
+## 本章小结
+
+| 概念 | 核心思想 | 应用场景 |
+|:----:|:--------:|:--------:|
+| 注意力机制 | 查询-键-值框架，动态权重分配 | 序列建模、特征选择 |
+| 自注意力 | 同一序列内部的注意力计算 | 捕捉长程依赖 |
+| 多头注意力 | 多个注意力头并行学习不同模式 | 捕捉多方面特征 |
+| 位置编码 | 为序列位置添加唯一标识 | 保持位置信息 |
+| Transformer | 完全基于注意力的序列模型 | NLP、生物序列分析 |
+| 预训练模型 | 大规模数据预训练+微调 | 迁移学习、少样本学习 |
+
+---
+
+# 第十章：图神经网络（GNN） {#第十章图神经网络gnn}
+
+图神经网络（Graph Neural Networks, GNN）是一类专门处理图结构数据的深度学习模型。在生物信息学中，许多数据天然具有图结构，如蛋白质相互作用网络、代谢网络、药物分子结构等，GNN在这些领域展现出强大的建模能力。
+
+## 10.1 图数据表示 {#101-图数据表示}
+
+### 核心概念
+
+图由节点（Node）和边（Edge）组成，可以表示实体及其之间的关系。在深度学习中，图数据通常包含三种信息：
+
+1. **节点特征（Node Features）**：每个节点的属性向量
+2. **边特征（Edge Features）**：每条边的属性向量（可选）
+3. **图结构**：由邻接矩阵或边列表表示
+
+### 数学基础
+
+**邻接矩阵（Adjacency Matrix）**：
+
+$$A_{ij} = \begin{cases} 1 & \text{如果节点 } i \text{ 和 } j \text{ 之间有边} \\ 0 & \text{否则} \end{cases}$$
+
+**度矩阵（Degree Matrix）**：
+
+$$D_{ii} = \sum_j A_{ij}$$
+
+**拉普拉斯矩阵（Laplacian Matrix）**：
+
+$$L = D - A$$
+
+**归一化拉普拉斯矩阵**：
+
+$$L_{sym} = D^{-1/2}LD^{-1/2} = I - D^{-1/2}AD^{-1/2}$$
+
+```{r}
+# 图数据结构的基本实现
+# 创建图对象
+create_graph <- function(num_nodes, node_features = NULL, edge_list = NULL, edge_features = NULL) {
+  # num_nodes: 节点数量
+  # node_features: 节点特征矩阵 [num_nodes, feature_dim]
+  # edge_list: 边列表，每行是一条边 [num_edges, 2]
+  # edge_features: 边特征矩阵 [num_edges, edge_dim]
+  
+  graph <- list(
+    num_nodes = num_nodes,
+    node_features = node_features,
+    edge_list = edge_list,
+    edge_features = edge_features
+  )
+  
+  # 计算邻接矩阵
+  if (!is.null(edge_list)) {
+    adj_matrix <- matrix(0, nrow = num_nodes, ncol = num_nodes)
+    for (i in 1:nrow(edge_list)) {
+      src <- edge_list[i, 1]
+      dst <- edge_list[i, 2]
+      adj_matrix[src, dst] <- 1
+      adj_matrix[dst, src] <- 1  # 无向图
+    }
+    graph$adj_matrix <- adj_matrix
+  }
+  
+  return(graph)
+}
+
+# 计算图的统计特性
+graph_statistics <- function(graph) {
+  adj <- graph$adj_matrix
+  
+  # 度向量
+  degrees <- rowSums(adj)
+  
+  # 平均度
+  avg_degree <- mean(degrees)
+  
+  # 图密度
+  num_edges <- sum(adj) / 2
+  max_edges <- graph$num_nodes * (graph$num_nodes - 1) / 2
+  density <- num_edges / max_edges
+  
+  # 聚类系数（简化计算）
+  clustering_coef <- mean(sapply(1:graph$num_nodes, function(i) {
+    neighbors <- which(adj[i, ] == 1)
+    if (length(neighbors) < 2) return(0)
+    
+    neighbor_edges <- sum(adj[neighbors, neighbors]) / 2
+    possible_edges <- length(neighbors) * (length(neighbors) - 1) / 2
+    return(neighbor_edges / possible_edges)
+  }))
+  
+  return(list(
+    num_nodes = graph$num_nodes,
+    num_edges = num_edges,
+    avg_degree = avg_degree,
+    density = density,
+    clustering_coef = clustering_coef,
+    degrees = degrees
+  ))
+}
+
+# 示例：创建蛋白质相互作用网络
+set.seed(42)
+num_proteins <- 10
+
+# 随机生成边
+edge_list <- matrix(c(
+  1, 2, 1, 3, 2, 3, 2, 4, 3, 5,
+  4, 5, 4, 6, 5, 6, 6, 7, 7, 8,
+  8, 9, 8, 10, 9, 10
+), ncol = 2, byrow = TRUE)
+
+# 节点特征（模拟蛋白质属性）
+node_features <- matrix(rnorm(num_proteins * 16), nrow = num_proteins)
+
+# 创建图
+ppi_graph <- create_graph(
+  num_nodes = num_proteins,
+  node_features = node_features,
+  edge_list = edge_list
+)
+
+# 计算统计特性
+stats <- graph_statistics(ppi_graph)
+cat("节点数量：", stats$num_nodes, "\n")
+cat("边数量：", stats$num_edges, "\n")
+cat("平均度：", round(stats$avg_degree, 2), "\n")
+cat("图密度：", round(stats$density, 3), "\n")
+cat("聚类系数：", round(stats$clustering_coef, 3), "\n")
+```
+
+### 可视化图结构
+
+```{r}
+# 简单的图可视化
+visualize_graph <- function(graph, node_labels = NULL) {
+  # 使用igraph包进行可视化
+  if (!requireNamespace("igraph", quietly = TRUE)) {
+    cat("请安装igraph包：install.packages('igraph')\n")
+    return(NULL)
+  }
+  
+  library(igraph)
+  
+  # 创建igraph对象
+  g <- igraph::graph_from_adjacency_matrix(
+    graph$adj_matrix, 
+    mode = "undirected"
+  )
+  
+  # 设置布局
+  layout <- igraph::layout_with_fr(g)
+  
+  # 绘制图形
+  plot(
+    g, 
+    layout = layout,
+    vertex.label = if (!is.null(node_labels)) node_labels else 1:graph$num_nodes,
+    vertex.size = 20,
+    vertex.color = "lightblue",
+    vertex.frame.color = "darkblue",
+    edge.color = "gray",
+    main = "图结构可视化"
+  )
+}
+
+# 可视化蛋白质相互作用网络
+visualize_graph(ppi_graph)
+```
+
+---
+
+## 10.2 图卷积网络（GCN）基本原理 {#102-图卷积网络gcn基本原理}
+
+### 核心概念
+
+图卷积网络（Graph Convolutional Network, GCN）将卷积操作从规则网格（如图像）推广到不规则图结构。GCN通过聚合邻居节点的特征来更新当前节点的表示，实现信息在图上的传播。
+
+### 数学基础
+
+**GCN层的前向传播公式**：
+
+$$H^{(l+1)} = \sigma\left(\tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}H^{(l)}W^{(l)}\right)$$
+
+**参数说明**：
+- $\tilde{A} = A + I$：添加自环的邻接矩阵
+- $\tilde{D}$：$\tilde{A}$ 的度矩阵
+- $H^{(l)}$：第 $l$ 层的节点特征矩阵
+- $W^{(l)}$：第 $l$ 层的可学习权重矩阵
+- $\sigma$：激活函数（如ReLU）
+
+**直观理解**：
+
+1. 每个节点聚合其邻居的特征
+2. 通过归一化处理，避免度数大的节点主导
+3. 通过可学习的权重矩阵进行特征变换
+
+```{r}
+# GCN层的实现
+gcn_layer <- function(in_features, out_features) {
+  # 初始化权重
+  W <- matrix(rnorm(in_features * out_features, sd = 0.1), nrow = in_features)
+  b <- rep(0, out_features)
+  
+  forward <- function(X, adj, activation = "relu") {
+    # X: 节点特征矩阵 [num_nodes, in_features]
+    # adj: 邻接矩阵 [num_nodes, num_nodes]
+    
+    num_nodes <- nrow(X)
+    
+    # 添加自环
+    adj_tilde <- adj + diag(num_nodes)
+    
+    # 计算度矩阵
+    degree <- rowSums(adj_tilde)
+    D_inv_sqrt <- diag(1 / sqrt(degree))
+    
+    # 归一化邻接矩阵
+    adj_norm <- D_inv_sqrt %*% adj_tilde %*% D_inv_sqrt
+    
+    # 图卷积
+    support <- X %*% W + matrix(b, nrow = num_nodes, ncol = out_features, byrow = TRUE)
+    output <- adj_norm %*% support
+    
+    # 激活函数
+    if (activation == "relu") {
+      output <- pmax(output, 0)
+    } else if (activation == "sigmoid") {
+      output <- 1 / (1 + exp(-output))
+    }
+    
+    return(output)
+  }
+  
+  return(list(forward = forward, W = W, b = b))
+}
+
+# 构建多层GCN
+build_gcn <- function(num_layers, in_features, hidden_features, out_features) {
+  layers <- list()
+  
+  # 第一层
+  layers[[1]] <- gcn_layer(in_features, hidden_features)
+  
+  # 中间层
+  if (num_layers > 2) {
+    for (i in 2:(num_layers - 1)) {
+      layers[[i]] <- gcn_layer(hidden_features, hidden_features)
+    }
+  }
+  
+  # 输出层
+  layers[[num_layers]] <- gcn_layer(hidden_features, out_features)
+  
+  forward <- function(X, adj) {
+    h <- X
+    
+    # 前面的层使用ReLU
+    for (i in 1:(num_layers - 1)) {
+      h <- layers[[i]]$forward(h, adj, activation = "relu")
+    }
+    
+    # 最后一层不使用激活函数（用于分类）
+    h <- layers[[num_layers]]$forward(h, adj, activation = "none")
+    
+    return(h)
+  }
+  
+  return(list(forward = forward, layers = layers))
+}
+
+# 示例：使用GCN进行节点分类
+set.seed(42)
+num_nodes <- 20
+num_features <- 16
+num_classes <- 3
+
+# 创建随机图
+adj <- matrix(0, nrow = num_nodes, ncol = num_nodes)
+for (i in 1:(num_nodes - 1)) {
+  for (j in (i + 1):num_nodes) {
+    if (runif(1) < 0.3) {  # 30%的连接概率
+      adj[i, j] <- 1
+      adj[j, i] <- 1
+    }
+  }
+}
+
+# 节点特征
+X <- matrix(rnorm(num_nodes * num_features), nrow = num_nodes)
+
+# 构建GCN
+gcn <- build_gcn(num_layers = 2, in_features = num_features, hidden_features = 32, out_features = num_classes)
+
+# 前向传播
+output <- gcn$forward(X, adj)
+
+cat("输入特征形状：", dim(X), "\n")
+cat("输出特征形状：", dim(output), "\n")
+cat("每个节点的类别预测：\n")
+print(apply(output, 1, which.max))
+```
+
+---
+
+## 10.3 图注意力网络（GAT） {#103-图注意力网络gat}
+
+### 核心概念
+
+图注意力网络（Graph Attention Network, GAT）将注意力机制引入图神经网络，让模型能够学习邻居节点的重要性权重，而不是像GCN那样使用固定的归一化权重。
+
+### 数学基础
+
+**注意力系数计算**：
+
+$$e_{ij} = a(Wh_i, Wh_j)$$
+
+$$\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k \in \mathcal{N}_i}\exp(e_{ik})}$$
+
+**特征聚合**：
+
+$$h_i' = \sigma\left(\sum_{j \in \mathcal{N}_i}\alpha_{ij}Wh_j\right)$$
+
+**参数说明**：
+- $W$：共享的线性变换矩阵
+- $a$：注意力机制函数
+- $\alpha_{ij}$：节点 $j$ 对节点 $i$ 的注意力系数
+- $\mathcal{N}_i$：节点 $i$ 的邻居集合
+
+```{r}
+# GAT层的实现
+gat_layer <- function(in_features, out_features, num_heads = 1, concat = TRUE) {
+  # in_features: 输入特征维度
+  # out_features: 每个头的输出特征维度
+  # num_heads: 注意力头数量
+  # concat: 是否拼接多头输出
+  
+  # 初始化参数
+  W <- matrix(rnorm(in_features * out_features * num_heads, sd = 0.1), 
+              nrow = in_features, ncol = out_features * num_heads)
+  a_src <- matrix(rnorm(out_features * num_heads, sd = 0.1), nrow = out_features * num_heads)
+  a_dst <- matrix(rnorm(out_features * num_heads, sd = 0.1), nrow = out_features * num_heads)
+  
+  forward <- function(X, adj) {
+    num_nodes <- nrow(X)
+    
+    # 线性变换
+    h <- X %*% W  # [num_nodes, out_features * num_heads]
+    
+    # 分割多头
+    heads_output <- list()
+    
+    for (head in 1:num_heads) {
+      start_col <- (head - 1) * out_features + 1
+      end_col <- head * out_features
+      h_head <- h[, start_col:end_col]
+      
+      # 计算注意力得分
+      attn_src <- h_head %*% a_src[start_col:end_col]
+      attn_dst <- h_head %*% a_dst[start_col:end_col]
+      
+      # 注意力得分矩阵
+      attn_scores <- attn_src + t(attn_dst)
+      
+      # 只保留邻居节点的注意力
+      attn_scores <- attn_scores * adj + (-1e9) * (1 - adj)
+      
+      # Softmax归一化
+      attn_weights <- t(apply(attn_scores, 1, function(row) {
+        exp_row <- exp(row - max(row))
+        exp_row / sum(exp_row)
+      }))
+      
+      # 特征聚合
+      heads_output[[head]] <- attn_weights %*% h_head
+    }
+    
+    # 合并多头
+    if (concat) {
+      output <- do.call(cbind, heads_output)
+    } else {
+      output <- Reduce(`+`, heads_output) / num_heads
+    }
+    
+    return(list(output = output, attention_weights = heads_output))
+  }
+  
+  return(list(forward = forward))
+}
+
+# 示例：使用GAT进行节点分类
+set.seed(42)
+num_nodes <- 15
+num_features <- 16
+out_features <- 8
+num_heads <- 4
+
+# 创建随机图
+adj <- matrix(0, nrow = num_nodes, ncol = num_nodes)
+for (i in 1:(num_nodes - 1)) {
+  for (j in (i + 1):num_nodes) {
+    if (runif(1) < 0.25) {
+      adj[i, j] <- 1
+      adj[j, i] <- 1
+    }
+  }
+}
+
+# 节点特征
+X <- matrix(rnorm(num_nodes * num_features), nrow = num_nodes)
+
+# 创建GAT层
+gat <- gat_layer(num_features, out_features, num_heads = num_heads, concat = TRUE)
+
+# 前向传播
+result <- gat$forward(X, adj)
+
+cat("输入特征形状：", dim(X), "\n")
+cat("输出特征形状：", dim(result$output), "\n")
+cat("注意力头数量：", length(result$attention_weights), "\n")
+```
+
+### 可视化注意力权重
+
+```{r}
+# 可视化GAT的注意力权重
+visualize_attention_weights <- function(attention_weights, adj, node_id = 1) {
+  # 获取指定节点的注意力权重
+  attn <- attention_weights[[1]][node_id, ]
+  
+  # 只显示邻居节点的注意力
+  neighbors <- which(adj[node_id, ] == 1)
+  
+  if (length(neighbors) == 0) {
+    cat("节点", node_id, "没有邻居\n")
+    return(NULL)
+  }
+  
+  # 创建数据框
+  df <- data.frame(
+    neighbor = neighbors,
+    weight = attn[neighbors]
+  )
+  
+  # 绘制条形图
+  p <- ggplot2::ggplot(df, ggplot2::aes(x = reorder(factor(neighbor), weight), y = weight)) +
+    ggplot2::geom_bar(stat = "identity", fill = "steelblue") +
+    ggplot2::coord_flip() +
+    ggplot2::labs(
+      title = paste("节点", node_id, "的注意力权重"),
+      x = "邻居节点",
+      y = "注意力权重"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 14)
+    )
+  
+  return(p)
+}
+
+# 可视化第一个节点的注意力权重
+visualize_attention_weights(result$attention_weights, adj, node_id = 1)
+```
+
+---
+
+## 10.4 在R中集成Python GNN库 {#104-在r中集成python-gnn库}
+
+### 使用reticulate调用DGL
+
+DGL（Deep Graph Library）是一个流行的图神经网络库，我们可以通过reticulate在R中使用它。
+
+```{r, eval=FALSE}
+# 使用reticulate调用DGL
+library(reticulate)
+
+# 导入Python模块
+dgl <- import("dgl")
+torch <- import("torch")
+nn <- import("torch.nn")
+F <- import("torch.nn.functional")
+
+# 创建DGL图
+create_dgl_graph <- function(num_nodes, edge_list, node_features) {
+  # 边列表转换为张量
+  src <- torch::torch_tensor(edge_list[, 1] - 1, dtype = torch::int64)  # R索引从1开始
+  dst <- torch::torch_tensor(edge_list[, 2] - 1, dtype = torch::int64)
+  
+  # 创建DGL图
+  g <- dgl$graph(list(src, dst), num_nodes = as.integer(num_nodes))
+  
+  # 添加节点特征
+  g$ndata$feat <- torch::torch_tensor(node_features, dtype = torch::float32)
+  
+  return(g)
+}
+
+# 使用DGL的GCN层
+dgl_gcn <- function(in_feats, hidden_size, out_feats) {
+  # 定义GCN模型
+  GCN <- torch::nn$ModuleList()
+  
+  # 第一层
+  GCN$append(dgl$nn$GraphConv(in_feats, hidden_size))
+  # 第二层
+  GCN$append(dgl$nn$GraphConv(hidden_size, out_feats))
+  
+  forward <- function(g, features) {
+    h <- features
+    for (i in 1:length(GCN)) {
+      h <- GCN[[i]](g, h)
+      if (i < length(GCN)) {
+        h <- F$relu(h)
+      }
+    }
+    return(h)
+  }
+  
+  return(list(forward = forward, layers = GCN))
+}
+
+# 示例
+set.seed(42)
+num_nodes <- 100
+num_features <- 10
+
+# 创建随机图
+edge_list <- matrix(c(), ncol = 2)
+for (i in 1:(num_nodes - 1)) {
+  for (j in (i + 1):num_nodes) {
+    if (runif(1) < 0.05) {
+      edge_list <- rbind(edge_list, c(i, j))
+    }
+  }
+}
+
+node_features <- matrix(rnorm(num_nodes * num_features), nrow = num_nodes)
+
+# 创建DGL图
+g <- create_dgl_graph(num_nodes, edge_list, node_features)
+
+# 创建GCN模型
+model <- dgl_gcn(num_features, 16, 3)
+
+# 前向传播
+output <- model$forward(g, g$ndata$feat)
+cat("输出形状：", as.array(output$shape), "\n")
+```
+
+### 使用PyTorch Geometric
+
+```{r, eval=FALSE}
+# 使用PyTorch Geometric
+torch_geometric <- import("torch_geometric")
+
+# 创建PyG数据对象
+create_pyg_data <- function(edge_list, node_features, labels = NULL) {
+  # 边索引（COO格式）
+  edge_index <- torch::torch_tensor(
+    rbind(edge_list[, 1] - 1, edge_list[, 2] - 1),  # 转换为0-based索引
+    dtype = torch::long
+  )
+  
+  # 节点特征
+  x <- torch::torch_tensor(node_features, dtype = torch::float)
+  
+  # 创建数据对象
+  data <- torch_geometric$data$Data(x = x, edge_index = edge_index)
+  
+  if (!is.null(labels)) {
+    data$y <- torch::torch_tensor(labels, dtype = torch::long)
+  }
+  
+  return(data)
+}
+
+# 使用PyG的GCN
+pyg_gcn <- function(num_features, hidden_dim, num_classes) {
+  # 定义模型
+  GCN <- torch::nn$ModuleDict()
+  
+  GCN$conv1 <- torch_geometric$nn$GCNConv(num_features, hidden_dim)
+  GCN$conv2 <- torch_geometric$nn$GCNConv(hidden_dim, num_classes)
+  
+  forward <- function(data) {
+    x <- data$x
+    edge_index <- data$edge_index
+    
+    x <- GCN$conv1(x, edge_index)
+    x <- F$relu(x)
+    x <- F$dropout(x, p = 0.5, training = GCN$training)
+    x <- GCN$conv2(x, edge_index)
+    
+    return(F$log_softmax(x, dim = 1))
+  }
+  
+  return(list(forward = forward, model = GCN))
+}
+```
+
+---
+
+## 10.5 GNN在生物网络中的应用 {#105-gnn在生物网络中的应用}
+
+### 蛋白质相互作用网络分析
+
+```{r}
+# 蛋白质相互作用网络的节点分类
+protein_interaction_analysis <- function() {
+  # 模拟蛋白质相互作用网络
+  set.seed(42)
+  num_proteins <- 50
+  
+  # 创建蛋白质特征（模拟功能注释）
+  # 特征包括：分子量、等电点、疏水性、二级结构比例等
+  features <- cbind(
+    rnorm(num_proteins, 50000, 20000),   # 分子量
+    rnorm(num_proteins, 7, 1),            # 等电点
+    runif(num_proteins, -1, 1),           # 疏水性
+    runif(num_proteins, 0, 1),            # α螺旋比例
+    runif(num_proteins, 0, 1)             # β折叠比例
+  )
+  
+  # 标准化特征
+  features <- scale(features)
+  
+  # 创建相互作用网络
+  adj <- matrix(0, nrow = num_proteins, ncol = num_proteins)
+  
+  # 模拟相互作用：功能相似的蛋白质更可能相互作用
+  for (i in 1:(num_proteins - 1)) {
+    for (j in (i + 1):num_proteins) {
+      # 基于特征相似性计算相互作用概率
+      similarity <- sum(features[i, ] * features[j, ])
+      prob <- 1 / (1 + exp(-similarity))
+      
+      if (runif(1) < prob * 0.3) {
+        adj[i, j] <- 1
+        adj[j, i] <- 1
+      }
+    }
+  }
+  
+  # 模拟功能标签（3个功能类别）
+  labels <- sample(1:3, num_proteins, replace = TRUE)
+  
+  return(list(
+    features = features,
+    adj = adj,
+    labels = labels,
+    num_proteins = num_proteins
+  ))
+}
+
+# 运行分析
+ppi_data <- protein_interaction_analysis()
+
+cat("蛋白质数量：", ppi_data$num_proteins, "\n")
+cat("相互作用数量：", sum(ppi_data$adj) / 2, "\n")
+cat("特征维度：", ncol(ppi_data$features), "\n")
+cat("功能类别分布：", table(ppi_data$labels), "\n")
+```
+
+### 代谢网络分析
+
+```{r}
+# 代谢网络分析示例
+metabolic_network_analysis <- function() {
+  # 模拟代谢网络
+  # 节点：代谢物
+  # 边：代谢反应
+  
+  set.seed(42)
+  num_metabolites <- 30
+  
+  # 代谢物特征
+  features <- cbind(
+    rnorm(num_metabolites, 200, 100),    # 分子量
+    rnorm(num_metabolites, 0, 2),         # 电荷
+    runif(num_metabolites, 0, 10),        # 浓度
+    runif(num_metabolites, 0, 1)          # 丰度
+  )
+  
+  # 创建代谢反应网络
+  adj <- matrix(0, nrow = num_metabolites, ncol = num_metabolites)
+  
+  # 模拟代谢通路
+  for (i in 1:(num_metabolites - 1)) {
+    # 线性通路
+    if (runif(1) < 0.7) {
+      adj[i, i + 1] <- 1
+      adj[i + 1, i] <- 1
+    }
+    
+    # 分支
+    if (i < num_metabolites - 5 && runif(1) < 0.3) {
+      branch <- i + sample(2:5, 1)
+      adj[i, branch] <- 1
+      adj[branch, i] <- 1
+    }
+  }
+  
+  # 使用GCN预测代谢物的重要性
+  gcn <- build_gcn(
+    num_layers = 2,
+    in_features = ncol(features),
+    hidden_features = 16,
+    out_features = 1
+  )
+  
+  # 前向传播
+  importance_scores <- gcn$forward(features, adj)
+  
+  return(list(
+    features = features,
+    adj = adj,
+    importance_scores = as.vector(importance_scores)
+  ))
+}
+
+# 运行分析
+metabolic_data <- metabolic_network_analysis()
+
+# 找出最重要的代谢物
+top_metabolites <- order(metabolic_data$importance_scores, decreasing = TRUE)[1:5]
+cat("最重要的5个代谢物：", top_metabolites, "\n")
+cat("重要性得分：", round(metabolic_data$importance_scores[top_metabolites], 3), "\n")
+```
+
+### 意义与使用场景
+
+**核心意义**：图神经网络能够有效处理具有复杂关系结构的生物数据，通过信息传播机制捕捉节点之间的依赖关系，在生物网络分析中具有独特优势。
+
+**举例**：预测蛋白质的功能注释
+
+**为什么这种数据适合用GNN？**
+
+首先，蛋白质的功能往往由其在相互作用网络中的位置和邻居决定，孤立的蛋白质特征不足以预测功能。其次，蛋白质相互作用网络具有复杂的拓扑结构，传统的特征工程难以充分利用这种结构信息。这种"关系数据+网络结构+邻居依赖"的特点，正是GNN的优势所在。
+
+**研究目的是什么？**
+
+1. 功能预测：为未注释的蛋白质预测功能类别。
+2. 关键蛋白质识别：找出对网络功能最重要的蛋白质。
+3. 疾病基因优先级排序：根据网络特征识别潜在的疾病相关基因。
+
+**可能得到什么样的结果？**
+
+模型可以输出每个蛋白质的功能预测概率。例如，蛋白质P53被预测为"DNA修复"功能的概率为0.85，"细胞凋亡"功能的概率为0.72。通过分析注意力权重，可以发现P53高度关注其邻居蛋白质MDM2和ATM，这与已知的生物学知识一致。
+
+**需要注意什么？**
+
+GNN容易过平滑（over-smoothing），即多层传播后节点特征趋于相似。对于深层GNN，需要使用残差连接、跳跃连接等技术缓解。此外，生物网络的噪声和不完整性会影响模型性能，需要考虑数据质量。
+
+---
+
+## 本章小结
+
+| 概念 | 核心思想 | 应用场景 |
+|:----:|:--------:|:--------:|
+| 图数据表示 | 邻接矩阵、节点特征、边特征 | 网络建模 |
+| GCN | 聚合邻居特征，归一化传播 | 节点分类、图分类 |
+| GAT | 注意力加权的邻居聚合 | 学习节点重要性 |
+| DGL/PyG | Python GNN库的R接口 | 大规模图计算 |
+| 生物网络 | 蛋白质相互作用、代谢网络 | 功能预测、关键节点识别 |
+
+---
+
+# 第十一章：深度学习在生物信息学中的应用 {#第十一章深度学习在生物信息学中的应用}
+
+深度学习在生物信息学领域有着广泛的应用，从基因表达分析到蛋白质结构预测，从药物发现到医学影像诊断。本章将介绍如何使用R语言和深度学习技术解决实际的生物信息学问题。
+
+## 11.1 基因表达数据深度学习建模 {#111-基因表达数据深度学习建模}
+
+### RNA-Seq数据处理
+
+RNA-Seq数据是高通量转录组学的主要数据类型，深度学习可以用于差异表达分析、癌症分类、生存预测等任务。
+
+```{r}
+# 模拟RNA-Seq数据
+simulate_rnaseq <- function(num_samples = 100, num_genes = 1000, num_classes = 2) {
+  set.seed(42)
+  
+  # 模拟基因表达矩阵
+  # 使用负二项分布模拟计数数据
+  expression_matrix <- matrix(
+    rnbinom(num_samples * num_genes, size = 10, mu = 50),
+    nrow = num_samples,
+    ncol = num_genes
+  )
+  
+  # 添加差异表达基因
+  diff_genes <- sample(1:num_genes, 100)
+  class_labels <- sample(1:num_classes, num_samples, replace = TRUE)
+  
+  for (gene in diff_genes) {
+    # 不同类别有不同的表达水平
+    expression_matrix[class_labels == 1, gene] <- 
+      expression_matrix[class_labels == 1, gene] * 2
+  }
+  
+  # 样本名称和基因名称
+  sample_names <- paste0("Sample_", 1:num_samples)
+  gene_names <- paste0("Gene_", 1:num_genes)
+  
+  rownames(expression_matrix) <- sample_names
+  colnames(expression_matrix) <- gene_names
+  
+  return(list(
+    expression = expression_matrix,
+    labels = class_labels,
+    diff_genes = diff_genes
+  ))
+}
+
+# 生成模拟数据
+rnaseq_data <- simulate_rnaseq(num_samples = 200, num_genes = 500, num_classes = 2)
+
+cat("表达矩阵维度：", dim(rnaseq_data$expression), "\n")
+cat("样本数量：", nrow(rnaseq_data$expression), "\n")
+cat("基因数量：", ncol(rnaseq_data$expression), "\n")
+cat("类别分布：", table(rnaseq_data$labels), "\n")
+```
+
+### 数据预处理
+
+```{r}
+# RNA-Seq数据预处理
+preprocess_rnaseq <- function(expression_matrix, method = "logcpm") {
+  # expression_matrix: 基因表达矩阵 [samples, genes]
+  # method: 标准化方法
+  
+  if (method == "logcpm") {
+    # Counts Per Million (CPM) 标准化
+    library_sizes <- rowSums(expression_matrix)
+    cpm <- expression_matrix / library_sizes * 1e6
+    
+    # 对数变换（添加伪计数）
+    log_cpm <- log2(cpm + 1)
+    
+    return(log_cpm)
+    
+  } else if (method == "logtpm") {
+    # TPM标准化（需要基因长度信息）
+    # 这里简化处理
+    return(log2(expression_matrix + 1))
+    
+  } else if (method == "vst") {
+    # 方差稳定变换（简化版）
+    return(log2(expression_matrix + 1))
+  }
+}
+
+# 标准化数据
+normalized_expr <- preprocess_rnaseq(rnaseq_data$expression, method = "logcpm")
+
+# 特征选择：选择高变基因
+select_variable_genes <- function(expression_matrix, top_n = 200) {
+  # 计算每个基因的方差
+  gene_vars <- apply(expression_matrix, 2, var)
+  
+  # 选择方差最大的基因
+  top_genes <- order(gene_vars, decreasing = TRUE)[1:top_n]
+  
+  return(list(
+    selected_genes = top_genes,
+    selected_expression = expression_matrix[, top_genes]
+  ))
+}
+
+# 选择高变基因
+selected_data <- select_variable_genes(normalized_expr, top_n = 200)
+
+cat("选择的基因数量：", length(selected_data$selected_genes), "\n")
+cat("选择后的表达矩阵维度：", dim(selected_data$selected_expression), "\n")
+```
+
+### 构建深度学习模型
+
+```{r, eval=FALSE}
+# 使用Keras构建RNA-Seq分类模型
+library(keras)
+
+build_rnaseq_classifier <- function(
+  num_genes, 
+  num_classes, 
+  hidden_units = c(256, 128, 64),
+  dropout_rate = 0.3
+) {
+  # 输入层
+  inputs <- layer_input(shape = list(num_genes))
+  
+  # 批归一化
+  x <- layer_batch_normalization()(inputs)
+  
+  # 隐藏层
+  for (units in hidden_units) {
+    x <- x %>%
+      layer_dense(units = units) %>%
+      layer_batch_normalization() %>%
+      layer_activation("relu") %>%
+      layer_dropout(rate = dropout_rate)
+  }
+  
+  # 输出层
+  outputs <- layer_dense(x, units = num_classes, activation = "softmax")
+  
+  # 创建模型
+  model <- keras_model(inputs = inputs, outputs = outputs)
+  
+  return(model)
+}
+
+# 准备训练数据
+X <- selected_data$selected_expression
+y <- rnaseq_data$labels - 1  # 转换为0-based索引
+
+# 划分训练集和测试集
+set.seed(42)
+train_idx <- sample(1:nrow(X), size = 0.8 * nrow(X))
+X_train <- X[train_idx, ]
+X_test <- X[-train_idx, ]
+y_train <- y[train_idx]
+y_test <- y[-train_idx]
+
+# 构建模型
+model <- build_rnaseq_classifier(
+  num_genes = ncol(X),
+  num_classes = 2,
+  hidden_units = c(256, 128, 64),
+  dropout_rate = 0.3
+)
+
+# 编译模型
+model %>% compile(
+  optimizer = optimizer_adam(learning_rate = 0.001),
+  loss = "sparse_categorical_crossentropy",
+  metrics = c("accuracy")
+)
+
+# 训练模型
+history <- model %>% fit(
+  X_train, y_train,
+  epochs = 50,
+  batch_size = 32,
+  validation_split = 0.2,
+  verbose = 0
+)
+
+# 评估模型
+eval_result <- model %>% evaluate(X_test, y_test)
+cat("测试集准确率：", round(eval_result$accuracy, 4), "\n")
+```
+
+---
+
+## 11.2 蛋白质序列分类 {#112-蛋白质序列分类}
+
+### 蛋白质序列编码
+
+```{r}
+# 蛋白质序列编码方法
+
+# 1. 氨基酸组成编码
+aa_composition <- function(sequence) {
+  # 计算20种氨基酸的组成比例
+  amino_acids <- c("A", "R", "N", "D", "C", "Q", "E", "G", "H", "I",
+                   "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V")
+  
+  sequence <- toupper(sequence)
+  seq_length <- nchar(sequence)
+  
+  composition <- sapply(amino_acids, function(aa) {
+    length(gregexpr(aa, sequence)[[1]]) / seq_length
+  })
+  
+  return(composition)
+}
+
+# 2. k-mer特征编码
+kmer_features <- function(sequence, k = 3) {
+  # 提取k-mer特征
+  amino_acids <- c("A", "R", "N", "D", "C", "Q", "E", "G", "H", "I",
+                   "L", "K", "M", "F", "P", "S", "T", "W", "Y", "V")
+  
+  # 生成所有可能的k-mer
+  generate_kmers <- function(k, amino_acids) {
+    if (k == 1) return(amino_acids)
+    
+    prev_kmers <- generate_kmers(k - 1, amino_acids)
+    kmers <- c()
+    for (aa in amino_acids) {
+      kmers <- c(kmers, paste0(prev_kmers, aa))
+    }
+    return(kmers)
+  }
+  
+  all_kmers <- generate_kmers(k, amino_acids)
+  sequence <- toupper(sequence)
+  
+  # 计算k-mer频率
+  kmer_counts <- sapply(all_kmers, function(kmer) {
+    length(gregexpr(kmer, sequence, fixed = TRUE)[[1]])
+  })
+  
+  # 归一化
+  total_kmers <- nchar(sequence) - k + 1
+  return(kmer_counts / total_kmers)
+}
+
+# 示例
+protein_seq <- "MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRVKHLKTEAEMKASEDLKKHGVTVLTALGAILKKKGHHEAELKPLAQSHATKHKIPIKYLEFISEAIIHVLHSRHPGDFGADAQGAMNKALELFRKDIAAKYKELGYQG"
+
+# 氨基酸组成
+aa_comp <- aa_composition(protein_seq)
+cat("氨基酸组成（前5个）：\n")
+print(round(aa_comp[1:5], 4))
+
+# k-mer特征
+kmer_feat <- kmer_features(protein_seq, k = 2)
+cat("\n2-mer特征数量：", length(kmer_feat), "\n")
+cat("前5个2-mer特征：\n")
+print(round(kmer_feat[1:5], 4))
+```
+
+### CNN模型进行蛋白质分类
+
+```{r, eval=FALSE}
+# 使用CNN进行蛋白质序列分类
+library(keras)
+
+build_protein_cnn <- function(
+  max_length = 500,
+  vocab_size = 21,
+  embedding_dim = 64,
+  num_classes = 2
+) {
+  # 输入层
+  inputs <- layer_input(shape = list(max_length))
+  
+  # 嵌入层
+  x <- inputs %>%
+    layer_embedding(input_dim = vocab_size, output_dim = embedding_dim)
+  
+  # 卷积层（多尺度）
+  conv_outputs <- list()
+  for (kernel_size in c(3, 5, 7)) {
+    conv_out <- x %>%
+      layer_conv_1d(filters = 64, kernel_size = kernel_size, padding = "same") %>%
+      layer_activation("relu") %>%
+      layer_max_pooling_1d(pool_size = 2)
+    
+    conv_outputs <- c(conv_outputs, list(conv_out))
+  }
+  
+  # 合并多尺度特征
+  x <- layer_concatenate(conv_outputs)
+  
+  # 全局池化
+  x <- layer_global_max_pooling_1d()(x)
+  
+  # 全连接层
+  x <- x %>%
+    layer_dense(units = 128, activation = "relu") %>%
+    layer_dropout(rate = 0.5) %>%
+    layer_dense(units = 64, activation = "relu") %>%
+    layer_dropout(rate = 0.3)
+  
+  # 输出层
+  outputs <- layer_dense(x, units = num_classes, activation = "softmax")
+  
+  return(keras_model(inputs = inputs, outputs = outputs))
+}
+
+# 创建模型
+protein_model <- build_protein_cnn(
+  max_length = 500,
+  vocab_size = 21,
+  embedding_dim = 64,
+  num_classes = 2
+)
+
+# 查看模型结构
+summary(protein_model)
+```
+
+---
+
+## 11.3 药物靶点相互作用预测 {#113-药物靶点相互作用预测}
+
+### 药物分子编码
+
+```{r}
+# 药物分子特征编码
+
+# Morgan指纹（简化实现）
+morgan_fingerprint <- function(smiles, radius = 2, n_bits = 1024) {
+  # 在实际应用中，应使用RDKit等化学信息学库
+  # 这里提供简化版本
+  
+  set.seed(sum(utf8ToInt(smiles)) %% 10000)
+  
+  # 模拟指纹向量
+  fingerprint <- sample(c(0, 1), n_bits, replace = TRUE, prob = c(0.9, 0.1))
+  
+  return(fingerprint)
+}
+
+# 药物-靶点特征组合
+combine_drug_target_features <- function(drug_features, target_features, method = "concat") {
+  if (method == "concat") {
+    # 拼接特征
+    return(c(drug_features, target_features))
+    
+  } else if (method == "product") {
+    # 元素乘积
+    len <- min(length(drug_features), length(target_features))
+    return(drug_features[1:len] * target_features[1:len])
+    
+  } else if (method == "outer") {
+    # 外积（简化版）
+    return(as.vector(outer(drug_features, target_features)))
+  }
+}
+
+# 示例
+drug_smiles <- "CC(=O)Oc1ccccc1C(=O)O"  # 阿司匹林
+drug_fp <- morgan_fingerprint(drug_smiles)
+
+# 靶点特征（使用氨基酸组成）
+target_seq <- "MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRVKHLKTEAEMKASEDLKKHGVTVLTALGAILKKKGHHEAELKPLAQSHATKHKIPIKYLEFISEAIIHVLHSRHPGDFGADAQGAMNKALELFRKDIAAKYKELGYQG"
+target_feat <- aa_composition(target_seq)
+
+# 组合特征
+combined_feat <- combine_drug_target_features(drug_fp, target_feat, method = "concat")
+cat("药物指纹维度：", length(drug_fp), "\n")
+cat("靶点特征维度：", length(target_feat), "\n")
+cat("组合特征维度：", length(combined_feat), "\n")
+```
+
+### 构建药物-靶点相互作用预测模型
+
+```{r, eval=FALSE}
+# 药物-靶点相互作用预测模型
+library(keras)
+
+build_dti_model <- function(
+  drug_dim = 1024,
+  target_dim = 20,
+  hidden_units = c(512, 256, 128),
+  num_classes = 2
+) {
+  # 药物输入
+  drug_input <- layer_input(shape = list(drug_dim), name = "drug_input")
+  
+  # 靶点输入
+  target_input <- layer_input(shape = list(target_dim), name = "target_input")
+  
+  # 药物特征处理
+  drug_features <- drug_input %>%
+    layer_dense(units = 256, activation = "relu") %>%
+    layer_dropout(rate = 0.3)
+  
+  # 靶点特征处理
+  target_features <- target_input %>%
+    layer_dense(units = 64, activation = "relu") %>%
+    layer_dropout(rate = 0.3)
+  
+  # 合并特征
+  combined <- layer_concatenate(list(drug_features, target_features))
+  
+  # 共享隐藏层
+  x <- combined
+  for (units in hidden_units) {
+    x <- x %>%
+      layer_dense(units = units, activation = "relu") %>%
+      layer_batch_normalization() %>%
+      layer_dropout(rate = 0.3)
+  }
+  
+  # 输出层
+  output <- layer_dense(x, units = num_classes, activation = "softmax")
+  
+  return(keras_model(
+    inputs = list(drug_input, target_input),
+    outputs = output
+  ))
+}
+
+# 创建模型
+dti_model <- build_dti_model()
+
+# 编译模型
+dti_model %>% compile(
+  optimizer = optimizer_adam(learning_rate = 0.001),
+  loss = "sparse_categorical_crossentropy",
+  metrics = c("accuracy")
+)
+
+summary(dti_model)
+```
+
+---
+
+## 11.4 单细胞RNA-Seq降维与聚类 {#114-单细胞rna-seq降维与聚类}
+
+### 使用自编码器进行降维
+
+```{r, eval=FALSE}
+# 单细胞RNA-Seq自编码器
+library(keras)
+
+build_scRNA_autoencoder <- function(
+  input_dim,
+  latent_dim = 32,
+  encoder_units = c(512, 256, 128),
+  decoder_units = c(128, 256, 512)
+) {
+  # 编码器
+  encoder_input <- layer_input(shape = list(input_dim))
+  
+  x <- encoder_input
+  for (units in encoder_units) {
+    x <- x %>%
+      layer_dense(units = units, activation = "relu") %>%
+      layer_batch_normalization() %>%
+      layer_dropout(rate = 0.2)
+  }
+  
+  # 潜在空间
+  latent <- layer_dense(x, units = latent_dim, name = "latent")
+  
+  encoder <- keras_model(encoder_input, latent)
+  
+  # 解码器
+  decoder_input <- layer_input(shape = list(latent_dim))
+  
+  x <- decoder_input
+  for (units in decoder_units) {
+    x <- x %>%
+      layer_dense(units = units, activation = "relu") %>%
+      layer_batch_normalization()
+  }
+  
+  decoder_output <- layer_dense(x, units = input_dim, activation = "relu")
+  
+  decoder <- keras_model(decoder_input, decoder_output)
+  
+  # 完整的自编码器
+  autoencoder_output <- decoder(encoder(encoder_input))
+  autoencoder <- keras_model(encoder_input, autoencoder_output)
+  
+  return(list(
+    autoencoder = autoencoder,
+    encoder = encoder,
+    decoder = decoder
+  ))
+}
+
+# 模拟单细胞数据
+set.seed(42)
+num_cells <- 1000
+num_genes <- 500
+
+# 模拟稀疏表达矩阵
+sc_expression <- matrix(
+  rnbinom(num_cells * num_genes, size = 5, mu = 10),
+  nrow = num_cells
+)
+sc_expression[sample(1:(num_cells * num_genes), 0.8 * num_cells * num_genes)] <- 0
+
+# 标准化
+sc_normalized <- log2(sc_expression + 1)
+
+# 构建自编码器
+ae_model <- build_scRNA_autoencoder(
+  input_dim = num_genes,
+  latent_dim = 32,
+  encoder_units = c(512, 256, 128),
+  decoder_units = c(128, 256, 512)
+)
+
+# 编译和训练
+ae_model$autoencoder %>% compile(
+  optimizer = optimizer_adam(learning_rate = 0.001),
+  loss = "mean_squared_error"
+)
+
+# 训练（简化）
+history <- ae_model$autoencoder %>% fit(
+  sc_normalized, sc_normalized,
+  epochs = 20,
+  batch_size = 64,
+  validation_split = 0.1,
+  verbose = 0
+)
+
+# 获取潜在表示
+latent_features <- ae_model$encoder %>% predict(sc_normalized)
+cat("潜在特征维度：", dim(latent_features), "\n")
+```
+
+---
+
+## 11.5 医学图像分类 {#115-医学图像分类}
+
+### 病理切片图像分类
+
+```{r, eval=FALSE}
+# 医学图像分类模型
+library(keras)
+
+build_medical_image_classifier <- function(
+  img_height = 224,
+  img_width = 224,
+  num_classes = 2
+) {
+  # 使用预训练的ResNet作为基础
+  base_model <- application_resnet50(
+    weights = "imagenet",
+    include_top = FALSE,
+    input_shape = c(img_height, img_width, 3)
+  )
+  
+  # 冻结基础模型权重
+  for (layer in base_model$layers) {
+    layer$trainable <- FALSE
+  }
+  
+  # 添加自定义分类头
+  inputs <- layer_input(shape = c(img_height, img_width, 3))
+  
+  x <- inputs %>%
+    base_model() %>%
+    layer_global_average_pooling_2d() %>%
+    layer_dense(units = 512, activation = "relu") %>%
+    layer_dropout(rate = 0.5) %>%
+    layer_dense(units = 256, activation = "relu") %>%
+    layer_dropout(rate = 0.3) %>%
+    layer_dense(units = num_classes, activation = "softmax")
+  
+  model <- keras_model(inputs, x)
+  
+  return(model)
+}
+
+# 创建模型
+medical_model <- build_medical_image_classifier()
+
+# 编译模型
+medical_model %>% compile(
+  optimizer = optimizer_adam(learning_rate = 0.0001),
+  loss = "categorical_crossentropy",
+  metrics = c("accuracy")
+)
+
+summary(medical_model)
+```
+
+### 数据增强
+
+```{r, eval=FALSE}
+# 医学图像数据增强
+datagen <- image_data_generator(
+  rescale = 1/255,
+  rotation_range = 20,
+  width_shift_range = 0.2,
+  height_shift_range = 0.2,
+  shear_range = 0.2,
+  zoom_range = 0.2,
+  horizontal_flip = TRUE,
+  fill_mode = "nearest"
+)
+
+# 从目录加载图像（示例）
+# train_generator <- flow_images_from_directory(
+#   directory = "path/to/train",
+#   generator = datagen,
+#   target_size = c(224, 224),
+#   batch_size = 32,
+#   class_mode = "categorical"
+# )
+```
+
+---
+
+## 11.6 深度学习模型解释 {#116-深度学习模型解释}
+
+### 使用LIME进行模型解释
+
+```{r, eval=FALSE}
+# 使用LIME解释模型预测
+library(lime)
+
+# 假设我们有一个训练好的模型
+# 创建LIME解释器
+explain_model <- function(model, X_train, feature_names) {
+  # 创建LIME解释器
+  explainer <- lime::lime(
+    x = as.data.frame(X_train),
+    model = model,
+    bin_continuous = TRUE,
+    n_bins = 10
+  )
+  
+  return(explainer)
+}
+
+# 解释单个预测
+explain_prediction <- function(explainer, new_data, n_features = 10) {
+  # 生成解释
+  explanation <- lime::explain(
+    x = as.data.frame(new_data),
+    explainer = explainer,
+    n_features = n_features,
+    n_permutations = 100
+  )
+  
+  return(explanation)
+}
+
+# 可视化解释
+visualize_explanation <- function(explanation) {
+  # 绘制特征重要性
+  lime::plot_features(explanation)
+}
+```
+
+### 使用SHAP进行模型解释
+
+```{r, eval=FALSE}
+# 使用SHAP值解释模型
+library(reticulate)
+
+# 导入SHAP
+shap <- import("shap")
+
+# 计算SHAP值
+calculate_shap_values <- function(model, X_background, X_explain) {
+  # 创建SHAP解释器
+  explainer <- shap$KernelExplainer(
+    model = model,
+    data = X_background
+  )
+  
+  # 计算SHAP值
+  shap_values <- explainer$shap_values(X_explain)
+  
+  return(shap_values)
+}
+
+# 可视化SHAP值
+visualize_shap <- function(shap_values, feature_names) {
+  # 转换为数据框
+  shap_df <- as.data.frame(shap_values)
+  colnames(shap_df) <- feature_names
+  
+  # 计算平均绝对SHAP值
+  mean_shap <- colMeans(abs(shap_df))
+  
+  # 创建数据框
+  importance_df <- data.frame(
+    feature = feature_names,
+    importance = mean_shap
+  )
+  importance_df <- importance_df[order(importance_df$importance, decreasing = TRUE), ]
+  
+  # 绘制条形图
+  ggplot2::ggplot(head(importance_df, 20), ggplot2::aes(x = reorder(feature, importance), y = importance)) +
+    ggplot2::geom_bar(stat = "identity", fill = "steelblue") +
+    ggplot2::coord_flip() +
+    ggplot2::labs(
+      title = "特征重要性（SHAP值）",
+      x = "特征",
+      y = "平均绝对SHAP值"
+    ) +
+    ggplot2::theme_minimal()
+}
+```
+
+---
+
+## 11.7 模型部署与Shiny集成 {#117-模型部署与shiny集成}
+
+### 使用plumber构建API
+
+```{r, eval=FALSE}
+# 使用plumber构建深度学习API
+library(plumber)
+
+# 定义API
+# plumber_api.R
+# 
+# #* @apiTitle Deep Learning Model API
+# #* @apiDescription API for deep learning model predictions
+# 
+# #* 加载模型
+# model <- load_model_hdf5("model.h5")
+# 
+# #* 预测端点
+# #* @param data:character 数据（JSON格式）
+# #* @post /predict
+# function(data) {
+#   # 解析输入数据
+#   input_data <- jsonlite::fromJSON(data)
+#   
+#   # 预处理
+#   processed_data <- preprocess(input_data)
+#   
+#   # 预测
+#   prediction <- model %>% predict(processed_data)
+#   
+#   # 返回结果
+#   return(list(
+#     prediction = prediction,
+#     status = "success"
+#   ))
+# }
+
+# 运行API
+# plumber::plumb("plumber_api.R")$run(port = 8000)
+```
+
+### Shiny应用集成
+
+```{r, eval=FALSE}
+# Shiny应用集成深度学习模型
+library(shiny)
+
+# ui.R
+ui <- fluidPage(
+  titlePanel("深度学习预测系统"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      fileInput("file", "上传数据文件"),
+      actionButton("predict", "预测"),
+      br(),
+      br(),
+      helpText("支持CSV格式的数据文件")
+    ),
+    
+    mainPanel(
+      tabsetPanel(
+        tabPanel("预测结果", 
+                 verbatimTextOutput("prediction_result")),
+        tabPanel("可视化",
+                 plotOutput("visualization")),
+        tabPanel("特征重要性",
+                 plotOutput("feature_importance"))
+      )
+    )
+  )
+)
+
+# server.R
+server <- function(input, output, session) {
+  # 加载模型
+  model <- reactive({
+    # 在实际应用中，从文件加载模型
+    # load_model_hdf5("model.h5")
+    NULL
+  })
+  
+  # 预测
+  prediction <- eventReactive(input$predict, {
+    req(input$file)
+    
+    # 读取数据
+    data <- read.csv(input$file$datapath)
+    
+    # 预处理
+    # processed_data <- preprocess(data)
+    
+    # 预测
+    # result <- model() %>% predict(processed_data)
+    
+    # 返回结果
+    return(list(
+      predictions = sample(c("Positive", "Negative"), nrow(data), replace = TRUE),
+      probabilities = runif(nrow(data))
+    ))
+  })
+  
+  # 显示预测结果
+  output$prediction_result <- renderPrint({
+    result <- prediction()
+    cat("预测结果：\n")
+    print(table(result$predictions))
+    cat("\n平均预测概率：", mean(result$probabilities))
+  })
+  
+  # 可视化
+  output$visualization <- renderPlot({
+    result <- prediction()
+    df <- data.frame(
+      sample = 1:length(result$probabilities),
+      probability = result$probabilities,
+      prediction = result$predictions
+    )
+    
+    ggplot2::ggplot(df, ggplot2::aes(x = sample, y = probability, fill = prediction)) +
+      ggplot2::geom_bar(stat = "identity") +
+      ggplot2::labs(title = "预测概率分布", x = "样本", y = "概率") +
+      ggplot2::theme_minimal()
+  })
+  
+  # 特征重要性
+  output$feature_importance <- renderPlot({
+    # 模拟特征重要性
+    features <- paste0("Gene_", 1:20)
+    importance <- runif(20)
+    df <- data.frame(feature = features, importance = importance)
+    df <- df[order(df$importance, decreasing = TRUE), ]
+    
+    ggplot2::ggplot(df, ggplot2::aes(x = reorder(feature, importance), y = importance)) +
+      ggplot2::geom_bar(stat = "identity", fill = "steelblue") +
+      ggplot2::coord_flip() +
+      ggplot2::labs(title = "特征重要性", x = "特征", y = "重要性") +
+      ggplot2::theme_minimal()
+  })
+}
+
+# 运行应用
+# shinyApp(ui = ui, server = server)
+```
+
+### 意义与使用场景
+
+**核心意义**：深度学习在生物信息学中的应用，能够从复杂的生物数据中自动学习特征，减少人工特征工程的工作量，提高预测准确性。
+
+**举例**：基于RNA-Seq数据的癌症类型分类
+
+**为什么这种数据适合用深度学习？**
+
+首先，RNA-Seq数据维度高（数万个基因），样本量相对较少，传统机器学习方法容易过拟合。深度学习通过正则化、dropout等技术可以有效缓解这个问题。其次，基因之间存在复杂的调控关系，深度学习能够自动学习这些非线性关系，而无需人工设计特征。
+
+**研究目的是什么？**
+
+1. 癌症诊断：根据基因表达谱预测癌症类型。
+2. 预后预测：预测患者的生存期或复发风险。
+3. 治疗反应预测：预测患者对特定药物的敏感性。
+
+**可能得到什么样的结果？**
+
+模型可以输出每个样本的癌症类型概率。例如，某样本被预测为"肺腺癌"的概率为0.92，"肺鳞癌"的概率为0.05。通过分析模型关注的基因，可以发现与肺癌相关的关键基因，如EGFR、KRAS等。
+
+**需要注意什么？**
+
+深度学习模型需要大量标注数据，但医学数据往往标注成本高。可以考虑使用迁移学习、数据增强等技术。此外，模型的可解释性在医学应用中非常重要，需要结合领域知识解释模型预测。
+
+---
+
+## 本章小结
+
+| 应用领域 | 数据类型 | 深度学习方法 | 主要任务 |
+|:--------:|:--------:|:------------:|:--------:|
+| RNA-Seq分析 | 基因表达矩阵 | DNN、自编码器 | 分类、聚类、降维 |
+| 蛋白质分类 | 蛋白质序列 | CNN、RNN、Transformer | 功能预测、结构预测 |
+| 药物靶点预测 | 分子指纹、序列特征 | 多输入DNN | 相互作用预测 |
+| 单细胞分析 | 单细胞表达矩阵 | 自编码器、VAE | 降维、聚类、细胞类型识别 |
+| 医学图像 | 病理切片、CT图像 | CNN、迁移学习 | 分类、分割、检测 |
+| 模型解释 | 模型输出 | LIME、SHAP | 特征重要性、预测解释 |
+
+---
+
+# 第十二章：PyTorch for R（torch包）进阶 {#第十二章pytorch-for-rtorch包进阶}
+
+torch包是PyTorch在R语言中的原生实现，提供了与Python PyTorch几乎相同的API。本章将深入介绍torch包的高级用法，包括自定义模块、训练循环、数据加载器等。
+
+## 12.1 torch包基础：张量与自动微分 {#121-torch包基础张量与自动微分}
+
+### 张量操作
+
+张量（Tensor）是torch中的核心数据结构，类似于R中的矩阵，但支持GPU加速和自动微分。
+
+```{r}
+library(torch)
+
+# 创建张量
+# 从R向量创建
+x <- torch_tensor(c(1, 2, 3, 4, 5))
+cat("一维张量：\n")
+print(x)
+
+# 从矩阵创建
+m <- torch_tensor(matrix(1:12, nrow = 3, ncol = 4))
+cat("\n二维张量：\n")
+print(m)
+
+# 创建特殊张量
+zeros <- torch_zeros(3, 4)
+ones <- torch_ones(2, 3)
+randn <- torch_randn(3, 3)  # 标准正态分布
+
+cat("\n零张量形状：", as.array(zeros$shape), "\n")
+cat("单位张量形状：", as.array(ones$shape), "\n")
+cat("随机张量形状：", as.array(randn$shape), "\n")
+```
+
+### 张量运算
+
+```{r}
+# 张量基本运算
+a <- torch_tensor(c(1, 2, 3))
+b <- torch_tensor(c(4, 5, 6))
+
+# 算术运算
+cat("加法：", as.array(a + b), "\n")
+cat("减法：", as.array(a - b), "\n")
+cat("乘法：", as.array(a * b), "\n")  # 逐元素乘法
+cat("除法：", as.array(a / b), "\n")
+
+# 矩阵运算
+m1 <- torch_randn(3, 4)
+m2 <- torch_randn(4, 2)
+
+# 矩阵乘法
+matmul_result <- torch_matmul(m1, m2)
+cat("矩阵乘法结果形状：", as.array(matmul_result$shape), "\n")
+
+# 转置
+transposed <- m1$t()
+cat("转置后形状：", as.array(transposed$shape), "\n")
+
+# 统计运算
+cat("均值：", as.array(m1$mean()), "\n")
+cat("标准差：", as.array(m1$std()), "\n")
+cat("最大值：", as.array(m1$max()), "\n")
+cat("最小值：", as.array(m1$min()), "\n")
+```
+
+### 自动微分（Autograd）
+
+```{r}
+# 自动微分示例
+# 创建需要梯度的张量
+x <- torch_tensor(2, requires_grad = TRUE)
+
+# 定义函数 y = x^2 + 2x + 1
+y <- x^2 + 2*x + 1
+
+# 计算梯度
+y$backward()
+
+# 查看梯度 dy/dx = 2x + 2 = 2*2 + 2 = 6
+cat("dy/dx 在 x=2 处的值：", as.array(x$grad), "\n")
+
+# 更复杂的例子
+x <- torch_tensor(c(1, 2, 3, 4), requires_grad = TRUE)
+y <- x$sum()
+y$backward()
+cat("\nsum(x)的梯度：", as.array(x$grad), "\n")
+
+# 矩阵运算的梯度
+W <- torch_randn(3, 4, requires_grad = TRUE)
+x <- torch_randn(4, 1)
+y <- torch_matmul(W, x)
+loss <- y$sum()
+loss$backward()
+cat("\n损失对W的梯度形状：", as.array(W$grad$shape), "\n")
+```
+
+---
+
+## 12.2 自定义nn_module构建网络 {#122-自定义nn_module构建网络}
+
+### 定义神经网络模块
+
+```{r}
+# 定义自定义神经网络模块
+SimpleMLP <- torch::nn_module(
+  "SimpleMLP",
+  initialize = function(input_dim, hidden_dim, output_dim) {
+    # 定义层
+    self$fc1 <- torch::nn_linear(input_dim, hidden_dim)
+    self$fc2 <- torch::nn_linear(hidden_dim, hidden_dim)
+    self$fc3 <- torch::nn_linear(hidden_dim, output_dim)
+    self$dropout <- torch::nn_dropout(0.3)
+  },
+  
+  forward = function(x) {
+    # 前向传播
+    x <- self$fc1(x)
+    x <- torch::nnf_relu(x)
+    x <- self$dropout(x)
+    x <- self$fc2(x)
+    x <- torch::nnf_relu(x)
+    x <- self$dropout(x)
+    x <- self$fc3(x)
+    return(x)
+  }
+)
+
+# 创建模型实例
+model <- SimpleMLP(input_dim = 10, hidden_dim = 32, output_dim = 2)
+
+# 测试前向传播
+test_input <- torch_randn(5, 10)
+output <- model(test_input)
+cat("输入形状：", as.array(test_input$shape), "\n")
+cat("输出形状：", as.array(output$shape), "\n")
+```
+
+### 构建CNN模型
+
+```{r}
+# 定义CNN模型
+SimpleCNN <- torch::nn_module(
+  "SimpleCNN",
+  initialize = function(num_classes = 10) {
+    # 卷积层
+    self$conv1 <- torch::nn_conv2d(1, 32, kernel_size = 3, stride = 1, padding = 1)
+    self$conv2 <- torch::nn_conv2d(32, 64, kernel_size = 3, stride = 1, padding = 1)
+    
+    # 池化层
+    self$pool <- torch::nn_max_pool2d(kernel_size = 2, stride = 2)
+    
+    # 全连接层
+    self$fc1 <- torch::nn_linear(64 * 7 * 7, 128)
+    self$fc2 <- torch::nn_linear(128, num_classes)
+    
+    # Dropout
+    self$dropout <- torch::nn_dropout(0.5)
+  },
+  
+  forward = function(x) {
+    # 第一卷积块
+    x <- self$pool(torch::nnf_relu(self$conv1(x)))
+    
+    # 第二卷积块
+    x <- self$pool(torch::nnf_relu(self$conv2(x)))
+    
+    # 展平
+    x <- x$view(c(-1, 64 * 7 * 7))
+    
+    # 全连接层
+    x <- torch::nnf_relu(self$fc1(x))
+    x <- self$dropout(x)
+    x <- self$fc2(x)
+    
+    return(x)
+  }
+)
+
+# 创建CNN模型
+cnn_model <- SimpleCNN(num_classes = 10)
+
+# 测试
+test_input <- torch_randn(5, 1, 28, 28)
+output <- cnn_model(test_input)
+cat("CNN输入形状：", as.array(test_input$shape), "\n")
+cat("CNN输出形状：", as.array(output$shape), "\n")
+```
+
+---
+
+## 12.3 训练循环手动编写 {#123-训练循环手动编写}
+
+### 完整的训练流程
+
+```{r, eval=FALSE}
+# 完整的训练循环示例
+library(torch)
+
+# 生成模拟数据
+set.seed(42)
+n_samples <- 1000
+n_features <- 20
+n_classes <- 3
+
+X <- matrix(rnorm(n_samples * n_features), nrow = n_samples)
+y <- sample(0:(n_classes - 1), n_samples, replace = TRUE)
+
+# 转换为张量
+X_tensor <- torch_tensor(X, dtype = torch_float())
+y_tensor <- torch_tensor(y, dtype = torch_long())
+
+# 划分训练集和测试集
+train_ratio <- 0.8
+train_size <- floor(n_samples * train_ratio)
+
+train_indices <- 1:train_size
+test_indices <- (train_size + 1):n_samples
+
+X_train <- X_tensor[train_indices, ]
+y_train <- y_tensor[train_indices]
+X_test <- X_tensor[test_indices, ]
+y_test <- y_tensor[test_indices]
+
+# 定义模型
+Classifier <- torch::nn_module(
+  "Classifier",
+  initialize = function(input_dim, hidden_dim, output_dim) {
+    self$fc1 <- torch::nn_linear(input_dim, hidden_dim)
+    self$fc2 <- torch::nn_linear(hidden_dim, hidden_dim)
+    self$fc3 <- torch::nn_linear(hidden_dim, output_dim)
+    self$dropout <- torch::nn_dropout(0.3)
+  },
+  
+  forward = function(x) {
+    x <- torch::nnf_relu(self$fc1(x))
+    x <- self$dropout(x)
+    x <- torch::nnf_relu(self$fc2(x))
+    x <- self$dropout(x)
+    x <- self$fc3(x)
+    return(x)
+  }
+)
+
+# 创建模型
+model <- Classifier(n_features, 64, n_classes)
+
+# 定义损失函数和优化器
+criterion <- torch::nn_cross_entropy_loss()
+optimizer <- torch::optim_adam(model$parameters, lr = 0.001)
+
+# 训练循环
+n_epochs <- 50
+batch_size <- 32
+
+for (epoch in 1:n_epochs) {
+  model$train()
+  
+  # 随机打乱数据
+  perm <- sample(1:train_size)
+  total_loss <- 0
+  n_batches <- ceiling(train_size / batch_size)
+  
+  for (i in 1:n_batches) {
+    # 获取批次数据
+    start_idx <- (i - 1) * batch_size + 1
+    end_idx <- min(i * batch_size, train_size)
+    batch_idx <- perm[start_idx:end_idx]
+    
+    batch_X <- X_train[batch_idx, ]
+    batch_y <- y_train[batch_idx]
+    
+    # 清零梯度
+    optimizer$zero_grad()
+    
+    # 前向传播
+    outputs <- model(batch_X)
+    
+    # 计算损失
+    loss <- criterion(outputs, batch_y)
+    
+    # 反向传播
+    loss$backward()
+    
+    # 更新参数
+    optimizer$step()
+    
+    total_loss <- total_loss + loss$item()
+  }
+  
+  # 每10个epoch打印一次
+  if (epoch %% 10 == 0) {
+    # 验证
+    model$eval()
+    with(torch::no_grad(), {
+      test_outputs <- model(X_test)
+      test_loss <- criterion(test_outputs, y_test)
+      
+      # 计算准确率
+      predictions <- test_outputs$argmax(dim = 2)
+      accuracy <- (predictions == y_test)$sum()$item() / length(y_test)
+    })
+    
+    cat(sprintf("Epoch %d, Train Loss: %.4f, Test Loss: %.4f, Test Acc: %.4f\n",
+                epoch, total_loss / n_batches, test_loss$item(), accuracy))
+  }
+}
+```
+
+---
+
+## 12.4 数据加载器（DataLoader） {#124-数据加载器dataloader}
+
+### 自定义数据集
+
+```{r, eval=FALSE}
+# 定义自定义数据集
+CustomDataset <- torch::dataset(
+  "CustomDataset",
+  initialize = function(X, y = NULL) {
+    self$X <- torch_tensor(X, dtype = torch_float())
+    if (!is.null(y)) {
+      self$y <- torch_tensor(y, dtype = torch_long())
+    } else {
+      self$y <- NULL
+    }
+  },
+  
+  .getitem = function(index) {
+    if (!is.null(self$y)) {
+      return(list(x = self$X[index, ], y = self$y[index]))
+    } else {
+      return(list(x = self$X[index, ]))
+    }
+  },
+  
+  .length = function() {
+    return(self$X$size(1))
+  }
+)
+
+# 创建数据集和数据加载器
+set.seed(42)
+n_samples <- 500
+n_features <- 10
+
+X <- matrix(rnorm(n_samples * n_features), nrow = n_samples)
+y <- sample(0:1, n_samples, replace = TRUE)
+
+# 划分数据
+train_size <- 400
+train_dataset <- CustomDataset(X[1:train_size, ], y[1:train_size])
+test_dataset <- CustomDataset(X[(train_size + 1):n_samples, ], y[(train_size + 1):n_samples])
+
+# 创建数据加载器
+train_dl <- torch::dataloader(
+  train_dataset,
+  batch_size = 32,
+  shuffle = TRUE
+)
+
+test_dl <- torch::dataloader(
+  test_dataset,
+  batch_size = 32,
+  shuffle = FALSE
+)
+
+# 使用数据加载器训练
+model <- Classifier(n_features, 32, 2)
+criterion <- torch::nn_cross_entropy_loss()
+optimizer <- torch::optim_adam(model$parameters, lr = 0.001)
+
+for (epoch in 1:10) {
+  model$train()
+  total_loss <- 0
+  
+  # 使用迭代器遍历数据加载器
+  for (batch in train_dl) {
+    optimizer$zero_grad()
+    
+    outputs <- model(batch$x)
+    loss <- criterion(outputs, batch$y)
+    loss$backward()
+    optimizer$step()
+    
+    total_loss <- total_loss + loss$item()
+  }
+  
+  cat(sprintf("Epoch %d, Loss: %.4f\n", epoch, total_loss / length(train_dl)))
+}
+```
+
+---
+
+## 12.5 迁移预训练模型 {#125-迁移预训练模型}
+
+### 使用预训练模型
+
+```{r, eval=FALSE}
+# 使用预训练的ResNet模型
+library(torch)
+
+# 定义预训练模型加载函数
+load_pretrained_resnet <- function(num_classes = 10, pretrained = TRUE) {
+  # 创建ResNet18模型
+  model <- torch::nn_module(
+    "ResNet18",
+    initialize = function(num_classes) {
+      # 简化的ResNet结构
+      self$conv1 <- torch::nn_conv2d(3, 64, kernel_size = 7, stride = 2, padding = 3)
+      self$bn1 <- torch::nn_batch_norm2d(64)
+      self$relu <- torch::nn_relu()
+      self$maxpool <- torch::nn_max_pool2d(kernel_size = 3, stride = 2, padding = 1)
+      
+      # 残差块（简化）
+      self$layer1 <- self$make_layer(64, 64, 2)
+      self$layer2 <- self$make_layer(64, 128, 2, stride = 2)
+      self$layer3 <- self$make_layer(128, 256, 2, stride = 2)
+      self$layer4 <- self$make_layer(256, 512, 2, stride = 2)
+      
+      self$avgpool <- torch::nn_adaptive_avg_pool2d(c(1, 1))
+      self$fc <- torch::nn_linear(512, num_classes)
+    },
+    
+    make_layer = function(in_channels, out_channels, blocks, stride = 1) {
+      layers <- list()
+      
+      for (i in 1:blocks) {
+        if (i == 1 && stride != 1) {
+          layers <- c(layers, list(
+            torch::nn_conv2d(in_channels, out_channels, kernel_size = 3, stride = stride, padding = 1),
+            torch::nn_batch_norm2d(out_channels),
+            torch::nn_relu(),
+            torch::nn_conv2d(out_channels, out_channels, kernel_size = 3, padding = 1),
+            torch::nn_batch_norm2d(out_channels)
+          ))
+        } else {
+          layers <- c(layers, list(
+            torch::nn_conv2d(in_channels, out_channels, kernel_size = 3, padding = 1),
+            torch::nn_batch_norm2d(out_channels),
+            torch::nn_relu(),
+            torch::nn_conv2d(out_channels, out_channels, kernel_size = 3, padding = 1),
+            torch::nn_batch_norm2d(out_channels)
+          ))
+        }
+        in_channels <- out_channels
+      }
+      
+      return(torch::nn_sequential(!!!layers))
+    },
+    
+    forward = function(x) {
+      x <- self$conv1(x)
+      x <- self$bn1(x)
+      x <- self$relu(x)
+      x <- self$maxpool(x)
+      
+      x <- self$layer1(x)
+      x <- self$layer2(x)
+      x <- self$layer3(x)
+      x <- self$layer4(x)
+      
+      x <- self$avgpool(x)
+      x <- torch::torch_flatten(x, 1)
+      x <- self$fc(x)
+      
+      return(x)
+    }
+  )
+  
+  return(model(num_classes))
+}
+
+# 创建模型
+resnet_model <- load_pretrained_resnet(num_classes = 10)
+
+# 测试
+test_input <- torch_randn(2, 3, 224, 224)
+output <- resnet_model(test_input)
+cat("ResNet输出形状：", as.array(output$shape), "\n")
+```
+
+---
+
+## 12.6 与reticulate的协同工作 {#126-与reticulate的协同工作}
+
+### 在R中调用PyTorch
+
+```{r, eval=FALSE}
+# 使用reticulate调用Python PyTorch
+library(reticulate)
+
+# 导入PyTorch
+torch <- import("torch")
+nn <- import("torch.nn")
+optim <- import("torch.optim")
+
+# 在Python中定义模型
+py_model <- torch$nn$ModuleDict()
+
+# 添加层
+py_model$fc1 <- nn$Linear(10, 32)
+py_model$fc2 <- nn$Linear(32, 2)
+
+# 定义前向传播函数
+forward <- function(x) {
+  x <- torch$relu(py_model$fc1(x))
+  x <- py_model$fc2(x)
+  return(x)
+}
+
+# 创建张量
+x <- torch$randn(5, 10)
+
+# 前向传播
+output <- forward(x)
+cat("输出形状：", as.array(output$shape), "\n")
+```
+
+### 数据交换
+
+```{r, eval=FALSE}
+# R和Python之间的数据交换
+
+# R数据转Python
+r_matrix <- matrix(rnorm(20), nrow = 4, ncol = 5)
+py_tensor <- torch$from_numpy(r_matrix)
+cat("R矩阵形状：", dim(r_matrix), "\n")
+cat("Python张量形状：", as.array(py_tensor$shape), "\n")
+
+# Python数据转R
+py_result <- torch$randn(3, 4)
+r_array <- as.array(py_result$numpy())
+cat("Python张量转R数组形状：", dim(r_array), "\n")
+```
+
+---
+
+## 本章小结
+
+| 概念 | 核心内容 | 应用场景 |
+|:----:|:--------:|:--------:|
+| 张量 | 多维数组，支持GPU和自动微分 | 数据表示、矩阵运算 |
+| 自动微分 | 自动计算梯度 | 反向传播、优化 |
+| nn_module | 自定义神经网络模块 | 构建复杂模型 |
+| 训练循环 | 手动控制训练过程 | 自定义训练逻辑 |
+| DataLoader | 批量数据加载 | 大规模数据训练 |
+| 迁移学习 | 使用预训练模型 | 少样本学习 |
+| reticulate | R与Python交互 | 使用Python生态 |
+
+---
+
+# 第十三章：模型优化与超参数调优 {#第十三章模型优化与超参数调优}
+
+模型优化和超参数调优是深度学习模型开发的关键环节。本章将介绍如何使用R语言进行系统性的超参数搜索和模型优化。
+
+## 13.1 超参数搜索方法 {#131-超参数搜索方法}
+
+### 超参数搜索概述
+
+超参数是在模型训练前需要设置的参数，如学习率、隐藏层大小、dropout率等。选择合适的超参数对模型性能至关重要。
+
+```{r}
+# 定义超参数搜索空间
+define_search_space <- function() {
+  search_space <- list(
+    learning_rate = c(0.0001, 0.001, 0.01, 0.1),
+    hidden_units = c(32, 64, 128, 256),
+    dropout_rate = c(0.1, 0.3, 0.5),
+    batch_size = c(16, 32, 64),
+    num_layers = c(1, 2, 3, 4)
+  )
+  
+  return(search_space)
+}
+
+# 显示搜索空间
+search_space <- define_search_space()
+cat("超参数搜索空间：\n")
+for (param in names(search_space)) {
+  cat(sprintf("  %s: %s\n", param, paste(search_space[[param]], collapse = ", ")))
+}
+
+# 计算总组合数
+total_combinations <- prod(sapply(search_space, length))
+cat(sprintf("\n总组合数：%d\n", total_combinations))
+```
+
+### 随机搜索
+
+```{r}
+# 随机搜索实现
+random_search <- function(search_space, n_trials = 10) {
+  results <- data.frame()
+  
+  for (trial in 1:n_trials) {
+    # 随机采样超参数
+    params <- list()
+    for (param in names(search_space)) {
+      values <- search_space[[param]]
+      params[[param]] <- sample(values, 1)
+    }
+    
+    # 模拟训练和评估
+    # 在实际应用中，这里应该是真实的模型训练
+    score <- runif(1, 0.5, 0.95)  # 模拟准确率
+    
+    # 记录结果
+    result <- data.frame(
+      trial = trial,
+      learning_rate = params$learning_rate,
+      hidden_units = params$hidden_units,
+      dropout_rate = params$dropout_rate,
+      batch_size = params$batch_size,
+      num_layers = params$num_layers,
+      score = score
+    )
+    
+    results <- rbind(results, result)
+  }
+  
+  return(results)
+}
+
+# 执行随机搜索
+set.seed(42)
+search_results <- random_search(search_space, n_trials = 20)
+
+# 显示最佳结果
+best_result <- search_results[which.max(search_results$score), ]
+cat("最佳超参数组合：\n")
+print(best_result)
+```
+
+### 网格搜索
+
+```{r}
+# 网格搜索实现（简化版）
+grid_search <- function(search_space, max_combinations = 100) {
+  # 生成所有组合
+  generate_combinations <- function(search_space) {
+    param_names <- names(search_space)
+    n_params <- length(param_names)
+    
+    # 递归生成组合
+    expand_grid_recursive <- function(params, idx, current) {
+      if (idx > n_params) {
+        return(list(current))
+      }
+      
+      param_name <- param_names[idx]
+      values <- search_space[[param_name]]
+      
+      results <- list()
+      for (v in values) {
+        new_current <- c(current, setNames(list(v), param_name))
+        results <- c(results, expand_grid_recursive(params, idx + 1, new_current))
+      }
+      
+      return(results)
+    }
+    
+    return(expand_grid_recursive(search_space, 1, list()))
+  }
+  
+  combinations <- generate_combinations(search_space)
+  
+  # 限制组合数量
+  if (length(combinations) > max_combinations) {
+    combinations <- combinations[1:max_combinations]
+  }
+  
+  # 评估每个组合
+  results <- data.frame()
+  
+  for (i in seq_along(combinations)) {
+    params <- combinations[[i]]
+    
+    # 模拟评估
+    score <- runif(1, 0.5, 0.95)
+    
+    result <- data.frame(
+      combination = i,
+      learning_rate = params$learning_rate,
+      hidden_units = params$hidden_units,
+      dropout_rate = params$dropout_rate,
+      score = score
+    )
+    
+    results <- rbind(results, result)
+  }
+  
+  return(results)
+}
+
+# 执行网格搜索（限制组合数）
+grid_results <- grid_search(search_space, max_combinations = 50)
+cat("网格搜索结果（前5个）：\n")
+print(head(grid_results, 5))
+```
+
+---
+
+## 13.2 学习率查找器 {#132-学习率查找器}
+
+### 学习率范围测试
+
+```{r}
+# 学习率查找器实现
+learning_rate_finder <- function(model, X_train, y_train, min_lr = 1e-6, max_lr = 1, n_steps = 100) {
+  # 存储学习率和损失
+  lrs <- exp(seq(log(min_lr), log(max_lr), length.out = n_steps))
+  losses <- numeric(n_steps)
+  
+  # 模拟学习率测试
+  # 在实际应用中，这里应该进行真实的模型训练
+  for (i in 1:n_steps) {
+    # 模拟损失变化
+    # 假设最优学习率在0.001左右
+    optimal_lr <- 0.001
+    losses[i] <- 0.5 + 0.3 * abs(log10(lrs[i] / optimal_lr)) + runif(1, -0.05, 0.05)
+  }
+  
+  return(list(
+    learning_rates = lrs,
+    losses = losses
+  ))
+}
+
+# 可视化学习率-损失曲线
+visualize_lr_finder <- function(lrf_result) {
+  df <- data.frame(
+    lr = lrf_result$learning_rates,
+    loss = lrf_result$losses
+  )
+  
+  ggplot2::ggplot(df, ggplot2::aes(x = lr, y = loss)) +
+    ggplot2::geom_line(color = "blue", size = 1) +
+    ggplot2::scale_x_log10() +
+    ggplot2::labs(
+      title = "学习率查找器结果",
+      x = "学习率（对数刻度）",
+      y = "损失"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(
+      plot.title = ggplot2::element_text(hjust = 0.5, size = 14)
+    )
+}
+
+# 模拟学习率查找
+set.seed(42)
+lrf_result <- learning_rate_finder(NULL, NULL, NULL)
+visualize_lr_finder(lrf_result)
+```
+
+---
+
+## 13.3 模型量化与剪枝基础 {#133-模型量化与剪枝基础}
+
+### 模型量化
+
+```{r, eval=FALSE}
+# 模型量化示例
+library(torch)
+
+# 创建模型
+model <- torch::nn_linear(10, 2)
+
+# 模拟量化过程
+quantize_model <- function(model) {
+  # 获取模型参数
+  params <- model$parameters
+  
+  # 量化参数（简化版：将float32转为int8范围）
+  quantized_params <- list()
+  
+  for (name in names(params)) {
+    param <- params[[name]]
+    
+    # 计算量化参数
+    min_val <- param$min()$item()
+    max_val <- param$max()$item()
+    scale <- (max_val - min_val) / 255
+    
+    # 量化
+    quantized <- torch::torch_round((param - min_val) / scale)
+    quantized_params[[name]] <- list(
+      quantized = quantized,
+      scale = scale,
+      min_val = min_val
+    )
+  }
+  
+  return(quantized_params)
+}
+
+# 反量化
+dequantize <- function(quantized_param) {
+  return(quantized_param$quantized * quantized_param$scale + quantized_param$min_val)
+}
+
+# 测试
+quantized <- quantize_model(model)
+cat("量化后的参数形状：", as.array(quantized$weight$quantized$shape), "\n")
+```
+
+### 模型剪枝
+
+```{r, eval=FALSE}
+# 模型剪枝示例
+prune_model <- function(model, prune_ratio = 0.3) {
+  # 获取模型参数
+  params <- model$parameters
+  
+  pruned_params <- list()
+  
+  for (name in names(params)) {
+    param <- params[[name]]
+    
+    # 计算阈值
+    threshold <- torch::torch_quantile(torch::torch_abs(param), prune_ratio)
+    
+    # 创建掩码
+    mask <- torch::torch_abs(param) > threshold
+    
+    # 应用剪枝
+    pruned_params[[name]] <- param * mask$to(param$dtype)
+  }
+  
+  return(pruned_params)
+}
+
+# 计算稀疏度
+calculate_sparsity <- function(tensor) {
+  total_elements <- tensor$numel()
+  zero_elements <- (tensor == 0)$sum()$item()
+  return(zero_elements / total_elements)
+}
+```
+
+---
+
+## 13.4 混合精度训练 {#134-混合精度训练}
+
+### 混合精度训练原理
+
+```{r, eval=FALSE}
+# 混合精度训练示例
+library(torch)
+
+# 定义混合精度训练函数
+train_with_mixed_precision <- function(model, X, y, n_epochs = 10) {
+  # 创建优化器
+  optimizer <- torch::optim_adam(model$parameters, lr = 0.001)
+  
+  # 创建梯度缩放器
+  scaler <- list(
+    scale = 65536,  # 初始缩放因子
+    growth_factor = 2,
+    backoff_factor = 0.5,
+    growth_interval = 2000
+  )
+  
+  for (epoch in 1:n_epochs) {
+    optimizer$zero_grad()
+    
+    # 将输入转换为半精度
+    X_half <- X$to(dtype = torch_float16())
+    
+    # 前向传播（半精度）
+    output <- model(X_half)
+    
+    # 将输出转回全精度计算损失
+    output_full <- output$to(dtype = torch_float32())
+    loss <- torch::nnf_cross_entropy(output_full, y)
+    
+    # 缩放损失
+    scaled_loss <- loss * scaler$scale
+    
+    # 反向传播
+    scaled_loss$backward()
+    
+    # 反缩放梯度
+    for (param in model$parameters) {
+      if (!is.null(param$grad)) {
+        param$grad <- param$grad / scaler$scale
+      }
+    }
+    
+    # 更新参数
+    optimizer$step()
+    
+    cat(sprintf("Epoch %d, Loss: %.4f\n", epoch, loss$item()))
+  }
+  
+  return(model)
+}
+```
+
+---
+
+## 13.5 分布式训练 {#135-分布式训练}
+
+### 多GPU训练设置
+
+```{r, eval=FALSE}
+# 分布式训练配置
+setup_distributed_training <- function() {
+  # 检查可用GPU数量
+  n_gpus <- torch::cuda_device_count()
+  
+  cat(sprintf("可用GPU数量：%d\n", n_gpus))
+  
+  if (n_gpus > 1) {
+    # 设置分布式训练
+    # 使用DataParallel进行简单多GPU训练
+    
+    distributed_config <- list(
+      backend = "nccl",
+      world_size = n_gpus,
+      rank = 0
+    )
+    
+    return(distributed_config)
+  } else {
+    cat("只有一个GPU或没有GPU，使用单机训练\n")
+    return(NULL)
+  }
+}
+
+# 数据并行包装
+wrap_model_parallel <- function(model) {
+  # 在实际应用中，使用torch::nn$DataParallel
+  # 这里提供简化版本
+  return(model)
+}
+```
+
+---
+
+## 本章小结
+
+| 技术 | 核心思想 | 适用场景 |
+|:----:|:--------:|:--------:|
+| 随机搜索 | 随机采样超参数组合 | 大搜索空间 |
+| 网格搜索 | 遍历所有超参数组合 | 小搜索空间 |
+| 学习率查找器 | 找到最优学习率范围 | 训练初始化 |
+| 模型量化 | 降低参数精度 | 模型部署、推理加速 |
+| 模型剪枝 | 移除冗余参数 | 模型压缩 |
+| 混合精度 | FP16训练+FP32梯度 | 加速训练、节省显存 |
+| 分布式训练 | 多GPU并行计算 | 大规模模型训练 |
+
+---
+
+# 第十四章：可解释性与模型调试 {#第十四章可解释性与模型调试}
+
+模型可解释性是深度学习在实际应用中的关键问题。本章将介绍如何使用R语言进行模型解释和调试。
+
+## 14.1 Grad-CAM实现 {#141-grad-cam实现}
+
+### 梯度类激活映射
+
+```{r, eval=FALSE}
+# Grad-CAM实现
+library(torch)
+
+# 定义Grad-CAM类
+GradCAM <- torch::nn_module(
+  "GradCAM",
+  initialize = function(model, target_layer) {
+    self$model <- model
+    self$target_layer <- target_layer
+    
+    # 存储特征图和梯度
+    self$features <- NULL
+    self$gradients <- NULL
+    
+    # 注册钩子
+    self$register_hooks()
+  },
+  
+  register_hooks = function() {
+    # 前向钩子：保存特征图
+    forward_hook <- function(module, input, output) {
+      self$features <- output
+    }
+    
+    # 反向钩子：保存梯度
+    backward_hook <- function(module, grad_input, grad_output) {
+      self$gradients <- grad_output[[1]]
+    }
+    
+    # 在实际应用中，需要正确注册钩子
+  },
+  
+  forward = function(x, target_class = NULL) {
+    # 前向传播
+    output <- self$model(x)
+    
+    if (is.null(target_class)) {
+      target_class <- output$argmax(dim = 2)
+    }
+    
+    # 获取目标类别的输出
+    target_output <- output[1, target_class]
+    
+    # 反向传播
+    self$model$zero_grad()
+    target_output$backward(retain_graph = TRUE)
+    
+    # 计算Grad-CAM
+    weights <- self$gradients$mean(dim = c(2, 3), keepdim = TRUE)
+    cam <- (weights * self$features)$sum(dim = 2, keepdim = TRUE)
+    cam <- torch::nnf_relu(cam)
+    
+    # 归一化
+    cam <- cam / (cam$max() + 1e-8)
+    
+    return(cam)
+  }
+)
+```
+
+---
+
+## 14.2 特征重要性分析 {#142-特征重要性分析}
+
+### 排列重要性
+
+```{r}
+# 排列重要性计算
+permutation_importance <- function(model, X, y, n_repeats = 10) {
+  # 模拟模型预测函数
+  predict_fn <- function(X) {
+    # 在实际应用中，这里应该是真实的模型预测
+    return(runif(nrow(X)))
+  }
+  
+  # 计算基准分数
+  baseline_score <- mean((predict_fn(X) - y)^2)
+  
+  # 计算每个特征的重要性
+  n_features <- ncol(X)
+  importance <- numeric(n_features)
+  
+  for (j in 1:n_features) {
+    scores <- numeric(n_repeats)
+    
+    for (r in 1:n_repeats) {
+      # 打乱第j个特征
+      X_permuted <- X
+      X_permuted[, j] <- sample(X[, j])
+      
+      # 计算打乱后的分数
+      permuted_score <- mean((predict_fn(X_permuted) - y)^2)
+      scores[r] <- permuted_score - baseline_score
+    }
+    
+    importance[j] <- mean(scores)
+  }
+  
+  return(data.frame(
+    feature = paste0("Feature_", 1:n_features),
+    importance = importance
+  ))
+}
+
+# 示例
+set.seed(42)
+X <- matrix(rnorm(100 * 10), nrow = 100)
+y <- rnorm(100)
+
+importance_df <- permutation_importance(NULL, X, y)
+importance_df <- importance_df[order(importance_df$importance, decreasing = TRUE), ]
+
+cat("特征重要性（前5个）：\n")
+print(head(importance_df, 5))
+```
+
+### SHAP值分析
+
+```{r, eval=FALSE}
+# SHAP值计算（简化版）
+calculate_shap <- function(model, X, n_samples = 100) {
+  n_features <- ncol(X)
+  n_obs <- nrow(X)
+  
+  # 模拟SHAP值计算
+  # 在实际应用中，应使用shap包
+  
+  shap_values <- matrix(0, nrow = n_obs, ncol = n_features)
+  
+  for (i in 1:min(n_obs, n_samples)) {
+    for (j in 1:n_features) {
+      # 简化的SHAP值计算
+      shap_values[i, j] <- runif(1, -0.5, 0.5)
+    }
+  }
+  
+  return(shap_values)
+}
+
+# 可视化SHAP值
+visualize_shap_summary <- function(shap_values, feature_names) {
+  # 计算平均绝对SHAP值
+  mean_abs_shap <- colMeans(abs(shap_values))
+  
+  df <- data.frame(
+    feature = feature_names,
+    importance = mean_abs_shap
+  )
+  df <- df[order(df$importance, decreasing = TRUE), ]
+  
+  ggplot2::ggplot(head(df, 20), ggplot2::aes(x = reorder(feature, importance), y = importance)) +
+    ggplot2::geom_bar(stat = "identity", fill = "steelblue") +
+    ggplot2::coord_flip() +
+    ggplot2::labs(
+      title = "SHAP特征重要性",
+      x = "特征",
+      y = "平均绝对SHAP值"
+    ) +
+    ggplot2::theme_minimal()
+}
+```
+
+---
+
+## 14.3 LIME局部解释 {#143-lime局部解释}
+
+### LIME实现
+
+```{r, eval=FALSE}
+# LIME局部解释
+library(lime)
+
+# 定义解释器
+create_lime_explainer <- function(X_train, model, feature_names) {
+  # 创建LIME解释器
+  explainer <- lime::lime(
+    x = as.data.frame(X_train),
+    model = model,
+    bin_continuous = TRUE,
+    n_bins = 4
+  )
+  
+  return(explainer)
+}
+
+# 解释单个预测
+explain_instance <- function(explainer, instance, n_features = 10) {
+  # 生成解释
+  explanation <- lime::explain(
+    x = as.data.frame(t(instance)),
+    explainer = explainer,
+    n_features = n_features,
+    n_permutations = 500
+  )
+  
+  return(explanation)
+}
+
+# 可视化解释
+visualize_lime <- function(explanation) {
+  lime::plot_features(explanation)
+}
+```
+
+---
+
+## 14.4 TensorBoard集成 {#144-tensorboard集成}
+
+### 使用TensorBoard记录训练过程
+
+```{r, eval=FALSE}
+# TensorBoard集成
+library(tensorflow)
+
+# 创建日志写入器
+create_summary_writer <- function(log_dir = "logs") {
+  writer <- tensorflow::tf$summary$create_file_writer(log_dir)
+  return(writer)
+}
+
+# 记录标量
+log_scalar <- function(writer, tag, value, step) {
+  with(writer$as_default(), {
+    tensorflow::tf$summary$scalar(tag, value, step = step)
+  })
+}
+
+# 记录直方图
+log_histogram <- function(writer, tag, values, step) {
+  with(writer$as_default(), {
+    tensorflow::tf$summary$histogram(tag, values, step = step)
+  })
+}
+
+# 训练循环中的日志记录示例
+train_with_logging <- function(model, X_train, y_train, log_dir = "logs") {
+  writer <- create_summary_writer(log_dir)
+  
+  for (epoch in 1:100) {
+    # 训练代码...
+    loss <- runif(1, 0.1, 1.0)  # 模拟损失
+    accuracy <- runif(1, 0.5, 0.99)  # 模拟准确率
+    
+    # 记录指标
+    log_scalar(writer, "loss", loss, epoch)
+    log_scalar(writer, "accuracy", accuracy, epoch)
+    
+    # 记录权重分布
+    # log_histogram(writer, "weights/layer1", model$layers[[1]]$get_weights()[[1]], epoch)
+  }
+  
+  writer$flush()
+}
+```
+
+---
+
+## 14.5 自定义回调记录中间层输出 {#145-自定义回调记录中间层输出}
+
+### 自定义回调函数
+
+```{r, eval=FALSE}
+# 自定义回调函数
+library(keras)
+
+# 定义中间层输出记录回调
+IntermediateLayerCallback <- R6::R6Class(
+  "IntermediateLayerCallback",
+  inherit = KerasCallback,
+  
+  public = list(
+    layer_name = NULL,
+    outputs = list,
+    
+    initialize = function(layer_name) {
+      self$layer_name <- layer_name
+      self$outputs <- list()
+    },
+    
+    on_batch_end = function(batch, logs = list()) {
+      # 获取中间层输出
+      # 在实际应用中，需要创建一个新的模型来获取中间层输出
+      # intermediate_model <- keras_model(
+      #   inputs = model$input,
+      #   outputs = get_layer(model, self$layer_name)$output
+      # )
+      # output <- predict(intermediate_model, current_batch)
+      # self$outputs <- c(self$outputs, list(output))
+    }
+  )
+)
+
+# 使用回调
+# callback <- IntermediateLayerCallback$new("conv2d_1")
+# history <- model %>% fit(X_train, y_train, callbacks = list(callback))
+```
+
+---
+
+## 本章小结
+
+| 技术 | 核心思想 | 应用场景 |
+|:----:|:--------:|:--------:|
+| Grad-CAM | 梯度加权的特征图可视化 | 图像分类解释 |
+| 排列重要性 | 打乱特征评估影响 | 特征选择 |
+| SHAP | 博弈论特征贡献分配 | 全局和局部解释 |
+| LIME | 局部线性近似 | 单样本解释 |
+| TensorBoard | 训练过程可视化 | 训练监控 |
+| 自定义回调 | 记录中间结果 | 深度调试 |
+
+---
+
+# 第十五章：生产环境部署 {#第十五章生产环境部署}
+
+将深度学习模型部署到生产环境是模型开发的最后一步。本章将介绍如何使用R语言进行模型部署。
+
+## 15.1 模型导出为SavedModel格式 {#151-模型导出为savedmodel格式}
+
+### 保存和加载模型
+
+```{r, eval=FALSE}
+# 保存Keras模型
+library(keras)
+
+# 假设有一个训练好的模型
+# model <- build_model()
+
+# 保存为SavedModel格式
+save_model <- function(model, path) {
+  # 保存完整模型
+  model %>% save_model_tf(filepath = path)
+  
+  cat(sprintf("模型已保存到：%s\n", path))
+}
+
+# 加载模型
+load_saved_model <- function(path) {
+  model <- load_model_tf(path)
+  return(model)
+}
+
+# 保存模型权重
+save_weights <- function(model, path) {
+  model %>% save_model_weights_tf(filepath = path)
+}
+
+# 加载模型权重
+load_weights <- function(model, path) {
+  model %>% load_model_weights_tf(filepath = path)
+}
+
+# 保存torch模型
+save_torch_model <- function(model, path) {
+  torch::torch_save(model, path)
+}
+
+# 加载torch模型
+load_torch_model <- function(path) {
+  model <- torch::torch_load(path)
+  return(model)
+}
+```
+
+---
+
+## 15.2 TensorFlow Serving部署基础 {#152-tensorflow-serving部署基础}
+
+### TensorFlow Serving配置
+
+```{r, eval=FALSE}
+# TensorFlow Serving配置示例
+
+# 创建模型配置文件
+create_model_config <- function(model_name, model_base_path) {
+  config <- sprintf('
+model_config_list {
+  config {
+    name: "%s"
+    base_path: "%s"
+    model_platform: "tensorflow"
+  }
+}
+', model_name, model_base_path)
+  
+  writeLines(config, "models.config")
+  return(config)
+}
+
+# 启动TensorFlow Serving的命令
+# docker run -t --rm -p 8501:8501 \
+#   -v "$(pwd)/models:/models" \
+#   tensorflow/serving \
+#   --model_config_file=/models/models.config
+
+# 发送预测请求
+send_prediction_request <- function(model_name, instances, server_url = "http://localhost:8501") {
+  # 构建请求体
+  request_body <- jsonlite::toJSON(list(
+    instances = instances
+  ), auto_unbox = TRUE)
+  
+  # 发送POST请求
+  response <- httr::POST(
+    url = sprintf("%s/v1/models/%s:predict", server_url, model_name),
+    body = request_body,
+    httr::content_type_json()
+  )
+  
+  # 解析响应
+  result <- httr::content(response, "parsed")
+  
+  return(result)
+}
+```
+
+---
+
+## 15.3 使用Plumber构建深度学习API {#153-使用plumber构建深度学习api}
+
+### 创建API端点
+
+```{r, eval=FALSE}
+# Plumber API示例
+library(plumber)
+
+# plumber_api.R
+
+#* @apiTitle Deep Learning Prediction API
+#* @apiDescription RESTful API for deep learning model predictions
+
+# 全局变量：加载模型
+# model <- load_model_tf("saved_model")
+
+#* 健康检查端点
+#* @get /health
+function() {
+  return(list(status = "healthy", timestamp = Sys.time()))
+}
+
+#* 预测端点
+#* @param data:character 输入数据（JSON格式）
+#* @post /predict
+function(data) {
+  # 解析输入数据
+  input_data <- jsonlite::fromJSON(data)
+  
+  # 预处理
+  # processed_data <- preprocess(input_data)
+  
+  # 预测
+  # predictions <- model %>% predict(processed_data)
+  
+  # 返回结果（模拟）
+  return(list(
+    predictions = list(
+      class = "positive",
+      probability = 0.85
+    ),
+    status = "success"
+  ))
+}
+
+#* 批量预测端点
+#* @param data:character 批量输入数据（JSON格式）
+#* @post /predict/batch
+function(data) {
+  # 解析输入数据
+  input_data <- jsonlite::fromJSON(data)
+  
+  # 批量预测
+  n_samples <- length(input_data)
+  
+  return(list(
+    predictions = lapply(1:n_samples, function(i) {
+      list(class = sample(c("positive", "negative"), 1), probability = runif(1))
+    }),
+    status = "success"
+  ))
+}
+
+# 运行API
+# plumber::plumb("plumber_api.R")$run(port = 8000, host = "0.0.0.0")
+```
+
+---
+
+## 15.4 将模型打包为R包 {#154-将模型打包为r包}
+
+### 创建模型R包
+
+```{r, eval=FALSE}
+# 创建模型R包的结构
+# mymodel/
+# ├── R/
+# │   ├── predict.R
+# │   ├── preprocess.R
+# │   └── load_model.R
+# ├── inst/
+# │   └── models/
+# │       └── model.h5
+# ├── man/
+# ├── DESCRIPTION
+# └── NAMESPACE
+
+# DESCRIPTION文件示例
+description_content <- '
+Package: mymodel
+Title: Deep Learning Model Package
+Version: 1.0.0
+Author: Your Name
+Maintainer: Your Name <your@email.com>
+Description: A package containing a trained deep learning model for prediction.
+License: MIT
+Encoding: UTF-8
+LazyData: true
+Depends: keras, tensorflow
+'
+
+# R/predict.R
+predict_function <- '
+#' Make predictions using the model
+#'
+#' @param input_data Input data for prediction
+#' @return Prediction results
+#' @export
+predict_mymodel <- function(input_data) {
+  model <- load_model()
+  processed <- preprocess(input_data)
+  predictions <- model %>% predict(processed)
+  return(predictions)
+}
+'
+
+# R/load_model.R
+load_model_function <- '
+#' Load the trained model
+#'
+#' @return Loaded model
+#' @export
+load_model <- function() {
+  model_path <- system.file("models", "model.h5", package = "mymodel")
+  model <- keras::load_model_hdf5(model_path)
+  return(model)
+}
+'
+```
+
+---
+
+## 15.5 Shiny应用中加载深度学习模型 {#155-shiny应用中加载深度学习模型}
+
+### 完整的Shiny应用示例
+
+```{r, eval=FALSE}
+# Shiny应用集成深度学习模型
+library(shiny)
+library(keras)
+
+# 全局初始化：加载模型
+# model <- load_model_tf("saved_model")
+
+# UI定义
+ui <- fluidPage(
+  titlePanel("深度学习预测系统"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      fileInput("file", "上传数据文件（CSV）",
+                accept = c(".csv")),
+      numericInput("threshold", "预测阈值", value = 0.5, min = 0, max = 1, step = 0.1),
+      actionButton("predict", "开始预测", class = "btn-primary"),
+      br(),
+      br(),
+      helpText("上传CSV格式的数据文件进行预测"),
+      br(),
+      downloadButton("download", "下载预测结果")
+    ),
+    
+    mainPanel(
+      tabsetPanel(
+        tabPanel("数据预览",
+                 DT::dataTableOutput("data_preview")),
+        tabPanel("预测结果",
+                 DT::dataTableOutput("prediction_table")),
+        tabPanel("可视化",
+                 plotOutput("prediction_plot")),
+        tabPanel("统计信息",
+                 verbatimTextOutput("statistics"))
+      )
+    )
+  )
+)
+
+# Server定义
+server <- function(input, output, session) {
+  # 读取上传的数据
+  uploaded_data <- reactive({
+    req(input$file)
+    
+    data <- read.csv(input$file$datapath, stringsAsFactors = FALSE)
+    return(data)
+  })
+  
+  # 数据预览
+  output$data_preview <- DT::renderDataTable({
+    req(uploaded_data())
+    DT::datatable(
+      head(uploaded_data(), 100),
+      options = list(scrollX = TRUE)
+    )
+  })
+  
+  # 预测结果
+  prediction_results <- eventReactive(input$predict, {
+    req(uploaded_data())
+    
+    data <- uploaded_data()
+    
+    # 预处理
+    # processed_data <- preprocess(data)
+    
+    # 预测
+    # predictions <- model %>% predict(processed_data)
+    
+    # 模拟预测结果
+    predictions <- data.frame(
+      sample_id = 1:nrow(data),
+      probability = runif(nrow(data)),
+      prediction = sample(c("Positive", "Negative"), nrow(data), replace = TRUE)
+    )
+    
+    return(predictions)
+  })
+  
+  # 预测结果表格
+  output$prediction_table <- DT::renderDataTable({
+    req(prediction_results())
+    DT::datatable(
+      prediction_results(),
+      options = list(scrollX = TRUE)
+    )
+  })
+  
+  # 预测结果可视化
+  output$prediction_plot <- renderPlot({
+    req(prediction_results())
+    
+    df <- prediction_results()
+    
+    ggplot2::ggplot(df, ggplot2::aes(x = probability, fill = prediction)) +
+      ggplot2::geom_histogram(bins = 30, alpha = 0.7, position = "identity") +
+      ggplot2::geom_vline(xintercept = input$threshold, linetype = "dashed", color = "red") +
+      ggplot2::labs(
+        title = "预测概率分布",
+        x = "预测概率",
+        y = "频数",
+        fill = "预测类别"
+      ) +
+      ggplot2::theme_minimal() +
+      ggplot2::theme(
+        plot.title = ggplot2::element_text(hjust = 0.5, size = 14)
+      )
+  })
+  
+  # 统计信息
+  output$statistics <- renderPrint({
+    req(prediction_results())
+    
+    df <- prediction_results()
+    
+    cat("预测结果统计\n")
+    cat("================\n\n")
+    cat("总样本数：", nrow(df), "\n")
+    cat("阳性预测：", sum(df$prediction == "Positive"), "\n")
+    cat("阴性预测：", sum(df$prediction == "Negative"), "\n")
+    cat("平均概率：", round(mean(df$probability), 4), "\n")
+    cat("概率标准差：", round(sd(df$probability), 4), "\n")
+  })
+  
+  # 下载预测结果
+  output$download <- downloadHandler(
+    filename = function() {
+      paste0("predictions_", format(Sys.time(), "%Y%m%d_%H%M%S"), ".csv")
+    },
+    content = function(file) {
+      write.csv(prediction_results(), file, row.names = FALSE)
+    }
+  )
+}
+
+# 运行应用
+# shinyApp(ui = ui, server = server)
+```
+
+### 意义与使用场景
+
+**核心意义**：将深度学习模型部署到生产环境，让模型能够为实际业务提供预测服务，是模型开发的最终目标。
+
+**举例**：部署一个癌症预测模型供临床使用
+
+**为什么需要模型部署？**
+
+首先，模型只有在实际应用中才能发挥价值。一个准确率99%的模型如果只存在于研究者的电脑上，就无法帮助任何患者。其次，生产环境部署需要考虑稳定性、可扩展性、安全性等问题，这些与模型开发阶段的需求不同。
+
+**研究目的是什么？**
+
+1. 提供实时预测：让临床医生能够快速获得预测结果。
+2. 集成到工作流程：将模型嵌入到医院信息系统。
+3. 持续监控：跟踪模型在生产环境中的表现。
+
+**可能得到什么样的结果？**
+
+部署后的模型可以通过API或Web界面提供服务。例如，医生上传患者的基因表达数据，系统返回癌症风险预测和置信度。同时，系统记录所有预测请求，用于后续的模型监控和更新。
+
+**需要注意什么？**
+
+生产环境的模型性能可能与实验室环境不同。数据分布的变化（数据漂移）可能导致模型性能下降。需要建立监控机制，定期评估模型性能，并在必要时更新模型。
+
+---
+
+## 本章小结
+
+| 部署方式 | 核心内容 | 适用场景 |
+|:--------:|:--------:|:--------:|
+| SavedModel | TensorFlow标准格式 | TensorFlow Serving |
+| TensorFlow Serving | 高性能模型服务 | 大规模生产环境 |
+| Plumber API | R语言REST API | 快速原型开发 |
+| R包打包 | 模型作为R包分发 | 内部分享、版本管理 |
+| Shiny应用 | 交互式Web应用 | 用户界面、可视化 |
+
+---
+
+# 全书总结
+
+本教程涵盖了R语言深度学习的高级主题，包括：
+
+| 章节 | 主题 | 核心技术 |
+|:----:|:----:|:--------:|
+| 第九章 | 注意力机制与Transformer | 自注意力、多头注意力、位置编码 |
+| 第十章 | 图神经网络 | GCN、GAT、生物网络分析 |
+| 第十一章 | 生物信息学应用 | RNA-Seq、蛋白质分类、药物发现 |
+| 第十二章 | PyTorch for R | torch包、自定义模块、训练循环 |
+| 第十三章 | 模型优化 | 超参数搜索、量化、剪枝 |
+| 第十四章 | 可解释性 | Grad-CAM、SHAP、LIME |
+| 第十五章 | 生产部署 | TensorFlow Serving、Plumber、Shiny |
+
+通过学习本教程，您应该能够：
+
+1. 理解并实现注意力机制和Transformer架构
+2. 使用图神经网络处理生物网络数据
+3. 将深度学习应用于实际的生物信息学问题
+4. 使用torch包进行灵活的模型开发
+5. 优化模型性能并进行超参数调优
+6. 解释模型预测并进行调试
+7. 将模型部署到生产环境
+
+深度学习是一个快速发展的领域，建议持续关注最新的研究进展和技术发展。
+
